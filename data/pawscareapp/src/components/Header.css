@@ -1,0 +1,45 @@
+/* styles to change the font of header items using the className "nav-link" */
+
+:root
+{
+    --logo: #B40404;
+    --active: #11c738;
+}
+
+.nav-link
+{
+    font-family: "Bebas Neue", sans-serif;
+    font-weight: 4000;
+    font-size: x-large;
+    color: var(--logo);
+}
+
+/* styles for company name */
+#pawscare
+{
+    color: var(--logo);
+    font-family: "Orbitron", sans-serif;
+    font-weight: 800;
+    top: 3px;
+    font-size: larger;
+}
+
+/* style when the cursor hovers over the nav-item */
+.nav-item:hover
+{
+    text-decoration-line: underline;
+    color: var(--logo);
+}
+
+/* style of nav-link when it is clicked and is active */
+.nav-link.active
+{
+    color: var(--active);
+}
+
+/* style of navbar to create shadow */
+.navbar
+{
+    display: flex;
+    box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
