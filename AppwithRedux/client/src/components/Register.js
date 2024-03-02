@@ -1,50 +1,47 @@
-import React from 'react'
-import { useState } from 'react';
+import React, {useState} from 'react'
 import {useForm} from "react-hook-form"
 import axios from 'axios';
 import {NavLink, useNavigate} from 'react-router-dom'
 import {hashSync} from 'bcryptjs'
-// import Appointment from './Appointment';
+
 
 function Register() {
 
-    let {register,handleSubmit,formState:{errors}}=useForm({
-        // defaultValues:{
-        //     Appointments:[],
-        //     orders:[]
-        // }
-    })
+    let {register,handleSubmit,formState:{errors}}=useForm()
     let navigate=useNavigate();
-    // console.log(typeof navigate)
     let [error,setError]=useState('')
-    // console.log("ERROR:",errors)
+    let [file,setFile]=useState(null)
+    const [userType,setUserType]=useState('user')
+
+
+    let userTypeChange=(event)=>
+    {
+        setUserType(event.target.value)
+    }
+
+    function uploadPic(e)
+    {
+        setFile(e.target.files[0])
+    }
 
     async function formSubmit(data)
     {
         // console.log(data);
         // store in local api
+        data={userType,...data}
+        const formData = new FormData();
+        formData.append('data',JSON.stringify(data))
+        formData.append('pic',file)
         try
         {
-            // search for duplicate user
-            let res1= await axios.get(`http://localhost:4000/userdata?username=${data.username}`)
-            let userList= res1.data;
-            if(userList.length===0)
+            let res = await axios.post('http://localhost:5000/user-api/user',formData)
+            if (res.status===201)
             {
-                // hashing the password
-                data.password = hashSync(data.password,5)
-                // replace password with hashed password
-                // store in local API
-                let res= await axios.post('http://localhost:4000/userdata',data)
-                // console.log(res)
-                if(res.status===201)
-                {
-                    navigate('/getstarted/login')
-                }
+                navigate('getstarted/login')
             }
-            // when username already exists
             else
             {
-                setError('Username Exists!')
+                setError(res.data.message)
             }
         }
         catch(err)
@@ -57,8 +54,7 @@ function Register() {
     {
         navigate('/getstarted')
     }
-    // console.log(errors.petanimal?.type)
-    // console.log(errors.username?.type)
+
 
 
     // console.log(error)
