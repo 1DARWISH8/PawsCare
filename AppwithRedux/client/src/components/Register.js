@@ -31,7 +31,8 @@ function Register() {
         data={userType,...data}
         const formData = new FormData();
         formData.append('data',JSON.stringify(data))
-        formData.append('pic',file)
+        formData.append('userpic',file)
+        formData.append('petpic',file)
         try
         {
             let res = await axios.post('http://localhost:5000/user-api/user',formData)
@@ -67,6 +68,11 @@ return (
         <p className='text-center fw-bold'>ALREADY A USER?<NavLink to='/getstarted/login'>Login</NavLink></p>
         {error.length!==0&& <p className='fw-bold text-center text-danger border-0'>{error}</p>}
 
+        <label className='form-label fw-bold'>SELECT USER TYPE:</label>
+        <input type='radio' id='user' name='userType' value='user' checked={userType==='user'} onChange={userTypeChange}></input>
+        <label htmlFor='user'>USER</label>
+        <input type='radio' id='admin' name='userType' value='admin' onChange={userTypeChange}></input>
+        <label htmlFor='admin'>ADMIN</label>
 
         {/* USER DETAILS FORM */}
         <h5 className='text-center fw-bold pt-5'>USER DETAILS</h5>
@@ -89,16 +95,23 @@ return (
             <input type='email' id='email' className='form-control border-black' {...register('email',{required:true})}></input>
             {errors.email?.type==='required'&&<p className='text-center text-danger fw-bold'>*EMAIL is required*</p>}
         </div>
+        <div className='sm-3 m-3'>
+            {/* USER DISPLAY PICTURE */}
+            <label htmlFor='userpic' className='form-label fw-bold'>PROFILE IMAGE:</label>
+            <input id='userpic' type='file' name='userpic' className='form-control border-black' onChange={uploadPic}/>
+        </div>
 
 
 
+        {userType==='user'?
+        <>
         {/* PET DETAILS FORM */}
         <div >
             <h5 className='text-center fw-bold pt-3'>PET DETAILS</h5>
         <div className='sm-3 m-3 '>
-        <label htmlFor='imageupload' className=' form-label fw-bold'>UPLOAD IMAGE:</label>
+        <label htmlFor='petpic' className=' form-label fw-bold'>UPLOAD PET IMAGE:</label>
         {/* <input type='file' accept='image/*' id='imageupload' className='form-control' {...register('imageupload')}></input> */}
-        <input type='text' id='imageupload' className='form-control border-black' {...register('imageupload')}></input>
+        <input type='text' id='petpic' className='form-control border-black' onChange={uploadPic}></input>
         </div>
         <div className='sm-3 m-3'>
             <label htmlFor='petname' className='form-label fw-bold' >PETNAME:</label>
@@ -153,6 +166,10 @@ return (
                 {errors.pincode?.type==='required'&&<p className='text-danger text-center fw-bold'>*PINCODE is required*</p>}
             </div>
         </div>
+        </>
+        :
+        <>
+        </>}
 
         <div className='text-center p-2'>
             <button type='submit' className='btn btn-dark'>REGISTER</button>
