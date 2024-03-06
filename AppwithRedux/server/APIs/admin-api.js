@@ -12,8 +12,20 @@ const {} = require('../Controllers/admin-controller')
 const verifytoken = require('../Middlewares/verifytoken')
 // import upload and/(or) cloudinary configurations
 const {upload} = require('../Middlewares/cloudinaryUpload')
+// import cors and use
+const cors = require('cors')
+adminApp.use(cors(
+    {
+        'Access-Control-Allow-Origin':'*'
+    }
+))
+// import req handlers from controllers
+const {getadmin} = require('../Controllers/admin-controller')
 
 
 // CRUD OPERATIONS
+
+// get admins
+adminApp.get('/getadmin',expressAsyncHandler(getadmin))
 
 module.exports=adminApp;
