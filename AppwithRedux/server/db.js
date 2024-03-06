@@ -1,4 +1,6 @@
 // import mongoose
+// const { type } = require('@testing-library/user-event/dist/type');
+const { type } = require('@testing-library/user-event/dist/type');
 const mongoose = require('mongoose')
 require('dotenv').config()
 
@@ -26,19 +28,148 @@ async function connecttoMongoDB()
     }
 }
 
+connecttoMongoDB()
 // CREATE SCHEMAS
 
 // Create User Schema
 const userSchema = new mongoose.Schema(
     {
-
+        userType:String,
+        username:
+        {
+            type:String,
+            required:[true,"USERNAME IS REQUIRED"]
+        },
+        password:
+        {
+            type:String,
+            required:[true,"PASSWORD IS REQUIRED"]
+        },
+        email:
+        {
+            type:String,
+            required:[true,"EMAIL IS REQUIRED"]
+        },
+        userpic:
+        {
+            type:String
+        },
+        registration_date:
+        {
+            type:Date,
+            default: Date.now
+        },
+        petname:
+        {
+            type:String,
+            required:[true,"PETNAME IS REQUIRED"]
+        },
+        dob:
+        {
+            type:Date,
+            required:[true,"PETNAME IS REQUIRED"]
+        },
+        petanimal:
+        {
+            type:String,
+            required:[true,"PETANIMAL IS REQUIRED"]
+        },
+        checkupdate:
+        {
+            type:Date
+        },
+        phonenumber:
+        {
+            type:Number,
+            required:[true,"PHONE NUMBER IS REQUIRED"]
+        },
+        address:
+        {
+            type:String,
+            required:[true,"ADDRESS IS REQUIRED"]
+        },
+        pincode:
+        {
+            type:Number,
+            required:[true,"PINCODE IS REQUIRED"]
+        },
+        appointments:
+        {
+            type:Array,
+            default:[]
+        },
+        orders:
+        {
+            type:Array,
+            default:[]
+        }
     }
 )
 
 // Create Admin Schema
 const adminSchema = new mongoose.Schema(
     {
+        userType:String,
+        username:
+        {
+            type:String,
+            required:[true,"USERNAME IS REQUIRED"]
+        },
+        password:
+        {
+            type:String,
+            required:[true,"PASSWORD IS REQUIRED"]
+        },
+        email:
+        {
+            type:String,
+            required:[true,"EMAIL IS REQUIRED"]
+        },
+        userpic:
+        {
+            type:String
+        },
+        registration_date:
+        {
+            type:Date,
+            default: Date.now
+        }
+    }
+)
 
+// Create Seller Schema
+const sellerSchema = new mongoose.Schema(
+    {
+        userType:String,
+        username:
+        {
+            type:String,
+            required:[true,"USERNAME IS REQUIRED"]
+        },
+        password:
+        {
+            type:String,
+            required:[true,"PASSWORD IS REQUIRED"]
+        },
+        email:
+        {
+            type:String,
+            required:[true,"EMAIL IS REQUIRED"]
+        },
+        userpic:
+        {
+            type:String
+        },
+        registration_date:
+        {
+            type:Date,
+            default: Date.now
+        },
+        company:
+        {
+            type:String,
+            required:[true,"COMPANY IS REQUIRED"]
+        }
     }
 )
 
@@ -54,8 +185,10 @@ const productSchema = new mongoose.Schema(
 const User = mongoose.model('User',userSchema)
 // model for adminSchema
 const Admin = mongoose.model('Admin',adminSchema)
+// model for sellerSchema
+const Seller = mongoose.model('Seller',sellerSchema)
 // model for productSchema
 const Product = mongoose.model('Product',productSchema)
 
 // Export Models(classes)
-module.exports={User,Admin,Product};
+module.exports={User,Admin,Seller,Product};
