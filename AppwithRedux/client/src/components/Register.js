@@ -2,7 +2,6 @@ import React, {useState} from 'react'
 import {useForm} from "react-hook-form"
 import axios from 'axios';
 import {NavLink, useNavigate} from 'react-router-dom'
-import {hashSync} from 'bcryptjs'
 
 
 function Register() {
@@ -31,11 +30,18 @@ function Register() {
         data={userType,...data}
         const formData = new FormData();
         formData.append('data',JSON.stringify(data))
-        formData.append('userpic',file)
-        formData.append('petpic',file)
+        if(userType==='user')
+        {
+            formData.append('userpic',file)
+            formData.append('petpic',file)
+        }
+        else
+        {
+            formData.append('userpic',file)
+        }
         try
         {
-            let res = await axios.post('http://localhost:5000/user-api/user',formData)
+            let res = await axios.post('http://localhost:5000/user-api/registeruser',formData)
             if (res.status===201)
             {
                 navigate('getstarted/login')
@@ -73,6 +79,8 @@ return (
         <label htmlFor='user'>USER</label>
         <input type='radio' id='admin' name='userType' value='admin' onChange={userTypeChange}></input>
         <label htmlFor='admin'>ADMIN</label>
+        <input type='radio' id='seller' name='userType' value='seller' onChange={userTypeChange}></input>
+        <label htmlFor='seller'>SELLER</label>
 
         {/* USER DETAILS FORM */}
         <h5 className='text-center fw-bold pt-5'>USER DETAILS</h5>
@@ -103,16 +111,16 @@ return (
 
 
 
-        {userType==='user'?
+        {userType==='user'&&
         <>
         {/* PET DETAILS FORM */}
         <div >
             <h5 className='text-center fw-bold pt-3'>PET DETAILS</h5>
-        <div className='sm-3 m-3 '>
-        <label htmlFor='petpic' className=' form-label fw-bold'>UPLOAD PET IMAGE:</label>
+        {/* <div className='sm-3 m-3 '>
+        <label htmlFor='petpic' className=' form-label fw-bold'>UPLOAD PET IMAGE:</label> */}
         {/* <input type='file' accept='image/*' id='imageupload' className='form-control' {...register('imageupload')}></input> */}
-        <input type='text' id='petpic' className='form-control border-black' onChange={uploadPic}></input>
-        </div>
+        {/* <input type='file' id='petpic' className='form-control border-black' onChange={uploadPic}></input>
+        </div> */}
         <div className='sm-3 m-3'>
             <label htmlFor='petname' className='form-label fw-bold' >PETNAME:</label>
             <input type='text' className='form-control border-black' id='petname' {...register('petname',{required:true})}></input>
@@ -167,9 +175,7 @@ return (
             </div>
         </div>
         </>
-        :
-        <>
-        </>}
+        }
 
         <div className='text-center p-2'>
             <button type='submit' className='btn btn-dark'>REGISTER</button>
