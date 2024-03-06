@@ -1,10 +1,9 @@
 // useContext hook is imported to read and access data from context
-import React, { useContext } from 'react'
-//context store is imported so to use states and functions.
-import { userLoginContext } from '../contexts/userLoginContext'
+import React from 'react'
 // To navigate from one components to other according to user interaction useNavigate hook is imported from React Router library
 import {useNavigate} from 'react-router-dom'
-// import axios from 'axios'
+import {useSelector} from 'react-redux'
+
 
 // images are imported for the carousel
 import haircut from '../images/haircut.jpg'
@@ -20,9 +19,12 @@ import './Home.css'
 
 function Home() {
 
+  // import userdata and status from userLoginSlice
+  let {currentUser,loginStatus} = useSelector(state=>state.userLogin)
+  
   // states are imported from the context store
   // useContext is given a userLoginContext
-  let [currentUser,,userLoginStatus]=useContext(userLoginContext)
+  // let [currentUser,,userLoginStatus]=useContext(userLoginContext)
   // useNavigate() hook is assigned to navigate 
   let navigate= useNavigate()
 
@@ -30,7 +32,7 @@ function Home() {
   function navigateTo()
   {
     // checks if user is logged in or not
-    if (userLoginStatus)
+    if (loginStatus)
     {
       //if user is logged in then the page navigates to the appointment page 
       navigate('/home/appointment')
@@ -47,7 +49,7 @@ function Home() {
   function toHealth()
   {
     // checks if user is logged in or not
-    if (userLoginStatus)
+    if (loginStatus)
     {
       // if user is logged in the page renders healthcard
       navigate('/home/healthcard')
@@ -66,7 +68,7 @@ function Home() {
           <h4 className='pt-4' id="welcome">Welcome to</h4>
           <h1 className='pt-2' id='intro'>PAWSCARE🌟</h1>
           {/* checks if user is logged in or not and renders the component accordingly */}
-          <div className='fs-3 pt-2 pb-5'> Your {userLoginStatus?<span id='intro'>{currentUser.petname}</span>:<span>Pet</span>}'s Wellbeing Central! 🐾</div>
+          <div className='fs-3 pt-2 pb-5'> Your {loginStatus===true?<span id='intro'>{currentUser.petname}</span>:<span>Pet</span>}'s Wellbeing Central! 🐾</div>
         </div>
         <div className="card m-3 mt-2" id='carouselcard'>
           <div className="card-header border-0">
