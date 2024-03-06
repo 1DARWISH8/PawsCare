@@ -1,17 +1,19 @@
-import React, {useContext} from 'react'
-import { userLoginContext } from '../contexts/userLoginContext'
+import React from 'react'
 import {useNavigate} from 'react-router-dom'
+import {useSelector,useDispatch} from 'react-redux'
+import { logOut } from '../redux/slices/userLoginSlice'
 
 function Profile() {
 
     let navigate=useNavigate()
-    let [currentUser,setCurrentUser,,setUserLoginStatus]=useContext(userLoginContext)
+	let dispatch = useDispatch()
+	let {currentUser}=useSelector(state=>state.userLogin)
 
 
     function logout()
     {
-        setCurrentUser({})
-        setUserLoginStatus(false)
+        dispatch(logOut())
+		sessionStorage.removeItem('token')
         navigate('/getstarted')
     }
 
@@ -26,7 +28,7 @@ return (
 					<div className="card m-3">
 						<div className="card-body">
 							<div className="d-flex flex-column align-items-center text-center">
-								<img src={currentUser.imageupload} alt={currentUser.petanimal} className="rounded-circle p-1 bg-primary" width="150"/>
+								{/* <img src={currentUser.imageupload} alt={currentUser.petanimal} className="rounded-circle p-1 bg-primary" width="150"/> */}
 								<div className="mt-3">
 									<h4>{currentUser.username}</h4>
 									<p className="text-black mb-1">Owner of {currentUser.petname}</p>
