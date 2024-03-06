@@ -16,10 +16,12 @@ app.use(express.json())
 // import apis
 const userApp = require('./APIs/user-api');
 const adminApp = require('./APIs/admin-api')
+const sellerApp = require('./APIs/seller-api')
 
 // Forward json request to corresponding api handlers
 app.use('/user-api',userApp)
 app.use('/admin-api',adminApp)
+app.use('/seller-api',sellerApp)
 
 // Error Handler
 app.use((err,req,res,next)=>
