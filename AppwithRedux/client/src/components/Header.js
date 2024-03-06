@@ -1,15 +1,14 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { NavLink } from 'react-router-dom'
 // logo image is imported from the images folder
 import logo from "../images/pawscarelogo.png"
 // userLoginContext is imported, to use the created context store
-import { userLoginContext } from '../contexts/userLoginContext'
 import './Header.css'
+import {useSelector} from 'react-redux'
 
 function Header() {
-
-  // userLoginStatus from the context store is used
-  let [ , ,userLoginStatus]=useContext(userLoginContext)
+  // import userloginSlice from reducer store
+  let {loginStatus} = useSelector(state=>state.userLogin)
 
 
   return (
@@ -17,7 +16,7 @@ function Header() {
             <nav className="navbar">
               <NavLink className='nav-link fw-bold fs-5' id='pawscare' to='/home'><img width='70px' src={logo} alt='logo'/>PAWS CARE</NavLink>
                 {/* userLoginStaus state is being to used to check if the user is logged in or not */}
-                {userLoginStatus===false?
+                {loginStatus===false?
               <>
               {/* if user is not logged in then by conditional rendering the header of the app changes */}
               <div >
