@@ -35,7 +35,7 @@ const userLoginSlice = createSlice(
         name:'user-login-slice',
         initialState:
         {
-            currentUser:[],
+            currentUser:{},
             loginStatus:false,
             errorMessage:'',
             isPending:false
@@ -44,10 +44,10 @@ const userLoginSlice = createSlice(
         {
             logOut:(state)=>
             {
-                state.currentUser=[],
-                state.loginStatus=false,
-                state.errorMessage='',
-                state.isPending=false
+                state.currentUser={};
+                state.loginStatus=false;
+                state.errorMessage='';
+                state.isPending=false;
             }
         },
         extraReducers:builder=>
@@ -69,7 +69,6 @@ const userLoginSlice = createSlice(
             state.errorMessage=action.payload;
             state.isPending=false;
         })
-
     }
 )
 
