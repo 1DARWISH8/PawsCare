@@ -20,6 +20,10 @@ import Toys from './components/Toys';
 import Essentials from './components/Essentials';
 import Cart from './components/Cart';
 import Checkout from './components/Checkout';
+import Checkappointment from './components/admin/Checkappointments';
+import Manageusers from './components/admin/Manageusers';
+import Managestore from './components/admin/Managestore'
+
 
 function App() {
   // browserRouter variable is created which contains all the paths and its components
@@ -67,7 +71,7 @@ function App() {
           ]
         },
         {
-          path:"/store/cart",
+          path:"/cart",
           element:<Cart/>
         },
         {
@@ -103,8 +107,20 @@ function App() {
           element:<Appointsuccess/>
         },
         {
-          path:'store/cart',
+          path:'/store',
           element:<Store/>
+        },
+        {
+          path:'/admin/checkappointment',
+          element:<Checkappointment/>
+        },
+        {
+          path:'/admin/manageusers',
+          element:<Manageusers/>
+        },
+        {
+          path:'/admin/managestore',
+          element:<Managestore/>
         }
       ]
     }
