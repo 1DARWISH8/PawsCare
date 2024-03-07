@@ -8,7 +8,7 @@ function Login() {
   let {register,handleSubmit,formState:{errors}}=useForm()
   let dispatch = useDispatch()
   let navigate=useNavigate()
-  let {currentUser,loginStatus,errorMessage,isPending} = useSelector(state=>state.userLogin)
+  let {loginStatus,errorMessage} = useSelector(state=>state.userLogin)
   let [userType,setUserType] = useState('user')
 
   let userTypeChange=(event)=>
@@ -39,8 +39,8 @@ function Login() {
       <label htmlFor='user'>USER</label>
       <input type='radio' id='admin' name='userType' value='admin' onChange={userTypeChange}></input>
       <label htmlFor='admin'>ADMIN</label>
-      <input type='radio' id='seller' name='userType' value='seller' onChange={userTypeChange} ></input>
-      <label htmlFor='seller'>SELLER</label>
+      {/* <input type='radio' id='seller' name='userType' value='seller' onChange={userTypeChange} ></input>
+      <label htmlFor='seller'>SELLER</label> */}
 
         <p className='text-center fw-bold pt-1'>Not a USER?<NavLink to='/getstarted/register'>REGISTER</NavLink></p>
         {errorMessage.length!==0&&<p className='fw-bold text-center text-danger'>{errorMessage.message}</p>}
