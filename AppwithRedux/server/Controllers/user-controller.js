@@ -19,9 +19,9 @@ const getuser = async(req,res)=>
 // REGISTER USER
 const registerUser = async(req,res)=>
 {
-    console.log(req.body)
+    // console.log(req.body)
     const userdata = req.body
-    console.log(userdata.userType)
+    // console.log(userdata.userType)
     let userType = userdata.userType
     // const userdata = JSON.parse(req.body.data)
     
@@ -68,21 +68,21 @@ const registerUser = async(req,res)=>
             res.status(200).send({message:"ADMIN ALREADY REGISTERED!"})
         }
     }
-    else if (userType==='seller')
-    {
-        let sellerexists = await Seller.findOne({username:userdata.username})
-        if (sellerexists===null)
-        {
-            let hashedpassword = await bcryptjs.hash(userdata.password,5)
-            userdata.password=hashedpassword
-            let seller = await Seller.create(userdata)
-            res.status(201).send({message:"SELLER PROFILE CREATED",payload:seller})
-        }
-        else
-        {
-            res.status(200).send({message:"SELLER ALREADY REGISTERED!"})
-        }
-    }
+    // else if (userType==='seller')
+    // {
+    //     let sellerexists = await Seller.findOne({username:userdata.username})
+    //     if (sellerexists===null)
+    //     {
+    //         let hashedpassword = await bcryptjs.hash(userdata.password,5)
+    //         userdata.password=hashedpassword
+    //         let seller = await Seller.create(userdata)
+    //         res.status(201).send({message:"SELLER PROFILE CREATED",payload:seller})
+    //     }
+    //     else
+    //     {
+    //         res.status(200).send({message:"SELLER ALREADY REGISTERED!"})
+    //     }
+    // }
 }
 
 
@@ -127,7 +127,7 @@ const userLogin = async(req,res)=>
             if (result)
             {
                 let signedToken = jwt.sign({username:adminExistsinDB.username},process.env.SECRET_KEY,{expiresIn:300})
-                res.status(200).send({message:"SUCCESSFUL LOGIN"})
+                res.status(200).send({message:"SUCCESSFUL LOGIN",token:signedToken,user:adminExistsinDB})
             }
             else
             {
@@ -135,28 +135,28 @@ const userLogin = async(req,res)=>
             }
         }
     }
-    else
-    {
-        let sellerExistsinDB = await Seller.findOne({username:userCred.username})
-        if (sellerExistsinDB===null)
-        {
-            res.status(200).send({message:"INVALID USERNAME"})
-        }
-        else
-        {
-            let result = await bcryptjs.compare(userCred.password,sellerExistsinDB.password)
+    // else
+    // {
+    //     let sellerExistsinDB = await Seller.findOne({username:userCred.username})
+    //     if (sellerExistsinDB===null)
+    //     {
+    //         res.status(200).send({message:"INVALID USERNAME"})
+    //     }
+    //     else
+    //     {
+    //         let result = await bcryptjs.compare(userCred.password,sellerExistsinDB.password)
 
-            if (result)
-            {
-                let signedToken = jwt.sign({username:sellerExistsinDB.username},process.env.SECRET_KEY,{expiresIn:300})
-                res.status(200).send({message:"SUCCESSFUL LOGIN",token:signedToken,user:sellerExistsinDB})
-            }
-            else
-            {
-                res.status(200).send({message:"INCORRECT PASSWORD"})
-            }
-        }
-    }
+    //         if (result)
+    //         {
+    //             let signedToken = jwt.sign({username:sellerExistsinDB.username},process.env.SECRET_KEY,{expiresIn:300})
+    //             res.status(200).send({message:"SUCCESSFUL LOGIN",token:signedToken,user:sellerExistsinDB})
+    //         }
+    //         else
+    //         {
+    //             res.status(200).send({message:"INCORRECT PASSWORD"})
+    //         }
+    //     }
+    // }
 }
 
 module.exports={getuser,registerUser,userLogin}
