@@ -8,7 +8,7 @@ import {useSelector} from 'react-redux'
 
 function Header() {
   // import userloginSlice from reducer store
-  let {loginStatus} = useSelector(state=>state.userLogin)
+  let {currentUser,loginStatus} = useSelector(state=>state.userLogin)
 
 
   return (
@@ -37,12 +37,41 @@ function Header() {
               {/* when the user is logged in the corresponding header is dynamically rendered */}
               <div>
               <ul className="nav justify-content-end">
-                <li className='nav-item '>
-                  <NavLink className='nav-link' id='icon' to=''><i className="bi bi-house-door-fill"></i>HOME</NavLink>
-                </li>
-                <li className='nav-item'>
-                  <NavLink className='nav-link' id='icon' to='/store/food'><i className="bi bi-shop"></i>STORE</NavLink>
-                </li>
+                {
+                  currentUser.userType==='user'&&
+                  <>
+                    <li className='nav-item '>
+                      <NavLink className='nav-link' id='icon' to=''><i className="bi bi-house-door-fill"></i>HOME</NavLink>
+                    </li>
+                    <li className='nav-item'>
+                      <NavLink className='nav-link' id='icon' to='/home/appointment'><i className="bi bi-shop"></i>BOOK APPOINTMENT</NavLink>
+                    </li>
+                    <li className='nav-item'>
+                      <NavLink className='nav-link' id='icon' to='/store/food'><i className="bi bi-shop"></i>STORE</NavLink>
+                    </li>
+                    <li className='nav-item'>
+                      <NavLink className='nav-link' id='icon' to='/cart'>CART<i className="bi bi-cart4"></i></NavLink>
+                    </li>
+                  </>
+                }
+                {
+                  currentUser.userType==='admin'&&
+                  <>
+                    <li className='nav-item '>
+                      <NavLink className='nav-link' id='icon' to=''><i className="bi bi-house-door-fill"></i>HOME</NavLink>
+                    </li>
+                    <li className='nav-item'>
+                      <NavLink className='nav-link' id='icon' to='/admin/checkappointment'><i className="bi bi-calendar"></i>CHECK APPOINTMENTS</NavLink>
+                    </li>
+                    <li className='nav-item'>
+                      <NavLink className='nav-link' id='icon' to='/admin/managestore'><i className="bi bi-shop"></i>MANAGE STORE</NavLink>
+                    </li>
+                    <li className='nav-item'>
+                      <NavLink className='nav-link' id='icon' to='/admin/manageusers'>MANAGE USERS<i className="bi bi-person"></i></NavLink>
+                    </li>
+                  </>
+                }
+
                 <li className='nav-item'>
                   <NavLink className='nav-link' id='icon' to='profile'>PROFILE<i className="bi bi-person-circle"></i></NavLink>
                 </li>
