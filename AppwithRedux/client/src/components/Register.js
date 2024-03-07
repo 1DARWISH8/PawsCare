@@ -79,8 +79,8 @@ return (
         <label htmlFor='user'>USER</label>
         <input type='radio' id='admin' name='userType' value='admin' onChange={userTypeChange}></input>
         <label htmlFor='admin'>ADMIN</label>
-        <input type='radio' id='seller' name='userType' value='seller' onChange={userTypeChange}></input>
-        <label htmlFor='seller'>SELLER</label>
+        {/* <input type='radio' id='seller' name='userType' value='seller' onChange={userTypeChange}></input>
+        <label htmlFor='seller'>SELLER</label> */}
 
         {/* USER DETAILS FORM */}
         <h5 className='text-center fw-bold pt-5'>USER DETAILS</h5>
