@@ -4,11 +4,13 @@ import { useForm } from 'react-hook-form'
 import axios from 'axios'
 import {useNavigate} from 'react-router-dom'
 import { NavLink } from 'react-router-dom'
+import {useSelector} from 'react-redux'
 
 function Appointment() {
 
     let navigate= useNavigate()
-    let [currentUser,setCurrentUser]=useContext(userLoginContext)
+    let {currentUser}=useSelector(state=>state.userLogin)
+    // let [currentUser,setCurrentUser]=useContext(userLoginContext)
     let [error,setError]=useState('')
     let {register,handleSubmit,formState:{errors}}=useForm()
 
@@ -17,11 +19,12 @@ function Appointment() {
         // store in local api
         try
         {
-            // search for duplicate user
-            let res1= await axios.patch(`http://localhost:4000/userdata/${currentUser.id}`,data)
-            setCurrentUser(res1.data)
-            // console.log(res1.data.Appointments)
-            if(res1.status===200)
+            let username = currentUser.username
+            let petname = currentUser.petname
+            data = {username,petname,...data}
+            // console.log(data)
+            let booked = await axios.post(`http://localhost:5000/user-api/bookappointment`,data)
+            if(booked.status===200)
             {
                 navigate('/appointment/appointsuccess')
             }
