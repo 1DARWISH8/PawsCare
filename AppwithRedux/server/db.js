@@ -34,6 +34,11 @@ connecttoMongoDB()
 // Create User Schema
 const userSchema = new mongoose.Schema(
     {
+        accountstatus:
+        {
+            type:String,
+            default:"ACTIVE"
+        },
         userType:String,
         username:
         {
@@ -94,6 +99,11 @@ const userSchema = new mongoose.Schema(
             required:[true,"PINCODE IS REQUIRED"]
         },
         appointments:
+        {
+            type:Array,
+            default:[]
+        },
+        cart:
         {
             type:Array,
             default:[]
@@ -173,6 +183,52 @@ const sellerSchema = new mongoose.Schema(
     }
 )
 
+// CREATE APPOINTMENT SCHEMA
+const appointmentSchema = new mongoose.Schema(
+    {
+        username:
+        {
+            type:String,
+            required:[true,"USERNAME IS REQUIRED"]
+        },
+        petname:
+        {
+            type:String,
+            required:[true,"PETNAME IS REQUIRED"]
+        },
+        service:
+        {
+            type:String,
+            required:[true,"SERVICE TYPE IS REQUIRED"]
+        },
+        location:
+        {
+            type:String,
+            required:[true,"SERVICE LOCATION IS REQUIRED"]
+        },
+        date:
+        {
+            type:Date,
+            required:[true,"APPOINTMENT DATE IS REQUIRED"]
+        },
+        time:
+        {
+            type:String,
+            required:[true,"APPOINTMENT TIME IS REQUIRED"]
+        },
+        bookingtime:
+        {
+            type:Date,
+            default: Date.now
+        },
+        appointmentstatus:
+        {
+            type:String,
+            default:"INCOMPLETE"
+        }
+    }
+)
+
 // CREATE PRODUCT SCHEMA
 const productSchema = new mongoose.Schema(
     {
@@ -187,8 +243,10 @@ const User = mongoose.model('User',userSchema)
 const Admin = mongoose.model('Admin',adminSchema)
 // model for sellerSchema
 const Seller = mongoose.model('Seller',sellerSchema)
+// model for appointmentSchema
+const Appointment = mongoose.model('Appointment',appointmentSchema)
 // model for productSchema
 const Product = mongoose.model('Product',productSchema)
 
 // Export Models(classes)
-module.exports={User,Admin,Seller,Product};
+module.exports={User,Admin,Seller,Appointment,Product};
