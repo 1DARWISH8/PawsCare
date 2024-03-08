@@ -25,26 +25,28 @@ function Register() {
 
     async function formSubmit(data)
     {
-        // console.log(data);
         // store in local api
         data={userType,...data}
+        // console.log(data)
         const formData = new FormData();
         formData.append('data',JSON.stringify(data))
-        if(userType==='user')
-        {
-            formData.append('userpic',file)
-            formData.append('petpic',file)
-        }
-        else
-        {
-            formData.append('userpic',file)
-        }
+        // if(userType==='user')
+        // {
+            //     formData.append('userpic',file)
+        //     formData.append('petpic',file)
+        
+        // }
+        // else
+        formData.append('userpic',file)
+        // {
+        // }
         try
         {
             let res = await axios.post('http://localhost:5000/user-api/registeruser',formData)
+            console.log(res)
             if (res.status===201)
             {
-                navigate('getstarted/login')
+                navigate('/getstarted/login')
             }
             else
             {
