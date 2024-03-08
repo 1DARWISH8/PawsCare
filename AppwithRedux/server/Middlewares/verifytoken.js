@@ -29,7 +29,7 @@ function verifytoken(req,res,next)
         // when token is not provided
         else
         {
-            res.staus(403).send({message:"User unauthorised, token is not provided"})
+            res.status(403).send({message:"User unauthorised, token is not provided"})
         }
 }
 
