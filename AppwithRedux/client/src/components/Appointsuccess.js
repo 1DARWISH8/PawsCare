@@ -1,11 +1,22 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { userLoginContext } from '../contexts/userLoginContext'
 import { NavLink } from 'react-router-dom'
+import {useSelector,useDispatch} from 'react-redux' 
+import { userDetailsPromiseStatus } from '../redux/slices/userDetailsSlice'
 
 function Appointsuccess() {
 
-    let [currentUser]=useContext(userLoginContext)
+    let {currentUser}=useSelector(state=>state.userLogin)
+    // let dispatch = useDispatch()
     // console.log(currentUser)
+    
+    // useEffect(()=>
+    // {
+    //     dispatch(userDetailsPromiseStatus(currentUser))
+    // },[])
+
+    // let {presentUser} = useSelector(state=>state.userdetails)
+    // console.log(presentUser)
 
 return (
     <div>
@@ -18,15 +29,15 @@ return (
         </div>
         <h5 className='text-center pt-2'>THE DETAILS ARE AS FOLLOW:</h5>
         <div className='card m-4 bg-success text-center border-0 sm-3'>
-        <div className='fw-bold text-white  border border-bottom-0'>
-            SERVICE:<span className='m-2'>{currentUser.service}</span>
+        {/* <div className='fw-bold text-white  border border-bottom-0'>
+            SERVICE:<span className='m-2'>{currentUser.appointments[0].service}</span>
         </div>
         <div className='fw-bold text-white border border-bottom-0'>
-            LOCATION:<span className='m-2'>{currentUser.location}</span>
+            LOCATION:<span className='m-2'>{currentUser.appointments[0].location}</span>
         </div>
         <div className='fw-bold text-white border'>
-            DATE,TIME:<span className='m-2'>{currentUser.date},{currentUser.time}</span>
-        </div>
+            DATE,TIME:<span className='m-2'>{currentUser.appointments[0].date},{currentUser.appointments[0].time}</span>
+        </div> */}
         </div>
     </div>
     </div>
