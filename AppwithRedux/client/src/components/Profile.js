@@ -122,16 +122,16 @@ return (
 							<div className="d-flex flex-column align-items-center text-center">
 									<h4>Appointment Details</h4>
 								<div className="mt-3">
-                                    {currentUser.service?
+                                    {currentUser.appointments.service?
                                     <div>
                                         <p>SERVICE:
-                                            <span className='form-control'>{currentUser.service}</span>
+                                            <span className='form-control'>{currentUser.appointments.service}</span>
                                         </p>
                                         <p>LOCATION:
-                                            <span className='form-control'>{currentUser.location}</span>
+                                            <span className='form-control'>{currentUser.appointments.location}</span>
                                         </p>
                                         <p>DATE,TIME:
-                                            <span className='form-control'>{currentUser.date},{currentUser.time}</span>
+                                            <span className='form-control'>{currentUser.appointments.date},{currentUser.appointments.time}</span>
                                         </p>
                                     </div>
                                     :
