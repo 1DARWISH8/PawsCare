@@ -1,5 +1,5 @@
 //import models
-const {User,Admin,Seller,Product} = require('../db')
+const {User,Admin,Seller,Appointment,Product} = require('../db')
 // import bcryptjs for password hashing
 const bcryptjs = require('bcryptjs')
 // import jsonwebtokens for JWT
@@ -10,20 +10,31 @@ const jwt = require('jsonwebtoken')
 const fs = require('fs');
 
 // get users
-const getuser = async(req,res)=>
+const getusers = async(req,res)=>
 {
     const users = await User.find()
     res.status(201).send({message:"USERS",payload:users})
+}
+
+// get a user BY username
+const getuser = async(req,res)=>
+{
+    let user = req.body
+    console.log(req.body)
+    console.log(user)
+    const updateduser = await User.findOne({username:user.username})
+    console.log(updateduser)
+    res.status(200).send({message:"USER",payload:updateduser})
 }
 
 // REGISTER USER
 const registerUser = async(req,res)=>
 {
     // console.log(req.body)
-    const userdata = req.body
+    // const userdata = req.body
     // console.log(userdata.userType)
+    const userdata = JSON.parse(req.body.data)
     let userType = userdata.userType
-    // const userdata = JSON.parse(req.body.data)
     
     if (userdata.userType==='user')
     {
@@ -159,4 +170,30 @@ const userLogin = async(req,res)=>
     // }
 }
 
-module.exports={getuser,registerUser,userLogin}
+// USER BOOKING APPOINTMENT
+const bookAppointment = async(req,res)=>
+{
+    let details = req.body;
+    let bookappointment = await Appointment.create(details)
+    let appointmentbooked = await User.findOneAndUpdate({username:details.username},
+        {
+            $push:
+            {
+                "appointments":bookappointment
+            },
+        },
+            {
+                returnOriginal:false
+            }
+        )
+    if (appointmentbooked && bookappointment)
+    {
+        res.status(200).send({message:"APPOINTMENT IS BOOKED",payload:appointmentbooked})
+    }
+    else
+    {
+        res.status(200).send({message:"UNABLE TO BOOK"})
+    }
+}
+
+module.exports={getuser,getusers,registerUser,userLogin,bookAppointment}
