@@ -6,8 +6,8 @@ const express = require('express')
 const adminApp = express.Router()
 // import express-async-handler to handle async errors (error handler in server.js cannot handle async errors)
 const expressAsyncHandler = require('express-async-handler')
-// import req hanlders from user controller
-const {} = require('../Controllers/admin-controller')
+// import req handlers from controllers
+const {getadmin,getallappointments,pendingappointments,cancelledappointments} = require('../Controllers/admin-controller')
 // import token verification middleware
 const verifytoken = require('../Middlewares/verifytoken')
 // import upload and/(or) cloudinary configurations
@@ -19,13 +19,21 @@ adminApp.use(cors(
         'Access-Control-Allow-Origin':'*'
     }
 ))
-// import req handlers from controllers
-const {getadmin} = require('../Controllers/admin-controller')
+
 
 
 // CRUD OPERATIONS
 
 // get admins
 adminApp.get('/getadmin',expressAsyncHandler(getadmin))
+
+// GET ALL APPOINTMENTS
+adminApp.get('/getallappointments',expressAsyncHandler(getallappointments))
+
+// GET PENDING APPOINTMENTS
+adminApp.get('/pendingappointments',expressAsyncHandler(pendingappointments))
+
+// GET CANCELLED APPOINTMENTS
+adminApp.get('/cancelledappointments',expressAsyncHandler(cancelledappointments))
 
 module.exports=adminApp;
