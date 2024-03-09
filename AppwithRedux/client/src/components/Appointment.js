@@ -14,6 +14,19 @@ function Appointment() {
     let [error,setError]=useState('')
     let {register,handleSubmit,formState:{errors}}=useForm()
 
+    async function getappointments()
+    {
+        try
+        {
+            let appointments = await axios.post('http://localhost:5000/user-api/appointments',currentUser)
+            console.log(appointments)
+        }
+        catch(err)
+        {
+            setError(err.message)
+        }
+    }
+
     async function formSubmit(data)
     {
         // store in local api
@@ -77,6 +90,7 @@ return (
             {errors.time?.type==='required'&&<p className='text-danger fw-bold text-center'>*TIME needs to be SELECTED*</p>}
             <div className='text-center pt-3'>
             <button className='btn btn-success' type='submit'>BOOK</button>
+            <button className='btn btn-warning' onClick={getappointments}>MY APPOINTMENTS</button>
             </div>
         
         </form>
