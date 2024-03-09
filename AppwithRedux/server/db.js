@@ -71,7 +71,7 @@ const userSchema = new mongoose.Schema(
         },
         dob:
         {
-            type:Date,
+            type:String,
             required:[true,"PETNAME IS REQUIRED"]
         },
         petanimal:
@@ -81,7 +81,7 @@ const userSchema = new mongoose.Schema(
         },
         checkupdate:
         {
-            type:Date
+            type:String
         },
         phonenumber:
         {
@@ -224,7 +224,7 @@ const appointmentSchema = new mongoose.Schema(
         appointmentstatus:
         {
             type:String,
-            default:"INCOMPLETE"
+            default:"PENDING"
         }
     }
 )
