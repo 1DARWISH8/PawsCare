@@ -20,10 +20,9 @@ const getusers = async(req,res)=>
 const getuser = async(req,res)=>
 {
     let user = req.body
-    console.log(req.body)
-    console.log(user)
+    // console.log(req.body)
     const updateduser = await User.findOne({username:user.username})
-    console.log(updateduser)
+    // console.log(updateduser)
     res.status(200).send({message:"USER",payload:updateduser})
 }
 
@@ -196,4 +195,54 @@ const bookAppointment = async(req,res)=>
     }
 }
 
-module.exports={getuser,getusers,registerUser,userLogin,bookAppointment}
+// SEE ALL APPOINTMENTS
+const appointments = async(req,res)=>
+{
+    let username = req.body.username;
+    let userdetails = await User.findOne({username:username})
+    if (userdetails)
+    {
+        res.status(200).send({message:"USER APPOINTMENTS",payload:userdetails.appointments})
+    }
+    else
+    {
+        res.status(200).send({message:"Unable to retrieve appointments"})
+    }
+}
+
+// EDIT APPOINTMENT
+const editappointment = async(req,res)=>
+{
+    let username = req.body.username
+    let id = req.body._id
+    let update = req.body.appointmentstatus
+    console.log(id)
+    console.log(update)
+    let userappointment = await User.findOne({"appointments._id":req.body._id})
+    // let userappointment = await User.findOneAndUpdate({username:username,"appointments._id":req.body._id},
+    // {
+    //     $set:
+    //     {
+    //         "appointments.$.appointmentstatus":update
+    //     }
+    // },
+    // {
+    //     returnOriginal:true
+    // })
+    console.log(userappointment)
+    // let appointment = await Appointment.findOneAndUpdate({_id:_id},
+    //     {
+    //         $set:{
+    //             "appointmentstatus":update
+    //             }
+    //     },
+    //     {
+    //         returnOriginal:false
+    //     })
+    // if (appointment)
+    // {
+    //     res.status(200).send({message:"APPOINTMENT SUCCESSFULLY EDITED",payload:appointment})
+    // }
+}
+
+module.exports={getuser,getusers,registerUser,userLogin,bookAppointment,appointments,editappointment}
