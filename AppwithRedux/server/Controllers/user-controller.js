@@ -199,10 +199,10 @@ const bookAppointment = async(req,res)=>
 const appointments = async(req,res)=>
 {
     let username = req.body.username;
-    let userdetails = await User.findOne({username:username})
-    if (userdetails)
+    let appointmentdetails = await Appointment.find({username:username})
+    if (appointmentdetails)
     {
-        res.status(200).send({message:"USER APPOINTMENTS",payload:userdetails.appointments})
+        res.status(200).send({message:"USER APPOINTMENTS",payload:appointmentdetails})
     }
     else
     {
@@ -210,39 +210,32 @@ const appointments = async(req,res)=>
     }
 }
 
-// EDIT APPOINTMENT
+// EDIT APPOINTMENT STATUS
 const editappointment = async(req,res)=>
 {
-    let username = req.body.username
-    let id = req.body._id
-    let update = req.body.appointmentstatus
-    console.log(id)
-    console.log(update)
-    let userappointment = await User.findOne({"appointments._id":req.body._id})
-    // let userappointment = await User.findOneAndUpdate({username:username,"appointments._id":req.body._id},
-    // {
-    //     $set:
-    //     {
-    //         "appointments.$.appointmentstatus":update
-    //     }
-    // },
-    // {
-    //     returnOriginal:true
-    // })
-    console.log(userappointment)
-    // let appointment = await Appointment.findOneAndUpdate({_id:_id},
-    //     {
-    //         $set:{
-    //             "appointmentstatus":update
-    //             }
-    //     },
-    //     {
-    //         returnOriginal:false
-    //     })
-    // if (appointment)
-    // {
-    //     res.status(200).send({message:"APPOINTMENT SUCCESSFULLY EDITED",payload:appointment})
-    // }
+    try
+    {
+        let username = req.body.username
+        let _id = req.body._id
+        let update = req.body.appointmentstatus
+        let appointment = await Appointment.findOneAndUpdate({username:username,_id:_id},
+            {
+                $set:{
+                    "appointmentstatus":update
+                    }
+            },
+            {
+                returnOriginal:false
+            })
+        if (appointment)
+        {
+            res.status(200).send({message:"APPOINTMENT SUCCESSFULLY EDITED",payload:appointment})
+        }
+    }
+    catch(err)
+    {
+        res.status(200).send(err.message)
+    }
 }
 
 module.exports={getuser,getusers,registerUser,userLogin,bookAppointment,appointments,editappointment}
