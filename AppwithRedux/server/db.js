@@ -98,17 +98,7 @@ const userSchema = new mongoose.Schema(
             type:Number,
             required:[true,"PINCODE IS REQUIRED"]
         },
-        appointments:
-        {
-            type:Array,
-            default:[]
-        },
         cart:
-        {
-            type:Array,
-            default:[]
-        },
-        orders:
         {
             type:Array,
             default:[]
@@ -236,6 +226,13 @@ const productSchema = new mongoose.Schema(
     }
 )
 
+// CREATE ORDERS SCHEMA
+const orderSchema = new mongoose.Schema(
+    {
+
+    }
+)
+
 // Create Model(Class) for Schemas
 // model for userSchema
 const User = mongoose.model('User',userSchema)
@@ -247,6 +244,8 @@ const Seller = mongoose.model('Seller',sellerSchema)
 const Appointment = mongoose.model('Appointment',appointmentSchema)
 // model for productSchema
 const Product = mongoose.model('Product',productSchema)
+// model for orderSchema
+const Order = mongoose.model('Order',orderSchema)
 
 // Export Models(classes)
-module.exports={User,Admin,Seller,Appointment,Product};
+module.exports={User,Admin,Seller,Appointment,Product,Order};
