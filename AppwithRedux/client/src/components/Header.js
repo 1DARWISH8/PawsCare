@@ -44,7 +44,7 @@ function Header() {
                       <NavLink className='nav-link' id='icon' to=''><i className="bi bi-house-door-fill"></i>HOME</NavLink>
                     </li>
                     <li className='nav-item'>
-                      <NavLink className='nav-link' id='icon' to='/home/appointment'><i className="bi bi-calendar"></i>BOOK APPOINTMENT</NavLink>
+                      <NavLink className='nav-link' id='icon' to='/home/appointment'><i className="bi bi-calendar"></i>APPOINTMENTS</NavLink>
                     </li>
                     <li className='nav-item'>
                       <NavLink className='nav-link' id='icon' to='/store/food'><i className="bi bi-shop"></i>STORE</NavLink>
