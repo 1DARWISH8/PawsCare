@@ -23,6 +23,7 @@ import Checkout from './components/Checkout';
 import Checkappointment from './components/admin/Checkappointments';
 import Manageusers from './components/admin/Manageusers';
 import Managestore from './components/admin/Managestore'
+import Bookappointment from './components/Bookappointment';
 
 
 function App() {
@@ -101,6 +102,10 @@ function App() {
         {
           path:'/home/appointment',
           element:<Appointment/>
+        },
+        {
+          path:'/home/bookappointment',
+          element:<Bookappointment/>
         },
         {
           path:'appointment/appointsuccess',
