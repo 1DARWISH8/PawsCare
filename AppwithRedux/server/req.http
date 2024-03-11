@@ -1,0 +1,115 @@
+POST http://localhost:5000/user-api/registeruser
+Content-Type: application/json
+
+{
+    "userType":"user",
+    "username":"WENDY",
+    "password":"WENDY",
+    "email":"wendy@gmail.com",
+    "petname":"buggie",
+    "dob":"12/12/1212",
+    "petanimal":"bat",
+    "phonenumber":1423232323,
+    "address":"FLORIDA,USA",
+    "pincode":"474744"
+}
+
+###
+POST http://localhost:5000/user-api/registeruser
+Content-Type: application/json
+
+{
+    "userType":"admin",
+    "username":"CHRISTY",
+    "password":"CHRISTY",
+    "email":"christy@gmail.com"
+}
+
+###
+POST http://localhost:5000/user-api/getuser
+Content-Type: application/json
+
+{
+    "username":"HENRY"
+}
+
+
+###
+#BOOKING AN APPOINTMENT
+POST http://localhost:5000/user-api/bookappointment
+Content-Type: application/json
+
+{
+    "username":"HENRY",
+    "petname":"Ginger",
+    "service":"GROOMING",
+    "location":"HYDERABAD",
+    "date":"01/01/2021",
+    "time":"10:38 PM"
+}
+
+###
+# get all appointments
+POST http://localhost:5000/user-api/appointments
+Content-Type: application/json
+
+{
+    "username":"HENRY"
+}
+
+###
+# edit appointment
+POST http://localhost:5000/user-api/editappointment
+Content-Type: application/json
+
+{
+    "username":"HENRY",
+    "_id": "65ec26b36f2b41aa3f2422a0",
+    "appointmentstatus":"CANCELLED",
+    "petname":"Ginger",
+    "service":"HEALTH CHECK UP",
+    "location":"DELHI",
+    "date":"2024-03-24T00:00:00.000+00:00",
+    "time":"16:40",
+    "bookingtime":"2024-03-09T09:06:59.757+00:00",
+    "__v":0
+}
+
+###
+GET http://localhost:5000/admin-api/getadmin
+
+
+###
+#get all appointments
+GET http://localhost:5000/admin-api/getallappointments
+
+###
+#get pending appointments
+GET http://localhost:5000/admin-api/pendingappointments
+
+###
+#get pending appointments according to input
+POST http://localhost:5000/admin-api/pendingappointment
+Content-Type: application/json
+
+{
+    "service":"TRAINING",
+    "location":"BANGALORE"
+}
+
+###
+#get cancelled appointments
+GET http://localhost:5000/admin-api/cancelledappointments
+
+###
+GET http://localhost:5000/seller-api/getseller
+
+###
+POST http://localhost:5000/user-api/login
+Content-Type: application/json
+
+{
+    "userType":"admin",
+    "username":"CHRISTY",
+    "password":"CHRISTY"
+}
