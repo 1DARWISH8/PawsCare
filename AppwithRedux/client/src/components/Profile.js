@@ -8,6 +8,7 @@ function Profile() {
     let navigate=useNavigate()
 	let dispatch = useDispatch()
 	let {currentUser}=useSelector(state=>state.userLogin)
+	let userType = currentUser.userType
 
 
     function logout()
@@ -19,7 +20,10 @@ function Profile() {
 
 return (
     <div>
-        <div className='text-center'>
+		{
+			userType==='user'?
+			<>
+			<div className='text-center'>
         </div>
         <div className="container pt-3">
 		<div className="main-body">
@@ -145,6 +149,16 @@ return (
 			</div>
 		</div>
 	</div>
+			</>
+			:
+			<>
+			<div>
+				<h1>{currentUser.username}</h1>
+				<button className='btn btn-danger p-2 mt-3 fw-bold' onClick={logout}>LOG OUT</button>
+			</div>
+			</>
+		}
+        
     </div>
 )
 }
