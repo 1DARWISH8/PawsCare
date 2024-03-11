@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken')
 const cloudinary = require('../Middlewares/cloudinaryUpload')
 // import fs (filesystem) module
 const fs = require('fs');
+const { Axios } = require('axios');
 
 // get admins
 const getadmin = async(req,res)=>
@@ -58,6 +59,31 @@ const pendingappointments = async(req,res)=>
     }
 }
 
+// GET PENDING APPOINTMENTS ACCORDING TO THE LOCATION,SERVICE,DATE
+const pendingappointment = async(req,res)=>
+{
+    try
+    {
+        let service = req.body.service
+        let location = req.body.location
+        let date = req.body.date
+        let appointments = await Appointment.find({service:service,location:location,date:date,appointmentstatus:"PENDING"})
+        if (appointments)
+        {
+            res.status(200).send({message:"APPOINTMENTS",payload:appointments})
+        }
+        else
+        {
+            res.status(200).send({message:"UNABLE IN FETCH APPOINTMENTS"})
+        }
+    }
+    catch(err)
+    {
+        res.status(200).send(err.message)
+    }
+}
+
+
 // get all cancelled appointments
 const cancelledappointments = async(req,res)=>
 {
@@ -79,4 +105,4 @@ const cancelledappointments = async(req,res)=>
     }
 }
 
-module.exports={getadmin,getallappointments,pendingappointments,cancelledappointments}
+module.exports={getadmin,getallappointments,pendingappointments,pendingappointment,cancelledappointments}
