@@ -222,7 +222,66 @@ const appointmentSchema = new mongoose.Schema(
 // CREATE PRODUCT SCHEMA
 const productSchema = new mongoose.Schema(
     {
-
+        productname:
+        {
+            type:String,
+            required:true
+        },
+        productid:
+        {
+            type:String,
+            required:true
+        },
+        status:
+        {
+            type:String,
+            default:"ACTIVE",
+            enum:['ACTIVE','INACTIVE']
+        },
+        description:
+        {
+            type:String,
+            required:true
+        },
+        Category:
+        {
+            type:String,
+            required:true
+        },
+        Brand:
+        {
+            type:String,
+            required:true
+        },
+        price:
+        {
+            type:Number,
+            required:true
+        },
+        stock:
+        {
+            type:String,
+            default:"In Stock",
+            enum:['In Stock','Out of Stock']
+        },
+        Images:
+        {
+            type:String,
+            required:true
+        },
+        reviews: [{
+            user: {
+                type: String,
+                required: true
+            },
+            rating: {
+                type: Number,
+                min: 0,
+                max: 5,
+                required: true
+                },
+            comment: String
+        }]
     }
 )
 
