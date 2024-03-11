@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { userLoginContext } from '../contexts/userLoginContext'
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
 import {useNavigate} from 'react-router-dom'
@@ -11,7 +10,6 @@ function Bookappointment() {
 
     let navigate= useNavigate()
     let {currentUser}=useSelector(state=>state.userLogin)
-    // let [currentUser,setCurrentUser]=useContext(userLoginContext)
     let [error,setError]=useState('')
     let {register,handleSubmit,formState:{errors}}=useForm()
 
@@ -40,13 +38,22 @@ function Bookappointment() {
 
     const today = new Date().toISOString().split('T')[0];
 
+    // const availableTimeSlots = [];
+    // for (let hour = 9; hour < 18; hour++)
+    // {
+    //     for (let minutes = 0 ; minutes < 60; minutes +=30)
+    //     {
+    //         availableTimeSlots.push
+    //         (`${hour.toString().padStart(2,'0')}:${minutes.toString().padStart(2,'0')}`);
+    //     }
+    // }
+
     const availableTimeSlots = [];
-    for (let hour = 9; hour < 18; hour++)
-    {
-        for (let minutes = 0 ; minutes < 60; minutes +=30)
-        {
-            availableTimeSlots.push(`${hour.toString().padStart(2,'0')}:${minutes.toString().padStart(2,'0')}`);
-        }
+    for (let hour = 9; hour <= 19; hour++) {
+    const hour12 = hour > 12 ? hour - 12 : hour;
+    const meridiem = hour >= 12 ? 'PM' : 'AM';
+    availableTimeSlots.push(`${hour12.toString().padStart(2, '0')}:00 ${meridiem}`);
+    availableTimeSlots.push(`${hour12.toString().padStart(2, '0')}:30 ${meridiem}`);
     }
 
     async function getappointments()
