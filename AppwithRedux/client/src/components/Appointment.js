@@ -1,23 +1,15 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { userLoginContext } from '../contexts/userLoginContext'
-import { useForm } from 'react-hook-form'
+import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import {useNavigate} from 'react-router-dom'
-import { NavLink } from 'react-router-dom'
 import {useSelector} from 'react-redux'
-import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 
 function Appointment() {
 
     let navigate= useNavigate()
     let {currentUser}=useSelector(state=>state.userLogin)
-    // let [currentUser,setCurrentUser]=useContext(userLoginContext)
     let [error,setError]=useState('')
-    // let {register,handleSubmit,formState:{errors}}=useForm()
-    // let [booking,setBooking]=useState(true)
     let [appointmentsdata,setAppointmentsdata]=useState('')
-    // let appointmentsdata
     // console.log(booking)
 
 
@@ -60,7 +52,7 @@ function Appointment() {
     }
 
 return (
-    <div>
+    <div className='text-center'>
         <button className='btn btn-warning' onClick={bookappointment}>BOOK APPOINTMENTS</button>
         {error.length!==0&& <p className='fw-bold text-center text-danger border-0'>{error}</p>}
         {appointmentsdata.length&&
@@ -74,11 +66,12 @@ return (
                                     <Card.Title>
                                         SERVICE:{appointment.service}
                                         <span>
-                                            {appointment.appointmentstatus!=="CANCELLED"?
+                                            {(appointment.appointmentstatus==="CANCELLED"||appointment.appointmentstatus==="COMPLETE")?
+                                            <>
+                                            </>:
                                             <>
                                             <button className='btn btn-danger' onClick={()=>cancelappointment(appointment)}>CANCEL</button>
-                                            </>:
-                                            <></>
+                                            </>
                                             }
                                         </span>
                                     </Card.Title>
