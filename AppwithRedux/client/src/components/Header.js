@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 // logo image is imported from the images folder
 import logo from "../images/pawscarelogo.png"
@@ -9,6 +9,12 @@ import {useSelector} from 'react-redux'
 function Header() {
   // import userloginSlice from reducer store
   let {currentUser,loginStatus} = useSelector(state=>state.userLogin)
+
+    const [isOpen, setIsOpen] = useState(false);
+  
+    const toggleDropdown = () => {
+      setIsOpen(!isOpen);
+    };
 
 
   return (
