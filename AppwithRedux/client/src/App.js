@@ -24,6 +24,9 @@ import Checkappointment from './components/admin/Checkappointments';
 import Manageusers from './components/admin/Manageusers';
 import Managestore from './components/admin/Managestore'
 import Bookappointment from './components/Bookappointment';
+import Addproducts from './components/admin/Addproducts';
+import Editproduct from './components/admin/Editproduct';
+import Deletedproduct from './components/admin/Deletedproduct';
 
 
 function App() {
@@ -126,6 +129,18 @@ function App() {
         {
           path:'/admin/managestore',
           element:<Managestore/>
+        },
+        {
+          path:'/admin/addproduct',
+          element:<Addproducts/>
+        },
+        {
+          path:'/admin/editproduct',
+          element:<Editproduct/>
+        },
+        {
+          path:'/admin/deletedproducts',
+          element:<Deletedproduct/>
         }
       ]
     }
