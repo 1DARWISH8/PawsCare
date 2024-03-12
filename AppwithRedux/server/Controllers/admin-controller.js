@@ -144,4 +144,186 @@ const cancelledappointments = async(req,res)=>
     }
 }
 
-module.exports={getadmin,getusers,changeuserstatus,getallappointments,pendingappointments,pendingappointment,cancelledappointments}
+// get products
+const getproducts = async(req,res)=>
+{
+    try
+    {
+        let products = await Product.find({status:"ACTIVE"})
+        if (products)
+        {
+            res.status(200).send({message:"PRODUCTS",payload:products})
+        }
+    }
+    catch(err)
+    {
+        res.status(200).send(err.message)
+    }
+}
+
+// add product
+const addproduct = async (req,res)=>
+{
+    try
+    {
+        let data = JSON.parse(req.body.data)
+        console.log(data)
+
+        let added = await Product.create(data)
+        if (added)
+        {
+            res.status(201).send({message:"Product Added",payload:added})
+        }
+        else
+        {
+            res.status(200).send({message:"ERROR IN ADDING PRODUCTS"})
+        }
+    }
+    catch(err)
+    {
+        res.status(200).send(err.message)
+    }
+}
+
+
+// edit product
+// get the exact product data
+const getaproduct = async(req,res)=>
+{
+    try
+    {
+        let productdata = req.body
+        let product = await Product.findOne({_id:productdata._id})
+        if (product)
+        {
+            res.status(200).send({message:"Product",payload:product})
+        }
+        else
+        {
+            res.status(200).send({message:"UNABLE TO FETCH DATA"})
+        }
+    }
+    catch(err)
+    {
+        res.status(200).send(err.message)
+    }
+}
+
+
+// EDIT A PRE-EXISTING PRODUCT
+const editproduct =async (req,res)=>
+{
+    try
+    {
+        let data = JSON.parse(req.body.data)
+        console.log(data)
+
+        let added = await Product.findOneAndUpdate({productid:data.productid},
+            {
+                $set:
+                {
+                    
+                }
+            },
+            {})
+        if (added)
+        {
+            res.status(201).send({message:"Product Added",payload:added})
+        }
+        else
+        {
+            res.status(200).send({message:"ERROR IN ADDING PRODUCTS"})
+        }
+    }
+    catch(err)
+    {
+        res.status(200).send(err.message)
+    }
+}
+
+// DELETE A PRODUCT BY DEACTIVATING 
+const deactivateproduct = async(req,res)=>
+{
+    try
+    {
+        let data = req.body
+        // console.log(req.body)
+        let deactivated = await Product.findOneAndUpdate({_id:data._id},
+            {
+                $set:
+                {
+                    "status":"INACTIVE"
+                }
+            },
+            {
+                returnDocument:false
+            })
+        if (deactivated)
+        {
+            res.status(200).send({message:"Product Deactivated"})
+        }
+        else
+        {
+            res.status(200).send({message:"ERROR WHILE DEACTIVATION"})
+        }
+    }
+    catch(err)
+    {
+        res.status(200).send(err.message)
+    }
+}
+
+// RESTORE A PRODUCT STATUS TO ACTIVE
+const activateproduct = async(req,res)=>
+{
+    try
+    {
+        let data = req.body
+        let activated = await Product.findOneAndUpdate({_id:data._id},
+            {
+                $set:
+                {
+                    "status":"ACTIVE"
+                }
+            },
+            {
+                returnDocument:false
+            })
+        if (activated)
+        {
+            res.status(200).send({message:"Product Activated"})
+        }
+        else
+        {
+            res.status(200).send({message:"ERROR WHILE ACTIVATION"})
+        }
+    }
+    catch(err)
+    {
+        res.status(200).send(err.message)
+    }
+}
+
+// GET ALL INACTIVE PRODUCTS
+const inactiveproducts = async (req,res)=>
+{
+    try
+    {
+        let products = await Product.find({status:"INACTIVE"})
+        if (products)
+        {
+            res.status(200).send({message:"ALL INACTIVE PRODUCTS",payload:products})
+        }
+        else
+        {
+            res.status(200).send({message:"UNABLE TO FETCH PRODUCTS"})
+        }
+    }
+    catch(err)
+    {
+        res.status(200).send(err.message)
+    }
+}
+
+
+module.exports={getadmin,getusers,changeuserstatus,getallappointments,pendingappointments,pendingappointment,cancelledappointments,getproducts,addproduct,getaproduct,editproduct,deactivateproduct,activateproduct,inactiveproducts}
