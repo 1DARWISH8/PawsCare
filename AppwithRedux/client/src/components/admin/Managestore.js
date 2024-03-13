@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useNavigate,NavLink } from 'react-router-dom'
+import { productDetailsPromiseStatus } from '../../redux/slices/productDetailsSlice'
+import {useDispatch,useSelector} from 'react-redux'
+import { reFresh } from '../../redux/slices/productDetailsSlice'
 
 function Managestore() 
 {
   let [products,setProducts]=useState([])
   let [error,setError] =useState('')
   let navigate = useNavigate()
+  let dispatch = useDispatch()
+  let {productSelected,errorMessage} = useSelector(state=>state.productdetails)
+
   
   async function viewproducts()
   {
@@ -36,8 +42,11 @@ function Managestore()
 
   function edit(item)
   {
-
+    dispatch(productDetailsPromiseStatus(item))
+    navigate('/admin/editproduct')
   }
+
+
 
   async function deleteproduct(item)
   {
@@ -55,7 +64,8 @@ function Managestore()
     }
   }
 
-  useEffect(()=>viewproducts,[])
+  useEffect(()=>
+  viewproducts,[])
   
   return (
     <div>
@@ -73,7 +83,7 @@ function Managestore()
                             <h5 className='card-title'>{item.productname}</h5>
                             <p className='card-text'>Rs.{item.price}</p>
                             <span>
-                            <button className='btn btn-success' onClick={()=>edit(item)}>EDIT</button>    
+                            <NavLink className='btn btn-success' onClick={()=>edit(item)}>EDIT</NavLink>    
                             <button className='btn btn-danger' onClick={()=>deleteproduct(item)}>DELETE</button>    
                             </span>
                         </div>
