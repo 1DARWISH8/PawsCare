@@ -196,7 +196,7 @@ const getaproduct = async(req,res)=>
         let product = await Product.findOne({_id:productdata._id})
         if (product)
         {
-            res.status(200).send({message:"Product",payload:product})
+            res.status(200).send({message:"Product",product:product})
         }
         else
         {
