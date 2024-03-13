@@ -11,6 +11,7 @@ export const userDetailsPromiseStatus = createAsyncThunk(
             console.log(data)
             let res = await axios.post('http://localhost:5000/user-api/getuser',data)
             console.log(res)
+            return res.data
         }
         catch(err)
         {
