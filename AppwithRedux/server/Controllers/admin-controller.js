@@ -216,23 +216,30 @@ const editproduct =async (req,res)=>
     try
     {
         let data = JSON.parse(req.body.data)
-        console.log(data)
+        // console.log(data)
 
-        let added = await Product.findOneAndUpdate({productid:data.productid},
+        let edited = await Product.findOneAndUpdate({_id:data._id},
             {
                 $set:
                 {
-                    
+                    "productname":data.productname,
+                    "productid":data.productid,
+                    "description":data.description,
+                    "category":data.category,
+                    "brand":data.brand,
+                    "price":data.price,
                 }
             },
-            {})
-        if (added)
+            {
+                returnOriginal:false
+            })
+        if (edited)
         {
-            res.status(201).send({message:"Product Added",payload:added})
+            res.status(201).send({message:"Product Edited",payload:edited})
         }
         else
         {
-            res.status(200).send({message:"ERROR IN ADDING PRODUCTS"})
+            res.status(200).send({message:"ERROR IN EDITING PRODUCTS"})
         }
     }
     catch(err)
