@@ -6,6 +6,8 @@ function Manageusers() {
 
   let [users,setUsers] = useState('')
   let [error,setError] = useState('')
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
 
   async function deactivateuser(user)
   {
@@ -49,6 +51,7 @@ function Manageusers() {
       if (users)
       {
         setUsers(users.data.payload)
+        setSearchResults(users.data.payload)
       }     
     }
     catch(err)
@@ -59,15 +62,29 @@ function Manageusers() {
 
   useEffect(()=>getusers,[])
 
+  const handleChange = (e) => {
+    setSearchTerm(e.target.value);
+    const results = users.filter(user =>
+    user.username.toLowerCase().includes(e.target.value.toLowerCase())
+    );
+    setSearchResults(results);
+};
 
   return (
-    <div>USERS
-      {users.length?
+    <div>
+      {error.length!==0&&<p>{error}</p>}
+      <input
+            type="text"
+            placeholder="Search by username"
+            value={searchTerm}
+            onChange={handleChange}
+        />
+      {searchResults.length?
       <>
         <table>
             <tbody>
                 {
-                    users.map((user,index)=>(
+                    searchResults.map((user,index)=>(
                         <tr key={index}>
                             <Card className='m-3'>
                                 <Card.Body>
