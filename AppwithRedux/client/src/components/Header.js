@@ -5,16 +5,23 @@ import logo from "../images/pawscarelogo.png"
 // userLoginContext is imported, to use the created context store
 import './Header.css'
 import {useSelector} from 'react-redux'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { faAngleDown, faHome, faUser, faShoppingCart, faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import './Dropdown.css';
 
 function Header() {
   // import userloginSlice from reducer store
   let {currentUser,loginStatus} = useSelector(state=>state.userLogin)
 
-    const [isOpen, setIsOpen] = useState(false);
-  
-    const toggleDropdown = () => {
-      setIsOpen(!isOpen);
-    };
+        const [isOpen, setIsOpen] = useState(false);
+    
+      const toggleDropdown = () => {
+        setIsOpen(!isOpen);
+      };
+
+      const closeDropdown = () => {
+        setIsOpen(false);
+      };
 
 
   return (
@@ -66,9 +73,20 @@ function Header() {
                     <li className='nav-item '>
                       <NavLink className='nav-link' id='icon' to=''><i className="bi bi-house-door-fill"></i>HOME</NavLink>
                     </li>
-                    <li className='nav-item'>
-                      <NavLink className='nav-link' id='icon' to='/admin/checkappointment'><i className="bi bi-calendar"></i>CHECK APPOINTMENTS</NavLink>
-                    </li>
+                    {/* <li className='nav-item' onMouseEnter={toggleDropdown} onMouseLeave={toggleDropdown}> */}
+                      {/* <NavLink className='nav-link' id='icon' to='/admin/checkappointment'><i className="bi bi-calendar"></i>APPOINTMENTS</NavLink> */}
+                      <div className="dropdown" onMouseEnter={toggleDropdown} onMouseLeave={closeDropdown}>
+                        <button className="dropbtn">
+                        <i className="bi bi-calendar"></i>APPOINTMENTS
+                        </button>
+                        {isOpen && (
+                          <div className="dropdown-content">
+                            <NavLink to="/admin/checkappointment" onClick={closeDropdown}><i className="bi bi-calendar"></i> CHECK APPOINTMENTS</NavLink>
+                            <NavLink to="/admin/bookuserappointment" onClick={closeDropdown}><i className="bi bi-calendar"></i> BOOK APPOINTMENTS</NavLink>
+                          </div>
+                        )}
+                      </div>
+                    {/* </li> */}
                     <li className='nav-item'>
                       <NavLink className='nav-link' id='icon' to='/admin/managestore'><i className="bi bi-shop"></i>MANAGE STORE</NavLink>
                     </li>
@@ -77,7 +95,7 @@ function Header() {
                     </li>
                   </>
                 }
-
+                
                 <li className='nav-item'>
                   <NavLink className='nav-link' id='icon' to='profile'>PROFILE<i className="bi bi-person-circle"></i></NavLink>
                 </li>
