@@ -21,6 +21,8 @@ function Editproduct() {
 
     async function formSubmit(data)
     {
+        let _id = presentItem._id
+        data = {...data,_id}
         console.log(data)
         const formData = new FormData();
         formData.append('data',JSON.stringify(data))
@@ -28,7 +30,7 @@ function Editproduct() {
 
         try
         {
-            let res = await axios.post('http://localhost:5000/admin-api/addproduct',formData)
+            let res = await axios.post('http://localhost:5000/admin-api/editproduct',formData)
             console.log(res)
             if (res.status===201)
             {
@@ -70,7 +72,7 @@ return (
         </div>
         <div className="mb-3">
             <label htmlFor="category" className="form-label">Category:</label>
-            <select className="form-control" id="category" name="category" defaultValue={presentItem.category} {...register("category",{required:true})}>
+            <select className="form-control" id="category" name="category"  {...register("category",{required:true})}>
             <option value="">SELECT</option>
             <option value="Food">Food</option>
             <option value="Treats">Treats</option>
