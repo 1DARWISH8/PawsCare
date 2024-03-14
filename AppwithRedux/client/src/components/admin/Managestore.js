@@ -11,8 +11,10 @@ function Managestore()
   let [error,setError] =useState('')
   let navigate = useNavigate()
   let dispatch = useDispatch()
-  let {productSelected,errorMessage} = useSelector(state=>state.productdetails)
-
+  // let {productSelected,errorMessage} = useSelector(state=>state.productdetails)
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  
   
   async function viewproducts()
   {
@@ -22,6 +24,7 @@ function Managestore()
       if (products)
       {
         setProducts(products.data.payload)
+        setSearchResults(products.data.payload)
         // console.log(products.data.payload)
       }
     }
@@ -42,6 +45,7 @@ function Managestore()
 
   function edit(item)
   {
+    // console.log(item)
     dispatch(productDetailsPromiseStatus(item))
     navigate('/admin/editproduct')
   }
@@ -64,17 +68,32 @@ function Managestore()
     }
   }
 
-  useEffect(()=>
-  viewproducts,[])
+  useEffect(()=>viewproducts,[])
+
+const handleChange = (e) => {
+    setSearchTerm(e.target.value);
+    const results = products.filter(product =>
+    product.productname.toLowerCase().includes(e.target.value.toLowerCase())
+    );
+    setSearchResults(results);
+};
   
   return (
     <div>
       <button className='btn btn-primary m-3' onClick={addproducts}>ADD PRODUCTS</button>
       <button className='btn btn-primary m-3' onClick={deletedproducts}>DELETED PRODUCTS</button>
+      
+
+        <input
+            type="text"
+            placeholder="Search by product name"
+            value={searchTerm}
+            onChange={handleChange}
+        />
 
       <div className='container pt-2'>
             <div className='row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-4 g-4'>
-            {products.map((item,index)=>
+            {searchResults.map((item,index)=>
             (
                 <div className='col pt-3 pb-3'  key={index}>
                     <div className='card' style={{height:'500px'}}>
