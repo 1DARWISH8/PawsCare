@@ -21,7 +21,7 @@ function Appointment() {
             appointmentsdata  = await axios.post('http://localhost:5000/user-api/appointments',currentUser)
             appointmentsdata = appointmentsdata.data.payload
             setAppointmentsdata(appointmentsdata)
-            console.log(appointmentsdata)
+            // console.log(appointmentsdata)
         }
         catch(err)
         {
@@ -42,7 +42,22 @@ function Appointment() {
         {
             appointment.appointmentstatus="CANCELLED"
             let cancelled = await axios.post('http://localhost:5000/user-api/editappointment',appointment)
-            console.log(cancelled)
+            // console.log(cancelled)
+            getappointments()
+        }
+        catch(err)
+        {
+            setError(err.message)
+        }
+    }
+
+    async function rescheduleappointment(appointment)
+    {
+        try
+        {
+            // appointment.appointmentstatus="CANCELLED"
+            // let cancelled = await axios.post('http://localhost:5000/user-api/editappointment',appointment)
+            // console.log(cancelled)
             getappointments()
         }
         catch(err)
@@ -66,11 +81,10 @@ return (
                                     <Card.Title>
                                         SERVICE:{appointment.service}
                                         <span>
-                                            {(appointment.appointmentstatus==="CANCELLED"||appointment.appointmentstatus==="COMPLETE")?
-                                            <>
-                                            </>:
+                                            {appointment.appointmentstatus==="PENDING"&&
                                             <>
                                             <button className='btn btn-danger' onClick={()=>cancelappointment(appointment)}>CANCEL</button>
+                                            <button className='btn btn-primary' onClick={()=>rescheduleappointment(appointment)}>RESCHEDULE</button>
                                             </>
                                             }
                                         </span>
