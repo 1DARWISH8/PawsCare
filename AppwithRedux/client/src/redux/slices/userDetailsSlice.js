@@ -1,24 +1,26 @@
-import {createSlice,createAsyncThunk} from '@reduxjs/toolkit'
+import {createSlice,createAsyncThunk, isPending} from '@reduxjs/toolkit'
 import axios from 'axios'
 
-// Use createAsyncThunk middleware 
+// createAsynThunk middleware
 export const userDetailsPromiseStatus = createAsyncThunk(
     'user-details',
     async(data,thunkAPI)=>
     {
         try
         {
-            console.log(data)
             let res = await axios.post('http://localhost:5000/user-api/getuser',data)
-            console.log(res)
+            if (res.data.message !== 'USER')
+            {
+                return thunkAPI.rejectWithValue(res.data)
+            }
             return res.data
         }
         catch(err)
         {
             return thunkAPI.rejectWithValue(err)
         }
-    })
-
+    }
+)
 
 const userDetailsSlice = createSlice(
     {
@@ -29,7 +31,8 @@ const userDetailsSlice = createSlice(
             errorMessage:'',
             isPending:false
         },
-        reducers:{},
+        reducers:
+        {},
         extraReducers:builder=>
         builder.addCase(userDetailsPromiseStatus.pending,(state,action)=>
         {
@@ -38,7 +41,7 @@ const userDetailsSlice = createSlice(
         .addCase(userDetailsPromiseStatus.fulfilled,(state,action)=>
         {
             state.presentUser=action.payload;
-            console.log(state.presentUser)
+            // console.log(state.presentUser)
             state.errorMessage='';
             state.isPending=false;
         })
@@ -51,7 +54,6 @@ const userDetailsSlice = createSlice(
     }
 )
 
-// export actions
 export const {} = userDetailsSlice.actions;
-// export root reducer
-export default userDetailsSlice.reducer;
+
+export default userDetailsSlice.reducer
