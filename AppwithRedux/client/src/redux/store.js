@@ -1,8 +1,9 @@
 import {configureStore} from '@reduxjs/toolkit'
 import userLoginSlice from './slices/userLoginSlice'
 import usercartSlice from './slices/usercartSlice'
-import userDetailsSlice from './slices/userDetailsSlice'
 import productDetailsSlice from './slices/productDetailsSlice'
+import userDetailsSlice from './slices/userDetailsSlice'
+import userselectedDetailsSlice from './slices/userselectedDetailsSlice'
 
 export const store=configureStore(
     {
@@ -11,6 +12,7 @@ export const store=configureStore(
             userLogin:userLoginSlice,
             usercart:usercartSlice,
             userdetails:userDetailsSlice,
+            userselected:userselectedDetailsSlice,
             productdetails:productDetailsSlice
         }
     }
