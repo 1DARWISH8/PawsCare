@@ -28,6 +28,7 @@ import Addproducts from './components/admin/Addproducts';
 import Editproduct from './components/admin/Editproduct';
 import Deletedproduct from './components/admin/Deletedproduct';
 import Bookuserappointment from './components/admin/Bookuserappointment';
+import Adminbookappointment from './components/admin/Adminbookappointment';
 
 
 function App() {
@@ -126,6 +127,10 @@ function App() {
         {
           path:'/admin/bookuserappointment',
           element:<Bookuserappointment/>
+        },
+        {
+          path:'/admin/adminbookappointment',
+          element:<Adminbookappointment/>
         },
         {
           path:'/admin/manageusers',
