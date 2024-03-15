@@ -174,20 +174,9 @@ const bookAppointment = async(req,res)=>
 {
     let details = req.body;
     let bookappointment = await Appointment.create(details)
-    let appointmentbooked = await User.findOneAndUpdate({username:details.username},
-        {
-            $push:
-            {
-                "appointments":bookappointment
-            },
-        },
-            {
-                returnOriginal:false
-            }
-        )
-    if (appointmentbooked && bookappointment)
+    if (bookappointment)
     {
-        res.status(200).send({message:"APPOINTMENT IS BOOKED",payload:appointmentbooked})
+        res.status(201).send({message:"APPOINTMENT IS BOOKED",payload:bookappointment})
     }
     else
     {
