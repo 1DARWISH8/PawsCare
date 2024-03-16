@@ -29,6 +29,7 @@ import Editproduct from './components/admin/Editproduct';
 import Deletedproduct from './components/admin/Deletedproduct';
 import Bookuserappointment from './components/admin/Bookuserappointment';
 import Adminbookappointment from './components/admin/Adminbookappointment';
+import Userprofile from './components/admin/Userprofile';
 
 
 function App() {
@@ -151,6 +152,10 @@ function App() {
         {
           path:'/admin/deletedproducts',
           element:<Deletedproduct/>
+        },
+        {
+          path:'/admin/userprofile',
+          element:<Userprofile/>
         }
       ]
     }
