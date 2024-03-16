@@ -7,12 +7,13 @@ import {useSelector} from 'react-redux'
 
 function Adminbookappointment() {
 
-  let {selectedUser} = useSelector(state=>state.userselected)
-  let [error,setError]=useState('')
-  let navigate= useNavigate()
-  let {register,handleSubmit,formState:{errors}}=useForm()
+    let {selectedUser} = useSelector(state=>state.userselected)
+    console.log(selectedUser)
+    let [error,setError]=useState('')
+    let navigate= useNavigate()
+    let {register,handleSubmit,formState:{errors}}=useForm()
 
-  async function formSubmit(data)
+    async function formSubmit(data)
     {
         // store in local api
         try
