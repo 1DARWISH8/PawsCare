@@ -1,13 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import Card from 'react-bootstrap/Card';
+import {useDispatch} from 'react-redux'
+import { userselectedDetailsPromiseSlice } from '../../redux/slices/userselectedDetailsSlice';
+import {useNavigate} from 'react-router-dom'
+import Spinner from 'react-bootstrap/Spinner';
 
 function Manageusers() {
 
   let [users,setUsers] = useState('')
-  let [error,setError] = useState('')
+  let [error,setError] = useState([])
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  let dispatch = useDispatch()
+  let navigate= useNavigate()
+
+
 
   async function deactivateuser(user)
   {
@@ -22,7 +30,7 @@ function Manageusers() {
     }
     catch(err)
     {
-      setError(err)
+      setError(err.message)
     }
   }
 
@@ -39,7 +47,7 @@ function Manageusers() {
     }
     catch(err)
     {
-      setError(err)
+      setError(err.message)
     }
   }
 
@@ -70,6 +78,12 @@ function Manageusers() {
     setSearchResults(results);
 };
 
+async function openprofile(user)
+    {
+        dispatch(userselectedDetailsPromiseSlice(user))
+        navigate('/admin/userprofile')
+    }
+
   return (
     <div>
       {error.length!==0&&<p>{error}</p>}
@@ -85,7 +99,7 @@ function Manageusers() {
             <tbody>
                 {
                     searchResults.map((user,index)=>(
-                        <tr key={index}>
+                        <tr key={index} onClick={()=>openprofile(user)}>
                             <Card className='m-3'>
                                 <Card.Body>
                                     <Card.Title>
@@ -109,6 +123,9 @@ function Manageusers() {
         </table>
       </>:
       <>
+      <Spinner animation="border" role="status">
+      <span className="visually-hidden">Loading...</span>
+    </Spinner>
       <h5>NO USERS TO SHOW</h5>
       </>
         }
