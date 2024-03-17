@@ -1,5 +1,4 @@
 // import mongoose
-// const { type } = require('@testing-library/user-event/dist/type');
 const { type } = require('@testing-library/user-event/dist/type');
 const mongoose = require('mongoose')
 require('dotenv').config()
@@ -219,18 +218,50 @@ const appointmentSchema = new mongoose.Schema(
     }
 )
 
+// DAY APPOINTMENT SCHEMA TO KEEP TRACK OF APPOINTMENTS
+const appointmentDaySchema = new mongoose.Schema(
+    {
+        date:
+        {
+            type:Date,
+            required:true
+        },
+        slots:
+        [
+            {
+                time:
+                {
+                    type:String,
+                    required:true
+                },
+                location:
+                {
+                    type:String,
+                    default:'HYDERABAD'
+                },
+                status:
+                {
+                    type:String,
+                    enum:['available','booked'],
+                    default:'available'
+                }
+            }
+        ]
+    }
+)
+
 // CREATE PRODUCT SCHEMA
 const productSchema = new mongoose.Schema(
     {
         productname:
         {
             type:String,
-            required:true
+            required:[true,"PRODUCTNAME IS REQUIRED"]
         },
         productid:
         {
             type:String,
-            required:true
+            required:[true,"ID IS REQUIRED"]
         },
         status:
         {
@@ -241,22 +272,22 @@ const productSchema = new mongoose.Schema(
         description:
         {
             type:String,
-            required:true
+            required:[true,"DESCRIPTION IS REQUIRED"]
         },
-        Category:
+        category:
         {
             type:String,
-            required:true
+            required:[true,"CATEGORY IS REQUIRED"]
         },
-        Brand:
+        brand:
         {
             type:String,
-            required:true
+            required:[true,"BRAND IS REQUIRED"]
         },
         price:
         {
             type:Number,
-            required:true
+            required:[true,"PRICE IS REQUIRED"]
         },
         stock:
         {
@@ -264,24 +295,24 @@ const productSchema = new mongoose.Schema(
             default:"In Stock",
             enum:['In Stock','Out of Stock']
         },
-        Images:
+        image:
         {
             type:String,
-            required:true
-        },
-        reviews: [{
-            user: {
-                type: String,
-                required: true
-            },
-            rating: {
-                type: Number,
-                min: 0,
-                max: 5,
-                required: true
-                },
-            comment: String
-        }]
+        }
+        // ,
+        // reviews: [{
+        //     user: {
+        //         type: String,
+        //         required: true
+        //     },
+        //     rating: {
+        //         type: Number,
+        //         min: 0,
+        //         max: 5,
+        //         required: true
+        //         },
+        //     comment: String
+        // }]
     }
 )
 
@@ -301,10 +332,13 @@ const Admin = mongoose.model('Admin',adminSchema)
 const Seller = mongoose.model('Seller',sellerSchema)
 // model for appointmentSchema
 const Appointment = mongoose.model('Appointment',appointmentSchema)
+// model fro appointmentDaySchema
+const Appointmentday = mongoose.model('Appointmentday',appointmentDaySchema)
 // model for productSchema
 const Product = mongoose.model('Product',productSchema)
 // model for orderSchema
 const Order = mongoose.model('Order',orderSchema)
 
+
 // Export Models(classes)
-module.exports={User,Admin,Seller,Appointment,Product,Order};
+module.exports={User,Admin,Seller,Appointment,Appointmentday,Product,Order};
