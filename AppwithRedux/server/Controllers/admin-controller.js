@@ -1,5 +1,5 @@
 //import models
-const {User,Admin,Seller,Product, Appointment} = require('../db')
+const {User,Admin,Seller,Appointment,Appointmentday,Product,Order} = require('../db')
 // import bcryptjs for password hashing
 const bcryptjs = require('bcryptjs')
 // import jsonwebtokens for JWT
@@ -15,6 +15,70 @@ const getadmin = async(req,res)=>
 {
     const admins = await Admin.find()
     res.status(200).send({message:"ADMINS",payload:admins})
+}
+
+// Create appointmentday slots for the current year
+async function autoFilldays()
+{
+    try
+    {
+        // Get the current year
+    const currentYear = new Date().getFullYear();
+    // Loop through all dates in the current year
+    for (let month = 0; month < 12; month++) {
+        const daysInMonth = new Date(currentYear, month + 1, 0).getDate();
+        for (let day = 1; day <= daysInMonth; day++) 
+        {
+            // Generate document for each date
+            let date = new Date(currentYear, month, day)
+            date.setHours(5,30,0,0);
+            const slots = generateSlots(); // Function to generate time slots
+            const dayAppointment = new Appointmentday({ date, slots });
+            // Insert document into the collection
+            await dayAppointment.save();
+        }
+    }
+    console.log('Day appointments auto-filled successfully');
+    }
+    catch(err)
+    {
+        console.error('Error auto-filling day appointments:', err);
+    }
+}
+
+
+// Function to generate time slots for a day (customize as needed)
+function generateSlots() {
+    // Example: Generate slots for every hour from 9 AM to 5 PM
+    const slots = [];
+    for (let hour = 9; hour <= 11; hour++) {
+        slots.push({ time: `${hour}:00 AM`, status: 'available' });
+        slots.push({ time: `${hour}:30 AM`, status: 'available' });
+    }
+    for (let hour = 1; hour <= 5; hour++) {
+        slots.push({ time: `${hour}:00 PM`, status: 'available' });
+        slots.push({ time: `${hour}:30 PM`, status: 'available' });
+    }
+    return slots
+}
+
+// Run the auto-fill script
+autoFilldays();
+
+// GET A EXACT DATE FOR APPOINTMENTS
+const getappointmentdate = async(req,res)=>
+{
+    try
+    {
+
+        let date = req.body.date
+        let obtained = await Appointmentday.findOne({date:date})
+        res.status(200).send({message:"DATE AND APPOINTMENT",payload:obtained})
+    }
+    catch(err)
+    {
+        res.status(200).send(err.message)
+    }
 }
 
 // get all users
@@ -333,4 +397,4 @@ const inactiveproducts = async (req,res)=>
 }
 
 
-module.exports={getadmin,getusers,changeuserstatus,getallappointments,pendingappointments,pendingappointment,cancelledappointments,getproducts,addproduct,getaproduct,editproduct,deactivateproduct,activateproduct,inactiveproducts}
+module.exports={getadmin,getusers,changeuserstatus,getallappointments,pendingappointments,pendingappointment,cancelledappointments,getproducts,addproduct,getaproduct,editproduct,deactivateproduct,activateproduct,inactiveproducts,getappointmentdate}
