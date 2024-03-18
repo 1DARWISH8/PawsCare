@@ -1,5 +1,5 @@
 //import models
-const {User,Admin,Seller,Appointment,Product} = require('../db')
+const {User,Admin,Seller,Appointment,Appointmentday,Product,Order} = require('../db')
 // import bcryptjs for password hashing
 const bcryptjs = require('bcryptjs')
 // import jsonwebtokens for JWT
@@ -227,4 +227,28 @@ const editappointment = async(req,res)=>
     }
 }
 
-module.exports={getuser,getusers,registerUser,userLogin,bookAppointment,appointments,editappointment}
+
+
+//STORE
+const getproducts = async(req,res)=>
+{
+    try
+    {
+        let products = await Product.find({status:"ACTIVE"})
+        if (products !== null)
+        {
+            res.status(200).send({message:"PRODUCTS",payload:products})
+        }
+        else
+        {
+            res.status(200).send({message:"UNABLE TO FETCH PRODUCTS"})
+        }
+    }
+    catch(err)
+    {
+        res.status(200).send(err.message)
+    }
+}
+
+
+module.exports={getuser,getusers,registerUser,userLogin,bookAppointment,appointments,editappointment,getproducts}
