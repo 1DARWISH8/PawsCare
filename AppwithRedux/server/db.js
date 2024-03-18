@@ -1,5 +1,4 @@
 // import mongoose
-const { type } = require('@testing-library/user-event/dist/type');
 const mongoose = require('mongoose')
 require('dotenv').config()
 
@@ -225,6 +224,12 @@ const appointmentDaySchema = new mongoose.Schema(
         {
             type:Date,
             required:true
+        },
+        service:
+        {
+            type:String,
+            required:true,
+            enum:['HEALTH CHECK UP','GROOMING','TRAINING']
         },
         slots:
         [
