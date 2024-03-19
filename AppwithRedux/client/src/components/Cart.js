@@ -1,41 +1,62 @@
-import React, { useContext, useState } from 'react'
-import { userLoginContext } from '../contexts/userLoginContext'
+import React, { useContext, useEffect, useState } from 'react'
 import './Cart.css'
 import axios from 'axios'
 import {useNavigate} from 'react-router-dom'
 import {NavLink} from 'react-router-dom'
+import {useDispatch,useSelector} from 'react-redux'
+import { userDetailsPromiseStatus } from '../redux/slices/userDetailsSlice'
 
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 // import {useNavigate} from 'react-router-dom'
 
 function Cart() {
 
-    let [currentUser,setCurrentUser,userLoginStatus,setUserLoginStatus,formSubmit,error,cart,setCart]=useContext(userLoginContext)
+    let {currentUser}=useSelector(state=>state.userLogin)
     let navigate=useNavigate()
-    // console.log(cart)
-    let [copycart,setCopycart]=useState(cart)
-    let sum =0
-
-
-    function removeitem(index)
+    let dispatch = useDispatch()
+    let [cart,setCart] = useState([])
+    let [error,setError] = useState('')
+    let sum = 0
+    
+    const getcart = async()=>
     {
-        let newcart = copycart.filter(item=>item.id!==index);
-        setCopycart(newcart);
-        setCart(newcart);
+        let cartproducts = await axios.get(`http://localhost:5000/user-api/cart/${currentUser.username}`)
+        setCart(cartproducts.data)
+    }
+    useEffect(()=>getcart,[])
+
+    async function removeitem(item)
+    {
+        try
+        {
+            let username = currentUser.username
+            item = {...item,username}
+            let productdeleted = await axios.post('http://localhost:5000/user-api/removecartproduct',item)
+            if (productdeleted.data.message === "PRODUCT IS DELETED FROM CART")
+            {
+                getcart()
+            }
+            else
+            {
+                setError(productdeleted.data.message)
+            }
+        }
+        catch(err)
+        {
+            setError(err.message)
+        }
     }
 
-    // console.log(cart)
     async function checkout()
     {
         try
         {
-            let res1= await axios.patch(`http://localhost:4000/userdata/${currentUser.id}`,cart)
-            // console.log(res1.status)
-            if(res1.status===200)
-                {
-                    setCart([])
-                    navigate('/store/checkout')
-                }
+            // let res1= await axios.patch(`http://localhost:4000/userdata/${currentUser.id}`,)
+            // // console.log(res1.status)
+            // if(res1.status===200)
+            //     {
+            //         setCart([])
+            //         navigate('/store/checkout')
+            //     }
         }
         catch(error)
         {
@@ -46,18 +67,21 @@ function Cart() {
 
 return (
     <div className='container'>
-        <NavLink className='btn fw-bold' to='/store/food'>ᐊ Back</NavLink>
+        <h2 className='text-center'>CART</h2>
+
+        
     <div >
         <div>
         {cart.length ? 
         <table className='table table-responsive table-hover'>
+            {error.length!==0&& <p className='fw-bold text-center text-danger border-0'>{error}</p>}
         <tbody>
         {cart.map((item,index)=>
         (
                 <tr key={index}>
                 <td>
                     <img src={item.image} style={{width:"50%",height:"50%"}}/>
-                    <p>{item.name}</p>
+                    <p>{item.productname}</p>
                 </td>
                 <td className='text-center'>
                     <div>Q:1</div>
@@ -65,7 +89,7 @@ return (
                     <div className='text-white'>{sum+=parseInt(item.price)}</div>
                 </td>
                 <td className='text-end'>
-                <button className='btn btn-danger' onClick={()=>removeitem(item.id)}><span className="material-symbols-outlined">
+                <button className='btn text-danger' onClick={()=>removeitem(item)}><span className="material-symbols-outlined">
                     delete
                 </span></button>
                 </td>
