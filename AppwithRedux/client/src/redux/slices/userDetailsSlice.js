@@ -40,7 +40,7 @@ const userDetailsSlice = createSlice(
         })
         .addCase(userDetailsPromiseStatus.fulfilled,(state,action)=>
         {
-            state.presentUser=action.payload;
+            state.presentUser=action.payload.payload;
             // console.log(state.presentUser)
             state.errorMessage='';
             state.isPending=false;
