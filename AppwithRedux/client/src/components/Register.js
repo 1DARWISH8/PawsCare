@@ -1,191 +1,130 @@
-import React, {useState} from 'react'
-import {useForm} from "react-hook-form"
-import axios from 'axios';
-import {NavLink, useNavigate} from 'react-router-dom'
+import React, {useEffect,useState} from 'react'
+import { NavLink,useNavigate } from 'react-router-dom'
+import {useDispatch,useSelector} from 'react-redux'
+import axios from 'axios'
+import { productDetailsPromiseStatus } from '../redux/slices/productDetailsSlice' 
+import {Alert} from 'react-bootstrap';
+
+function Store() {
+
+  let navigate = useNavigate()
+  let [products,setProducts]=useState([])
+  let [error,setError] =useState('')
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  let {currentUser}=useSelector(state=>state.userLogin)
+  let [alert,setAlert] = useState('')
 
 
-function Register() {
+  function tocart()
+  {
+    // if()
+    // {
+    //   navigate('/cart')
+    // }
+    // else
+    // {
+    //   alert("SIGN UP / LOG IN TO ORDER")
+    //   navigate('/getstarted')
+    // }
+  }
 
-    let {register,handleSubmit,formState:{errors}}=useForm()
-    let navigate=useNavigate();
-    let [error,setError]=useState('')
-    let [file,setFile]=useState(null)
-    const [userType,setUserType]=useState('user')
-
-
-    let userTypeChange=(event)=>
+  async function viewproducts()
+  {
+    try
     {
-        setUserType(event.target.value)
+      let products = await axios.get('http://localhost:5000/user-api/getproducts')
+      if (products)
+      {
+        setProducts(products.data.payload)
+        setSearchResults(products.data.payload)
+        // console.log(products.data.payload)
+      }
     }
-
-    function uploadPic(e)
+    catch(err)
     {
-        setFile(e.target.files[0])
+      setError(err.message)
     }
+  }
 
-    async function formSubmit(data)
+  useEffect(()=>viewproducts,[])
+
+  const hideAlert = () =>
+  {
+    setTimeout(()=>
     {
-        // store in local api
-        data={userType,...data}
-        // console.log(data)
-        const formData = new FormData();
-        formData.append('data',JSON.stringify(data))
-        // if(userType==='user')
-        // {
-            //     formData.append('userpic',file)
-        //     formData.append('petpic',file)
-        
-        // }
-        // else
-        formData.append('userpic',file)
-        // {
-        // }
-        try
+      setAlert('');
+    },5000);
+  }
+
+  useState(()=>
+  {
+    hideAlert();
+  },[])
+
+  const handleChange = (e) => {
+    setSearchTerm(e.target.value);
+    const results = products.filter(product =>
+    product.productname.toLowerCase().includes(e.target.value.toLowerCase())
+    );
+    setSearchResults(results);
+};
+
+  async function addtocart(item)
+  {
+    try
+    {
+        let username=currentUser.username;
+        item = {...item,username}
+        let added = await axios.post('http://localhost:5000/user-api/addcartproduct',item)
+        console.log(added)
+        if (added.data.message === "PRODUCT ADDED TO CART")
         {
-            let res = await axios.post('http://localhost:5000/user-api/registeruser',formData)
-            console.log(res)
-            if (res.status===201)
-            {
-                navigate('/getstarted/login')
-            }
-            else
-            {
-                setError(res.data.message)
-            }
-        }
-        catch(err)
-        {
-            setError(err.message)
+          setAlert('PRODUCT ADDED')
         }
     }
-
-    function Back()
+    catch(err)
     {
-        navigate('/getstarted')
+      setError(err.message)
     }
+  }
 
-
-
-    // console.log(error)
-
-return (
+  return (
     <div>
-        <button className='border-0 bg-white text-decoration-underline' onClick={Back}>Back</button>
-        <form className='col-sm-6 mx-auto m-3 p-2' onSubmit={handleSubmit(formSubmit)}>
-        <h1 className='text-center fs-3 text-decoration-underline'>REGISTRATION</h1>
-        <p className='text-center fw-bold'>ALREADY A USER?<NavLink to='/getstarted/login'>Login</NavLink></p>
-        {error.length!==0&& <p className='fw-bold text-center text-danger border-0'>{error}</p>}
 
-        <label className='form-label fw-bold'>SELECT USER TYPE:</label>
-        <input type='radio' id='user' name='userType' value='user' checked={userType==='user'} onChange={userTypeChange}></input>
-        <label htmlFor='user'>USER</label>
-        <input type='radio' id='admin' name='userType' value='admin' onChange={userTypeChange}></input>
-        <label htmlFor='admin'>ADMIN</label>
-        {/* <input type='radio' id='seller' name='userType' value='seller' onChange={userTypeChange}></input>
-        <label htmlFor='seller'>SELLER</label> */}
+      <div className='text-center'>
+                <input
+            type="text"
+            placeholder="Search by product name"
+            value={searchTerm}
+            onChange={handleChange}
+        />
+      </div>
 
-        {/* USER DETAILS FORM */}
-        <h5 className='text-center fw-bold pt-5'>USER DETAILS</h5>
-        <div className='sm-3 m-3'>
-            {/* username */}
-            <label htmlFor='username' className='form-label fw-bold' >USERNAME:</label>
-            <input type='text' className='form-control border-black' id='username' {...register('username',{required:true})}></input>
-            {errors.username?.type==='required'&&<p className='text-danger fw-bold text-center'>*USERNAME is required*</p>}
-        </div>
-        
-        <div className='sm-3 m-3'>
-            {/* password */}
-            <label htmlFor='password' className='form-label fw-bold' >PASSWORD:</label>
-            <input type='password' className='form-control border-black' id='password' {...register('password',{required:true})}></input>
-            {errors.password?.type==='required'&&<p className='text-center text-danger fw-bold'>*PASSWORD is required*</p>}
-        </div>
-        <div className='sm-3 m-3'>
-            {/* email */}
-            <label htmlFor='email' className='form-label fw-bold' >EMAIL ADDRESS:</label>
-            <input type='email' id='email' className='form-control border-black' {...register('email',{required:true})}></input>
-            {errors.email?.type==='required'&&<p className='text-center text-danger fw-bold'>*EMAIL is required*</p>}
-        </div>
-        <div className='sm-3 m-3'>
-            {/* USER DISPLAY PICTURE */}
-            <label htmlFor='userpic' className='form-label fw-bold'>PROFILE IMAGE:</label>
-            <input id='userpic' type='file' name='userpic' className='form-control border-black' onChange={uploadPic}/>
-        </div>
-
-
-
-        {userType==='user'&&
-        <>
-        {/* PET DETAILS FORM */}
-        <div >
-            <h5 className='text-center fw-bold pt-3'>PET DETAILS</h5>
-        {/* <div className='sm-3 m-3 '>
-        <label htmlFor='petpic' className=' form-label fw-bold'>UPLOAD PET IMAGE:</label> */}
-        {/* <input type='file' accept='image/*' id='imageupload' className='form-control' {...register('imageupload')}></input> */}
-        {/* <input type='file' id='petpic' className='form-control border-black' onChange={uploadPic}></input>
-        </div> */}
-        <div className='sm-3 m-3'>
-            <label htmlFor='petname' className='form-label fw-bold' >PETNAME:</label>
-            <input type='text' className='form-control border-black' id='petname' {...register('petname',{required:true})}></input>
-            {errors.petname?.type==='required'&&<p className='text-danger fw-bold text-center'>*PETNAME is required*</p>}
-        </div>
-        <div className='sm-3 m-3'>
-            {/* DOB */}
-            <label htmlFor='dob' className='form-label fw-bold'>DATE OF BIRTH:</label>
-            <input type='date' id="dob" className='form-control border-black text-center' {...register('dob',{required:true})}></input>
-            {errors.dob?.type==='required'&&<p className='text-center text-danger fw-bold'>*DATE OF BIRTH is required*</p>}
-        </div>
-        <div className='sm-3 m-3'>
-            <label className='form-label fw-bold' htmlFor='petanimal'>PET ANIMAL:</label>
-            <select className='form-control text-center border-black' id='petanimal' {...register('petanimal',{required:true})}>
-                <option value="">--SELECT--</option>
-                <option value="DOG">DOG</option>
-                <option value="CAT">CAT</option>
-                <option value="BIRD">BIRD</option>
-                <option value="HAMSTER">HAMSTER</option>
-                <option value="OTHER">Other</option>
-            </select>
-            {errors.petanimal?.type==='required'&&<p className='text-center text-danger fw-bold'>*PET ANIMAL TYPE is required*</p>}
-        </div>
-        <div className='sm-3 m-3'>
-            {/* Previous Health checkup date */}
-            <label htmlFor='checkupdate' className='form-label fw-bold'>PREVIOUS DATE OF HEALTH CHECK-UP:</label>
-            <input type='date' id="checkupdate" className='form-control border-black text-center' {...register('checkupdate',{required:true})}></input>
-            {errors.checkupdate?.type==='required'&&<p className='text-center text-danger fw-bold'>*PREVIOUS HEALTH CHECK-UP DATE is required*</p>}
-        </div>
-        </div>
-
-
-
-{/* COMMUNICATION DETAILS */}
-
-        <div>
-            <h5 className='text-center fw-bold pt-3'>COMMUNICATION DETAILS</h5>
-            <div className='sm-3 m-3 '>
-                <label className='form-label fw-bold' htmlFor='phonenumber'>PHONE NUMBER:</label>
-                <input className='form-control border-black' type='tele' {...register('phonenumber',{required:true})}></input>
-                {errors.phonenumber?.type==='required'&&<p className='fw-bold text-danger text-center'>*PHONE NUMBER is required*</p>}
-            </div>
-            <div className='sm-3 m-3 '>
-                <label className='form-label fw-bold' htmlFor='address'>ADDRESS:</label>
-                <textarea className='form-control border-black' type='text' id='address' {...register('address',{required:true})}></textarea>
-                {errors.address?.type==='required'&&<p className='fw-bold text-danger text-center'>*ADDRESS is required*</p>}
-            </div>
-            <div className='sm-3 m-3'>
-                <label className='form-label fw-bold' htmlFor='pincode'>PINCODE</label>
-                <input className='form-control border-black' type='number' id='pincode' {...register('pincode',{required:true})}></input>
-                {errors.pincode?.type==='required'&&<p className='text-danger text-center fw-bold'>*PINCODE is required*</p>}
+      {error.length!==0&& <p className='fw-bold text-center text-danger border-0'>{error}</p>}
+      {alert.length!==0 && <Alert variant={'dark'} onClose={()=>setAlert('')}>PRODUCT ADDED</Alert> }
+      <div className='container pt-2'>
+            <div className='row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-4 g-4'>
+            {searchResults.map((item,index)=>
+            (
+                <div className='col pt-3 pb-3'  key={index}>
+                    <div className='card' style={{height:'500px'}}>
+                        <img src={item.image} className='card-img-top' style={{width:'auto',height:'250px'}} alt={item.name}/>
+                        <div className='card-body'>
+                            <h5 className='card-title'>{item.productname}</h5>
+                            <p className='card-text'>Rs.{item.price}</p>
+                            <span>
+                            <NavLink className='btn btn-success' onClick={()=>addtocart(item)}>ADD TO CART</NavLink>    
+                            <button className='btn btn-danger' >HEART</button>    
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            ))}
             </div>
         </div>
-        </>
-        }
-
-        <div className='text-center p-2'>
-            <button type='submit' className='btn btn-dark'>REGISTER</button>
-        </div>
-        </form>
-
     </div>
-)
+  )
 }
 
-export default Register
+export default Store
