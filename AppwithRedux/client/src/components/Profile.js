@@ -2,6 +2,7 @@ import React from 'react'
 import {useNavigate} from 'react-router-dom'
 import {useSelector,useDispatch} from 'react-redux'
 import { logOut } from '../redux/slices/userLoginSlice'
+import Alert from 'react-bootstrap/Alert';
 
 function Profile() {
 
@@ -13,8 +14,11 @@ function Profile() {
 
     function logout()
     {
+		<Alert key={'dark'} variant={'dark'}>
+        	LOGOUT SUCCESSFULL
+        </Alert>
         dispatch(logOut())
-		sessionStorage.removeItem('token')
+		sessionStorage.removeItem('token')        
         navigate('/getstarted')
     }
 
@@ -23,8 +27,7 @@ return (
 		{
 			userType==='user'?
 			<>
-			<div className='text-center'>
-        </div>
+			
         <div className="container pt-3">
 		<div className="main-body">
 			<div className="row">
@@ -35,7 +38,7 @@ return (
 								{/* <img src={currentUser.imageupload} alt={currentUser.petanimal} className="rounded-circle p-1 bg-primary" width="150"/> */}
 								<div className="mt-3">
 									<h4>{currentUser.username}</h4>
-									<p className="text-black mb-1">Owner of {currentUser.petname}</p>
+									<p className="text-black mb-1">Owner of {currentUser.petdetails[0].petname}</p>
 								</div>
                                 <button className='btn btn-danger p-2 mt-3 fw-bold' onClick={logout}>LOG OUT</button>
 							</div>
@@ -75,7 +78,7 @@ return (
 									<h6 className="mb-0">Address</h6>
 								</div>
 								<div className="col-sm-9 text-secondary">
-                                    <p className='form-control'>{currentUser.address},{currentUser.pincode}</p>
+                                    <p className='form-control'>{currentUser.address[0].addressline},{currentUser.address[0].district},{currentUser.address[0].state},{currentUser.address[0].country},{currentUser.address[0].pincode}</p>
 								</div>
 							</div>
 						</div>
@@ -90,7 +93,7 @@ return (
 									<h6 className="mb-0">PetName:</h6>
 								</div>
 								<div className="col-sm-9 text-secondary">
-                                    <p className='form-control'>{currentUser.petname}</p>
+                                    <p className='form-control'>{currentUser.petdetails[0].petname}</p>
 								</div>
 							</div>
 							<div className="row mb-3">
@@ -98,7 +101,7 @@ return (
 									<h6 className="mb-0">ANIMAL:</h6>
 								</div>
 								<div className="col-sm-9 text-secondary">
-                                    <p className='form-control'>{currentUser.petanimal}</p>
+                                    <p className='form-control'>{currentUser.petdetails[0].petanimal}</p>
 								</div>
 							</div>
 							<div className="row mb-3">
@@ -106,7 +109,7 @@ return (
 									<h6 className="mb-0">DATE OF BIRTH:</h6>
 								</div>
 								<div className="col-sm-9 text-secondary">
-                                    <p className='form-control'>{currentUser.dob}</p>
+                                    <p className='form-control'>{currentUser.petdetails[0].dob}</p>
 								</div>
 							</div>
 							<div className="row mb-3">
@@ -114,7 +117,7 @@ return (
 									<h6 className="mb-0">Previous Health Checkup:</h6>
 								</div>
 								<div className="col-sm-9 text-secondary">
-                                    <p className='form-control'>{currentUser.checkupdate}</p>
+                                    <p className='form-control'>{currentUser.petdetails[0].last_checkup_date}</p>
 								</div>
 							</div>
 						</div>
@@ -126,7 +129,7 @@ return (
 							<div className="d-flex flex-column align-items-center text-center">
 									<h4>Appointment Details</h4>
 								<div className="mt-3">
-                                    {currentUser.appointments.service?
+                                    {currentUser.appointments?.service?
                                     <div>
                                         <p>SERVICE:
                                             <span className='form-control'>{currentUser.appointments.service}</span>
