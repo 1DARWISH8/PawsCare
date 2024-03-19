@@ -53,6 +53,11 @@ const userSchema = new mongoose.Schema(
             type:String,
             required:[true,"EMAIL IS REQUIRED"]
         },
+        phonenumber:
+        {
+            type:Number,
+            required:[true,"PHONE NUMBER IS REQUIRED"]
+        },
         userpic:
         {
             type:String
@@ -62,45 +67,79 @@ const userSchema = new mongoose.Schema(
             type:Date,
             default: Date.now
         },
-        petname:
-        {
-            type:String,
-            required:[true,"PETNAME IS REQUIRED"]
-        },
-        dob:
-        {
-            type:String,
-            required:[true,"PETNAME IS REQUIRED"]
-        },
-        petanimal:
-        {
-            type:String,
-            required:[true,"PETANIMAL IS REQUIRED"]
-        },
-        checkupdate:
-        {
-            type:String
-        },
-        phonenumber:
-        {
-            type:Number,
-            required:[true,"PHONE NUMBER IS REQUIRED"]
-        },
+        petdetails:
+        [{
+
+            petname:
+            {
+                type:String,
+                required:[true,"PETNAME IS REQUIRED"]
+            },
+            dob:
+            {
+                type:String,
+                required:[true,"PETNAME IS REQUIRED"]
+            },
+            petanimal:
+            {
+                type:String,
+                required:[true,"PETANIMAL IS REQUIRED"]
+            },
+            last_checkup_date:
+            {
+                type:String
+            }
+        }],
         address:
-        {
-            type:String,
-            required:[true,"ADDRESS IS REQUIRED"]
-        },
-        pincode:
-        {
-            type:Number,
-            required:[true,"PINCODE IS REQUIRED"]
-        },
+        [{
+            addressline:
+            {
+                type:String,
+                required:true,
+            },
+            district:
+            {
+                type:String,
+                required:true,
+            },
+            state:
+            {
+                type:String,
+                required:true,
+            },
+            country:
+            {
+                type:String,
+                default:'INDIA'
+            },
+            pincode:
+            {
+                type:Number,
+                required:true,
+            }
+        }],
         cart:
-        {
-            type:Array,
-            default:[]
-        }
+        [{
+            productname:String,
+            productid:String,
+            username:String,
+            quantity:
+            {
+                type:Number,
+                default:1
+            },
+            price:Number,
+            stock:
+            {
+                type:String,
+                default:"In Stock",
+                enum:['In Stock','Out of Stock']
+            },
+            image:
+            {
+                type:String,
+            }
+        }]
     }
 )
 
@@ -320,6 +359,7 @@ const productSchema = new mongoose.Schema(
         // }]
     }
 )
+
 
 // CREATE ORDERS SCHEMA
 const orderSchema = new mongoose.Schema(
