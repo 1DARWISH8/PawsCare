@@ -30,6 +30,7 @@ import Deletedproduct from './components/admin/Deletedproduct';
 import Bookuserappointment from './components/admin/Bookuserappointment';
 import Adminbookappointment from './components/admin/Adminbookappointment';
 import Userprofile from './components/admin/Userprofile';
+import Productpage from './components/Productpage';
 
 
 function App() {
@@ -120,6 +121,10 @@ function App() {
         {
           path:'/store',
           element:<Store/>
+        },
+        {
+          path:'/store/productpage',
+          element:<Productpage/>
         },
         {
           path:'/admin/checkappointment',
