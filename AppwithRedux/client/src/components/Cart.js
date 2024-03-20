@@ -50,13 +50,7 @@ function Cart() {
     {
         try
         {
-            // let res1= await axios.patch(`http://localhost:4000/userdata/${currentUser.id}`,)
-            // // console.log(res1.status)
-            // if(res1.status===200)
-            //     {
-            //         setCart([])
-            //         navigate('/store/checkout')
-            //     }
+            
         }
         catch(error)
         {
@@ -64,17 +58,52 @@ function Cart() {
         }        
     }
 
+    async function incrementQuantity(item)
+    {
+        try
+        {
+            item.quantity += 1
+            let increased = await axios.post('http://localhost:5000/user-api/editquantity',item)
+            if (increased)
+            {
+                getcart()
+            }
+        }
+        catch(err)
+        {
+            setError(err.message)
+        }
+        
+    };
+    async function decrementQuantity(item) 
+    {
+        try
+        {
+            if (item.quantity !== 1)
+            {
+                item.quantity -= 1
+                let decreased = await axios.post('http://localhost:5000/user-api/editquantity',item)
+                if (decreased)
+                {
+                    getcart()
+                }
+            }
+        }
+        catch(err)
+        {
+            setError(err.message)
+        }
+    };
+
 
 return (
     <div className='container'>
-        <h2 className='text-center'>CART</h2>
-
-        
     <div >
         <div>
         {cart.length ? 
         <table className='table table-responsive table-hover'>
             {error.length!==0&& <p className='fw-bold text-center text-danger border-0'>{error}</p>}
+                <h2 >CART</h2>
         <tbody>
         {cart.map((item,index)=>
         (
@@ -84,9 +113,13 @@ return (
                     <p>{item.productname}</p>
                 </td>
                 <td className='text-center'>
-                    <div>Q:1</div>
+                    <div>
+                        <button className='btn btn-dark m-0' onClick={()=>decrementQuantity(item)}>-</button>
+                        <span className='m-2'>{item.quantity}</span>
+                        <button className='btn btn-dark m-0' onClick={()=>incrementQuantity(item)}>+</button>
+                    </div>
                     Rs.{item.price}
-                    <div className='text-white'>{sum+=parseInt(item.price)}</div>
+                    <div className='text-white'>{sum+=(parseInt(item.price)*item.quantity)}</div>
                 </td>
                 <td className='text-end'>
                 <button className='btn text-danger' onClick={()=>removeitem(item)}><span className="material-symbols-outlined">
@@ -105,7 +138,7 @@ return (
         </tbody>
         </table>:
         <>
-            <h1 className='text-center'>..CART IS EMPTY..</h1>
+            <h1 className='text-center m-3'>..CART IS EMPTY..</h1>
             <p className='fw-bold text-center'>ADD ITEMS TO CART</p>
         </>}
         
