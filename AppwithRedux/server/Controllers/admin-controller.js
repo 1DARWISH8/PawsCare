@@ -24,18 +24,24 @@ async function autoFilldays()
     {
         // Get the current year
     const currentYear = new Date().getFullYear();
+    let servicetype = ['HEALTH CHECK UP','GROOMING','TRAINING']
     // Loop through all dates in the current year
-    for (let month = 0; month < 12; month++) {
-        const daysInMonth = new Date(currentYear, month + 1, 0).getDate();
-        for (let day = 1; day <= daysInMonth; day++) 
+    for (let count = 0; count <3; count++)
+    {
+        for (let month = 0; month < 12; month++)
         {
-            // Generate document for each date
-            let date = new Date(currentYear, month, day)
-            date.setHours(5,30,0,0);
-            const slots = generateSlots(); // Function to generate time slots
-            const dayAppointment = new Appointmentday({ date, slots });
-            // Insert document into the collection
-            await dayAppointment.save();
+            const daysInMonth = new Date(currentYear, month + 1, 0).getDate();
+            for (let day = 1; day <= daysInMonth; day++) 
+            {
+                // Generate document for each date
+                let date = new Date(currentYear, month, day)
+                date.setHours(5,30,0,0)
+                const service = servicetype[count]
+                const slots = generateSlots(); // Function to generate time slots
+                const dayAppointment = new Appointmentday({ date,  service, slots });
+                // Insert document into the collection
+                await dayAppointment.save();
+            }
         }
     }
     console.log('Day appointments auto-filled successfully');
@@ -71,8 +77,9 @@ const getappointmentdate = async(req,res)=>
     try
     {
 
+        let service = req.body.service
         let date = req.body.date
-        let obtained = await Appointmentday.findOne({date:date})
+        let obtained = await Appointmentday.findOne({date:date,service:service})
         res.status(200).send({message:"DATE AND APPOINTMENT",payload:obtained})
     }
     catch(err)
@@ -396,5 +403,38 @@ const inactiveproducts = async (req,res)=>
     }
 }
 
+// CHANGE PRODUCT STATUS
+const updatestock = async(req,res)=>
+{
+    try
+    {
+        let data = req.body
+        // console.log(data)
+        let stockupdated = await Product.findOneAndUpdate({_id:data._id},
+            {
+                $set:
+                {
+                    "stock":data.stock
+                }
+            },
+            {
+                returnDocument:false
+            })
+        // console.log(stockupdated)
+        if (stockupdated)
+        {
+            res.status(200).send({message:"Product Stock Updated"})
+        }
+        else
+        {
+            res.status(200).send({message:"ERROR WHILE UPDATING STOCK"})
+        }
+    }
+    catch(err)
+    {
+        res.status(200).send(err.message)
+    }
+} 
 
-module.exports={getadmin,getusers,changeuserstatus,getallappointments,pendingappointments,pendingappointment,cancelledappointments,getproducts,addproduct,getaproduct,editproduct,deactivateproduct,activateproduct,inactiveproducts,getappointmentdate}
+
+module.exports={getadmin,getusers,changeuserstatus,getallappointments,pendingappointments,pendingappointment,cancelledappointments,getproducts,addproduct,getaproduct,editproduct,deactivateproduct,activateproduct,inactiveproducts,updatestock,getappointmentdate}
