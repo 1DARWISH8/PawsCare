@@ -274,23 +274,32 @@ const addcartproduct = async (req,res)=>
     {
         let productdata = req.body
         // console.log(productdata)
-        let addedtocart = await User.findOneAndUpdate({username:productdata.username},
-            {
-                $push:
-                {
-                    "cart":productdata
-                }
-            },
-            {
-                returnOriginal: false
-            })
-        if (addedtocart)
+        let user = await User.findOne({username:productdata.username})
+        let cartproduct = user.cart.find(product=>product._id.equals(productdata._id))
+        if (cartproduct)
         {
-            res.status(200).send({message:"PRODUCT ADDED TO CART",payload:addedtocart})
+            res.status(200).send({message:'ITEM ALREADY IN CART'})
         }
         else
         {
-            res.status(200).send({message:"PRODUCT COULDN'T ADDED TO CART"})
+            let addedtocart = await User.findOneAndUpdate({username:productdata.username},
+                {
+                    $push:
+                    {
+                        "cart":productdata
+                    }
+                },
+                {
+                    returnOriginal: false
+                })
+            if (addedtocart)
+            {
+                res.status(200).send({message:"PRODUCT ADDED TO CART",payload:addedtocart})
+            }
+            else
+            {
+                res.status(200).send({message:"PRODUCT COULDN'T ADDED TO CART"})
+            }
         }
     }
     catch(err)
@@ -336,5 +345,32 @@ const removecartproduct = async (req,res)=>
     }
 }
 
+// EDIT QUANTITY
+const editquantity = async (req,res)=>
+{
+    try
+    {
+        let request = req.body
+        const updatedcart = await User.findOneAndUpdate(
+            // Find the user and the nested cart item by their IDs
+            { username: request.username, 'cart._id': request._id },
+            // Update the quantity of the nested cart item
+            { $set: { 'cart.$.quantity': request.quantity } }, 
+            { new: true } // To return the updated document
+        );
+        if (updatedcart)
+        {
+            res.status(200).send({message:"Quantity updated",payload:updatedcart})
+        }
+        else
+        {
+            res.status(200).send({message:"Quantity couldn't be updated"})
+        }
+    }
+    catch(err)
+    {
+        res.status(200).send(err.message)
+    }
+}
 
-module.exports={getuser,getusers,registerUser,userLogin,bookAppointment,appointments,editappointment,getproducts,cart,addcartproduct,removecartproduct}
+module.exports={getuser,getusers,registerUser,userLogin,bookAppointment,appointments,editappointment,getproducts,cart,addcartproduct,removecartproduct,editquantity}
