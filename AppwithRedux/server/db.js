@@ -364,7 +364,85 @@ const productSchema = new mongoose.Schema(
 // CREATE ORDERS SCHEMA
 const orderSchema = new mongoose.Schema(
     {
-
+        username:
+        {
+            type:String,
+            required:true
+        },
+        orderdate:
+        {
+            type:Date,
+            default: Date.now
+        },
+        orderstatus:
+        {
+            type:String,
+            enum:['PENDING','ACCEPTED',"IN DELIVERY","DELIVERED"],
+            default:'PENDING'
+        },
+        paymentstatus:
+        {
+            type:String,
+            enum:['PENDING','COMPLETED'],
+            default:"PENDING"
+        },
+        paymentmethod:
+        {
+            type:String,
+            enum:['UPI PAYMENT',"NETBANKING","CASH ON DELIVERY(COD)"]
+        },
+        orderitems:
+        [
+            {
+                productname:String,
+                productid:String,
+                username:String,
+                quantity:
+                {
+                    type:Number,
+                    default:1
+                },
+                price:Number,
+                stock:
+                {
+                    type:String,
+                    default:"In Stock",
+                    enum:['In Stock','Out of Stock']
+                },
+                image:
+                {
+                    type:String,
+                }
+            }
+        ],
+        address:
+        [{
+            addressline:
+            {
+                type:String,
+                required:true,
+            },
+            district:
+            {
+                type:String,
+                required:true,
+            },
+            state:
+            {
+                type:String,
+                required:true,
+            },
+            country:
+            {
+                type:String,
+                default:'INDIA'
+            },
+            pincode:
+            {
+                type:Number,
+                required:true,
+            }
+        }],
     }
 )
 
