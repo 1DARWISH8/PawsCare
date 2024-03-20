@@ -3,7 +3,7 @@ import axios from 'axios'
 import { useNavigate,NavLink } from 'react-router-dom'
 import { productDetailsPromiseStatus } from '../../redux/slices/productDetailsSlice'
 import {useDispatch,useSelector} from 'react-redux'
-import { reFresh } from '../../redux/slices/productDetailsSlice'
+import {Alert} from 'react-bootstrap';
 
 function Managestore() 
 {
@@ -14,8 +14,21 @@ function Managestore()
   // let {productSelected,errorMessage} = useSelector(state=>state.productdetails)
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  let [alert,setAlert] = useState('')
   
-  
+  const hideAlert = () =>
+  {
+    setTimeout(()=>
+    {
+      setAlert('');
+    },5000);
+  }
+
+  useState(()=>
+  {
+    hideAlert();
+  },[])
+
   async function viewproducts()
   {
     try
@@ -77,6 +90,47 @@ const handleChange = (e) => {
     );
     setSearchResults(results);
 };
+
+async function updatestock(item)
+{
+  try
+  {
+    if (item.stock === 'In Stock')
+    {
+      item.stock = 'Out of Stock'
+      // console.log(item)
+      let stockupdated = await axios.post('http://localhost:5000/admin-api/updatestock',item)
+      // console.log(stockupdated)
+      if (stockupdated)
+      {
+        setAlert('PRODUCT STOCK UPDATED')
+        viewproducts()
+      }
+      else
+      {
+        setError(stockupdated.message)
+      }
+    }
+    else
+    {
+      item.stock = 'In Stock'
+      let stockupdated = await axios.post('http://localhost:5000/admin-api/updatestock',item)
+      if (stockupdated)
+      {
+        setAlert('PRODUCT STOCK UPDATED')
+        viewproducts()
+      }
+      else
+      {
+        setError(stockupdated.message)
+      }
+    }
+  }
+  catch(err)
+  {
+    setError(err.message)
+  }
+}
   
   return (
     <div>
@@ -102,9 +156,21 @@ const handleChange = (e) => {
                             <h5 className='card-title'>{item.productname}</h5>
                             <p className='card-text'>Rs.{item.price}</p>
                             <span>
-                            <NavLink className='btn btn-success' onClick={()=>edit(item)}>EDIT</NavLink>    
+                            <NavLink className='btn btn-success m-3' onClick={()=>edit(item)}>EDIT</NavLink>    
                             <button className='btn btn-danger' onClick={()=>deleteproduct(item)}>DELETE</button>    
                             </span>
+                            <div className='text-center'>
+                            {
+                              item.stock === 'In Stock' ?
+                              <p className='fw-bold m-1'> CHANGE STOCK:
+                                <button className='btn btn-warning m-2' onClick={()=>updatestock(item)}> Out of Stock</button>
+                              </p>
+                              :
+                              <p className='fw-bold m-1'> CHANGE STOCK:
+                                <button className='btn btn-warning m-2' onClick={()=>updatestock(item)}>In Stock</button>
+                              </p>
+                            }
+                            </div>
                         </div>
                     </div>
                 </div>
