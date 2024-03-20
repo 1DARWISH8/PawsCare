@@ -65,10 +65,15 @@ function Home() {
   return (
     <div>
         <div className='text-center' id='header'>
-          <h4 className='pt-4' id="welcome">Welcome to</h4>
-          <h1 className='pt-2' id='intro'>PAWSCARE🌟</h1>
+          {
+            currentUser.userType === 'user' &&
+            <>
+              <h4 className='pt-4' id="welcome">Welcome to</h4>
+              <h1 className='pt-2' id='intro'>PAWSCARE🌟</h1>
+              <div className='fs-3 pt-2 pb-5'> Your {loginStatus===true?<span id='intro'>{currentUser.petdetails[0].petname}</span>:<span>Pet</span>}'s Wellbeing Central! 🐾</div>
+            </>
+          }
           {/* checks if user is logged in or not and renders the component accordingly */}
-          <div className='fs-3 pt-2 pb-5'> Your {loginStatus===true?<span id='intro'>{currentUser.petname}</span>:<span>Pet</span>}'s Wellbeing Central! 🐾</div>
         </div>
         <div className="card m-3 mt-2" id='carouselcard'>
           <div className="card-header border-0">
