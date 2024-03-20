@@ -20,7 +20,7 @@ userApp.use(cors(
 ))
 
 // import req handlers from controllers
-const {getuser,getusers,registerUser,userLogin,bookAppointment,appointments,editappointment,getproducts,cart,addcartproduct,removecartproduct} = require('../Controllers/user-controller')
+const {getuser,getusers,registerUser,userLogin,bookAppointment,appointments,editappointment,getproducts,cart,addcartproduct,removecartproduct,editquantity} = require('../Controllers/user-controller')
 
 // CRUD OPERATIONS
 
@@ -57,5 +57,7 @@ userApp.get('/cart/:username',expressAsyncHandler(cart))
 userApp.post('/addcartproduct',expressAsyncHandler(addcartproduct))
 // Remove product from cart
 userApp.post('/removecartproduct',expressAsyncHandler(removecartproduct))
+// EDIT PRODUCT QUANTITY
+userApp.post('/editquantity',expressAsyncHandler(editquantity))
 
 module.exports=userApp;
