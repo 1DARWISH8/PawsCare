@@ -8,6 +8,7 @@ import {Alert} from 'react-bootstrap';
 function Store() {
 
   let navigate = useNavigate()
+  let dispatch = useDispatch()
   let [products,setProducts]=useState([])
   let [error,setError] =useState('')
   const [searchTerm, setSearchTerm] = useState('');
@@ -15,19 +16,6 @@ function Store() {
   let {currentUser}=useSelector(state=>state.userLogin)
   let [alert,setAlert] = useState('')
 
-
-  function tocart()
-  {
-    // if()
-    // {
-    //   navigate('/cart')
-    // }
-    // else
-    // {
-    //   alert("SIGN UP / LOG IN TO ORDER")
-    //   navigate('/getstarted')
-    // }
-  }
 
   async function viewproducts()
   {
@@ -77,11 +65,29 @@ function Store() {
         let username=currentUser.username;
         item = {...item,username}
         let added = await axios.post('http://localhost:5000/user-api/addcartproduct',item)
-        console.log(added)
+        // console.log(added)
         if (added.data.message === "PRODUCT ADDED TO CART")
         {
           setAlert('PRODUCT ADDED')
         }
+        else if (added.data.message === "ITEM ALREADY IN CART")
+        {
+          setAlert('PRODUCT ALREADY IN CART')
+        }
+
+    }
+    catch(err)
+    {
+      setError(err.message)
+    }
+  }
+
+  async function openproductpage(item)
+  {
+    try
+    {
+      dispatch(productDetailsPromiseStatus(item))
+      navigate('/store/productpage')
     }
     catch(err)
     {
@@ -102,20 +108,20 @@ function Store() {
       </div>
 
       {error.length!==0&& <p className='fw-bold text-center text-danger border-0'>{error}</p>}
-      {alert.length!==0 && <Alert variant={'dark'} onClose={()=>setAlert('')}>PRODUCT ADDED</Alert> }
+      {alert.length!==0 && <Alert variant={'dark'} onClose={()=>setAlert('')}>{alert}</Alert> }
       <div className='container pt-2'>
             <div className='row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-4 g-4'>
             {searchResults.map((item,index)=>
             (
                 <div className='col pt-3 pb-3'  key={index}>
                     <div className='card' style={{height:'500px'}}>
-                        <img src={item.image} className='card-img-top' style={{width:'auto',height:'250px'}} alt={item.name}/>
+                        <img src={item.image} className='card-img-top' style={{width:'auto',height:'250px'}} alt={item.name} onClick={()=>openproductpage(item)}/>
                         <div className='card-body'>
                             <h5 className='card-title'>{item.productname}</h5>
                             <p className='card-text'>Rs.{item.price}</p>
                             <span>
-                            <NavLink className='btn btn-success' onClick={()=>addtocart(item)}>ADD TO CART</NavLink>    
-                            <button className='btn btn-danger' >HEART</button>    
+                            <button className='btn btn-success' onClick={()=>addtocart(item)}>ADD TO CART</button>    
+                            <button className='btn' ><span className='text-danger'><i class="bi bi-heart"></i></span></button>    
                             </span>
                         </div>
                     </div>
