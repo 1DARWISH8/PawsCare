@@ -3,6 +3,7 @@ import {useNavigate} from 'react-router-dom'
 import {useSelector,useDispatch} from 'react-redux'
 import axios from 'axios'
 import { userselectedDetailsPromiseSlice } from '../../redux/slices/userselectedDetailsSlice';
+import {Alert} from 'react-bootstrap';
 
 function Userprofile() {
 
@@ -11,7 +12,7 @@ function Userprofile() {
   let {selectedUser} = useSelector(state=>state.userselected)
   let [error,setError] = useState([])
   let user = {...selectedUser}
-
+  let [alert,setAlert] = useState('')
 
   async function bookappointment()
         {
@@ -27,7 +28,8 @@ function Userprofile() {
       let deactivated = await axios.post('http://localhost:5000/admin-api/changeuserstatus',user)
       if (deactivated)
       {
-        dispatch(userselectedDetailsPromiseSlice(deactivated.data.payload))
+        setAlert('USER DEACTIVATED')
+		dispatch(userselectedDetailsPromiseSlice(deactivated.data.payload))
       }
     }
     catch(err)
@@ -40,25 +42,40 @@ function Userprofile() {
   {
     try
     {
-      user.accountstatus="ACTIVE"
-      let activated = await axios.post('http://localhost:5000/admin-api/changeuserstatus',user)
-      if (activated)
-      {
-        dispatch(userselectedDetailsPromiseSlice(activated.data.payload))
-      }
+    	user.accountstatus="ACTIVE"
+    	let activated = await axios.post('http://localhost:5000/admin-api/changeuserstatus',user)
+    	if (activated)
+    	{
+        	setAlert('USER ACTIVATED')
+			dispatch(userselectedDetailsPromiseSlice(activated.data.payload))
+    	}
     }
     catch(err)
     {
-      setError(err.message)
+    	setError(err.message)
     }
   }
+
+const hideAlert = () =>
+{
+    setTimeout(()=>
+    {
+        setAlert('');
+    },5000);
+}
+
+useState(()=>
+{
+    hideAlert();
+},[])
 
 
 
   return (
     <div>
-      {error.length!==0&&<p className='fs-3 text-danger'>{error}</p>}
-        <div className="container pt-3">
+	{error.length!==0&&<p className='fs-3 text-danger'>{error}</p>}
+	{alert.length!==0 && <Alert variant={'dark'} onClose={()=>setAlert('')}>{alert}</Alert> }
+		<div className="container pt-3">
 	        	<div className="main-body">
 	        		<div className="row">
 	        			<div className="col-lg-4">
@@ -68,16 +85,16 @@ function Userprofile() {
 	        							{/* <img src={selectedUser.imageupload} alt={selectedUser.petanimal} className="rounded-circle p-1 bg-primary" width="150"/> */}
 	        							<div className="mt-3">
 	        								<h4>{selectedUser.username}</h4>
-	        								<p className="text-black mb-1">Owner of {selectedUser.petname}</p>
+	        								<p className="text-black mb-1">Owner of {selectedUser.petdetails[0].petname}</p>
 	        							</div>
                             {
-                              selectedUser.accountstatus==="ACTIVE"?
-                              <>
-                              <button className='btn btn-danger' onClick={()=>deactivateuser(user)}>DEACTIVATE USER</button>
-                              <button className='btn btn-primary p-2 m-3 fw-bold' onClick={bookappointment}>BOOK APPOINTMENT</button>
-                              </>
-                              :
-                              <button className='btn btn-success' onClick={()=>activateuser(user)}>ACTIVATE USER</button>
+                            	selectedUser.accountstatus==="ACTIVE"?
+                            	<>
+                            	<button className='btn btn-danger' onClick={()=>deactivateuser(user)}>DEACTIVATE USER</button>
+                            	<button className='btn btn-primary p-2 m-3 fw-bold' onClick={bookappointment}>BOOK APPOINTMENT</button>
+                            	</>
+                            	:
+                            	<button className='btn btn-success' onClick={()=>activateuser(user)}>ACTIVATE USER</button>
                             }
 	        						</div>
 	        					</div>
@@ -116,7 +133,7 @@ function Userprofile() {
 	        								<h6 className="mb-0">Address</h6>
 	        							</div>
 	        							<div className="col-sm-9 text-secondary">
-                                            <p className='form-control'>{selectedUser.address},{selectedUser.pincode}</p>
+                                            <p className='form-control'>{selectedUser.address[0].addressline},{selectedUser.address[0].pincode}</p>
 	        							</div>
 	        						</div>
 	        					</div>
@@ -131,7 +148,7 @@ function Userprofile() {
 	        								<h6 className="mb-0">PetName:</h6>
 	        							</div>
 	        							<div className="col-sm-9 text-secondary">
-                                            <p className='form-control'>{selectedUser.petname}</p>
+                                            <p className='form-control'>{selectedUser.petdetails[0].petname}</p>
 	        							</div>
 	        						</div>
 	        						<div className="row mb-3">
@@ -139,7 +156,7 @@ function Userprofile() {
 	        								<h6 className="mb-0">ANIMAL:</h6>
 	        							</div>
 	        							<div className="col-sm-9 text-secondary">
-                                            <p className='form-control'>{selectedUser.petanimal}</p>
+                                            <p className='form-control'>{selectedUser.petdetails[0].petanimal}</p>
 	        							</div>
 	        						</div>
 	        						<div className="row mb-3">
@@ -147,7 +164,7 @@ function Userprofile() {
 	        								<h6 className="mb-0">DATE OF BIRTH:</h6>
 	        							</div>
 	        							<div className="col-sm-9 text-secondary">
-                                            <p className='form-control'>{selectedUser.dob}</p>
+                                            <p className='form-control'>{selectedUser.petdetails[0].dob}</p>
 	        							</div>
 	        						</div>
 	        						<div className="row mb-3">
@@ -155,7 +172,7 @@ function Userprofile() {
 	        								<h6 className="mb-0">Previous Health Checkup:</h6>
 	        							</div>
 	        							<div className="col-sm-9 text-secondary">
-                                            <p className='form-control'>{selectedUser.checkupdate}</p>
+                                            <p className='form-control'>{selectedUser.petdetails[0].checkupdate}</p>
 	        							</div>
 	        						</div>
 	        					</div>
