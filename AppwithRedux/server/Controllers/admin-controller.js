@@ -291,22 +291,14 @@ const editproduct =async (req,res)=>
 
         let edited = await Product.findOneAndUpdate({_id:data._id},
             {
-                $set:
-                {
-                    "productname":data.productname,
-                    "productid":data.productid,
-                    "description":data.description,
-                    "category":data.category,
-                    "brand":data.brand,
-                    "price":data.price,
-                }
+                $set:data
             },
             {
                 returnOriginal:false
             })
         if (edited)
         {
-            res.status(201).send({message:"Product Edited",payload:edited})
+            res.status(200).send({message:"Product Edited",payload:edited})
         }
         else
         {
