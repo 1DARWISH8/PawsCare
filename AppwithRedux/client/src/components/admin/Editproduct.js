@@ -4,6 +4,7 @@ import {useNavigate,NavLink} from 'react-router-dom'
 import axios from 'axios'
 import {useDispatch,useSelector} from 'react-redux'
 import { reFresh } from '../../redux/slices/productDetailsSlice'
+import {Alert} from 'react-bootstrap';
 
 function Editproduct() {
     let {register,handleSubmit,formState:{errors}}=useForm()
@@ -12,6 +13,7 @@ function Editproduct() {
     let dispatch = useDispatch()
     let navigate=useNavigate()
     let {presentItem} = useSelector(state=>state.productdetails)
+    let [alert,setAlert] = useState('')
 
     // console.log(presentItem)
     function uploadPic(e)
@@ -19,21 +21,34 @@ function Editproduct() {
         setFile(e.target.files[0])
     }
 
+const hideAlert = () =>
+{
+    setTimeout(()=>
+    {
+        setAlert('');
+    },5000);
+}
+
+useState(()=>
+{
+    hideAlert();
+},[])
+
     async function formSubmit(data)
     {
         let _id = presentItem._id
         data = {...data,_id}
-        console.log(data)
+        // console.log(data)
         const formData = new FormData();
         formData.append('data',JSON.stringify(data))
         formData.append('image',file)
-
         try
         {
             let res = await axios.post('http://localhost:5000/admin-api/editproduct',formData)
-            console.log(res)
-            if (res.status===201)
+            // console.log(res)
+            if (res.data.message==="Product Edited")
             {
+                setAlert('PRODUCT SUCCESSFULLY EDITED')
                 navigate('/admin/managestore')
             }
             else
@@ -55,6 +70,7 @@ function Editproduct() {
 
 return (
 <div className="container">
+{alert.length!==0 && <Alert variant={'dark'} onClose={()=>setAlert('')}>{alert}</Alert> }
     <h2 className="mt-5 mb-4">Product Registration Form</h2>
     <NavLink className='btn btn-dark' to='/admin/managestore' onClick={refresh}>BACK TO PRODUCTS</NavLink>
     <form onSubmit={handleSubmit(formSubmit)}>
@@ -69,6 +85,19 @@ return (
         <div className="mb-3">
             <label htmlFor="description" className="form-label">Description:</label>
             <input type="text" className="form-control" id="description" name="description" defaultValue={presentItem.description} {...register("description",{required:true})} />
+        </div>
+        <div className="mb-3">
+            <label htmlFor="animal" className="form-label">ANIMAL:</label>
+            <select className="form-control" id="animal" name="animal" {...register("animal",{required:true})}>
+            <option value="">SELECT</option>
+            <option value="DOG">DOG</option>
+            <option value="CAT">CAT</option>
+            <option value="BIRD"> BIRD</option>
+            <option value="FISH">FISH</option>
+            <option value="GUINEA PIG">GUINEA PIG</option>
+            <option value="HAMSTER">HAMSTER</option>
+            <option value="TURTLE">TURTLE</option>
+            </select>
         </div>
         <div className="mb-3">
             <label htmlFor="category" className="form-label">Category:</label>
