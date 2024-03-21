@@ -3,6 +3,8 @@ import axios from 'axios'
 import {useDispatch,useSelector} from 'react-redux'
 import { productDetailsPromiseStatus } from '../redux/slices/productDetailsSlice' 
 import {Alert} from 'react-bootstrap';
+import { useNavigate,NavLink } from 'react-router-dom'
+
 
 function Productpage() {
 
@@ -11,7 +13,8 @@ function Productpage() {
     let {currentUser}=useSelector(state=>state.userLogin)
     let [alert,setAlert] = useState('')
     let [error,setError] =useState('')
-
+    let navigate = useNavigate()
+    let item = {...presentItem}
 
     async function addtocart(item)
 {
@@ -46,10 +49,51 @@ const hideAlert = () =>
 }
 
 useState(()=>
-  {
+{
     hideAlert();
-  },[])
-  
+},[])
+
+function edit(item)
+    {
+      // console.log(item)
+        dispatch(productDetailsPromiseStatus(item))
+        navigate('/admin/editproduct')
+    }
+
+    async function deleteproduct(item)
+    {
+        try
+        {
+            let deactivatedproduct = await axios.post('http://localhost:5000/admin-api/deactivateproduct',item)
+            if (deactivatedproduct)
+            {
+                setAlert(deactivatedproduct.data.message)
+                dispatch(productDetailsPromiseStatus(item))
+            }
+        }
+        catch(err)
+        {
+            setError(err.message)
+        }
+    }
+
+async function restoreproduct(item)
+{
+    try
+    {
+        let restored = await axios.post('http://localhost:5000/admin-api/activateproduct',item)
+        if (restored)
+        {
+            setAlert(restored.data.message)
+            dispatch(productDetailsPromiseStatus(item))
+        }
+    }
+    catch(err)
+    {
+        setError(err.message)
+    }
+}
+
 async function incrementQuantity(item)
     {
         try
@@ -87,6 +131,47 @@ async function incrementQuantity(item)
         }
     };
 
+async function updatestock(item)
+{
+    try
+    {
+        if (item.stock === 'In Stock')
+        {
+            item.stock = 'Out of Stock'
+            // console.log(item)
+            let stockupdated = await axios.post('http://localhost:5000/admin-api/updatestock',item)
+            // console.log(stockupdated)
+            if (stockupdated)
+            {
+                setAlert('PRODUCT STOCK UPDATED')
+                dispatch(productDetailsPromiseStatus(item))
+            }
+        else
+        {
+            setError(stockupdated.message)
+        }
+    }
+    else
+    {
+        item.stock = 'In Stock'
+        let stockupdated = await axios.post('http://localhost:5000/admin-api/updatestock',item)
+        if (stockupdated)
+        {
+            setAlert('PRODUCT STOCK UPDATED')
+            dispatch(productDetailsPromiseStatus(item))
+        }
+        else
+        {
+            setError(stockupdated.message)
+        }
+    }
+    }
+    catch(err)
+    {
+        setError(err.message)
+    }
+}
+
 
 return (
     <div className="container-fluid">
@@ -95,13 +180,13 @@ return (
             <div className="cart">
                 <div className="row row1">
                     <div className="col-md-4">
-                        <img src={presentItem.image} width="100%" id="ProductImg" alt="Product" />
+                        <img src={item.image} width="100%" id="ProductImg" alt="Product" />
                         <div className="small-imgs">
-                            <img src={presentItem.image} width="10%" className="small-img" alt="Product" />
+                            <img src={item.image} width="10%" className="small-img" alt="Product" />
                         </div>
                     </div>
                     <div className="col-md-6">
-                        <h1 className="product-title">{presentItem.productname}</h1>
+                        <h1 className="product-title">{item.productname}</h1>
                         <div className="reviews">
                             <i className="fas fa-star"></i>
                             <i className="fas fa-star"></i>
@@ -111,7 +196,7 @@ return (
                             <p></p>
                         </div>
                         <div className="itemprice m-1">
-                            Rs.{presentItem.price}
+                            Rs.{item.price}
                         </div>
                         <div className="row">
                             <div className="col-md-4 qty">
@@ -121,7 +206,32 @@ return (
                         <div className="buttons">
                             <div className="row">
                                 <div className="col-md-6">
-                                <button className='btn btn-success m-1' onClick={()=>addtocart(presentItem)}>ADD TO CART</button>
+                                    {
+                                        currentUser.usertype === 'user' ?
+                                        <>
+                                            <button className='btn btn-success m-1' onClick={()=>addtocart(item)}>ADD TO CART</button>
+                                        </>
+                                        :
+                                        <>
+                                            <NavLink className='btn btn-success m-3' onClick={()=>edit(item)}>EDIT</NavLink>
+                                            {
+                                                item.status === 'ACTIVE' ? 
+                                                <button className='btn btn-danger' onClick={()=>deleteproduct(item)}>DELETE</button> 
+                                                :
+                                                <button className='btn btn-danger' onClick={()=>restoreproduct(item)}>RESTORE</button> 
+                                            }
+                                            {
+                                                item.stock === 'In Stock' ?
+                                                <p className='fw-bold m-1'> CHANGE STOCK TO:
+                                                    <button className='btn btn-warning m-2' onClick={()=>updatestock(item)}> Out of Stock</button>
+                                                </p>
+                                                :
+                                                <p className='fw-bold m-1'> CHANGE STOCK TO:
+                                                    <button className='btn btn-warning m-2' onClick={()=>updatestock(item)}>In Stock</button>
+                                                </p>
+                                            }
+                                        </>
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -129,7 +239,7 @@ return (
                             <span className="active"><a href="#Description" className='text-dark fw-bold'>Product Description:</a></span>
                             <div className="tabs-content">
                                 <div id="Description">
-                                    <p className='text-dark'>{presentItem.description}</p>
+                                    <p className='text-dark'>{item.description}</p>
                                 </div>
                             </div>
                         </div>
