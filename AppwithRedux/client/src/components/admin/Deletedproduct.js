@@ -16,7 +16,7 @@ function Deletedproduct() {
       if (products)
       {
         setProducts(products.data.payload)
-        console.log(products.data.payload)
+        // console.log(products.data.payload)
       }
     }
     catch(err)
