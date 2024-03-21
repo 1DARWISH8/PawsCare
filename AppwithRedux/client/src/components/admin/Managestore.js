@@ -56,40 +56,41 @@ function Managestore()
     navigate('/admin/deletedproducts')
   }
 
-  function edit(item)
-  {
-    // console.log(item)
-    dispatch(productDetailsPromiseStatus(item))
-    navigate('/admin/editproduct')
-  }
-
-
-
-  async function deleteproduct(item)
-  {
-    try
-    {
-      let deactivatedproduct = await axios.post('http://localhost:5000/admin-api/deactivateproduct',item)
-      if (deactivatedproduct)
-      {
-        navigate('/admin/deletedproducts')
-      }
-    }
-    catch(err)
-    {
-      setError(err.message)
-    }
-  }
-
+  
   useEffect(()=>viewproducts,[])
-
-const handleChange = (e) => {
+  
+  const handleChange = (e) => {
     setSearchTerm(e.target.value);
     const results = products.filter(product =>
-    product.productname.toLowerCase().includes(e.target.value.toLowerCase())
-    );
-    setSearchResults(results);
-};
+      product.productname.toLowerCase().includes(e.target.value.toLowerCase())
+      );
+      setSearchResults(results);
+    };
+    
+    function edit(item)
+    {
+      // console.log(item)
+      dispatch(productDetailsPromiseStatus(item))
+      navigate('/admin/editproduct')
+    }
+  
+  
+  
+    async function deleteproduct(item)
+    {
+      try
+      {
+        let deactivatedproduct = await axios.post('http://localhost:5000/admin-api/deactivateproduct',item)
+        if (deactivatedproduct)
+        {
+          navigate('/admin/deletedproducts')
+        }
+      }
+      catch(err)
+      {
+        setError(err.message)
+      }
+    }
 
 async function updatestock(item)
 {
@@ -131,7 +132,21 @@ async function updatestock(item)
     setError(err.message)
   }
 }
+
+async function openproductpage(item)
+  {
+    try
+    {
+      dispatch(productDetailsPromiseStatus(item))
+      navigate('/store/productpage')
+    }
+    catch(err)
+    {
+      setError(err.message)
+    }
+  }
   
+
   return (
     <div>
       <button className='btn btn-primary m-3' onClick={addproducts}>ADD PRODUCTS</button>
@@ -145,13 +160,14 @@ async function updatestock(item)
             onChange={handleChange}
         />
 
+
       <div className='container pt-2'>
             <div className='row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-4 g-4'>
             {searchResults.map((item,index)=>
             (
                 <div className='col pt-3 pb-3'  key={index}>
                     <div className='card' style={{height:'500px'}}>
-                        <img src={item.image} className='card-img-top' style={{width:'auto',height:'250px'}} alt={item.name}/>
+                        <img src={item.image} className='card-img-top' style={{width:'auto',height:'250px'}} alt={item.name} onClick={()=>openproductpage(item)}/>
                         <div className='card-body'>
                             <h5 className='card-title'>{item.productname}</h5>
                             <p className='card-text'>Rs.{item.price}</p>
@@ -162,11 +178,11 @@ async function updatestock(item)
                             <div className='text-center'>
                             {
                               item.stock === 'In Stock' ?
-                              <p className='fw-bold m-1'> CHANGE STOCK:
+                              <p className='fw-bold m-1'> CHANGE STOCK TO:
                                 <button className='btn btn-warning m-2' onClick={()=>updatestock(item)}> Out of Stock</button>
                               </p>
                               :
-                              <p className='fw-bold m-1'> CHANGE STOCK:
+                              <p className='fw-bold m-1'> CHANGE STOCK TO:
                                 <button className='btn btn-warning m-2' onClick={()=>updatestock(item)}>In Stock</button>
                               </p>
                             }
