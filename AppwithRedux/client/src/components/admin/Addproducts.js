@@ -59,6 +59,19 @@ return (
             <textarea type="text" className="form-control" id="description" name="description" {...register("description",{required:true})} />
         </div>
         <div className="mb-3">
+            <label htmlFor="animal" className="form-label">ANIMAL:</label>
+            <select className="form-control" id="animal" name="animal" {...register("animal",{required:true})}>
+            <option value="">SELECT</option>
+            <option value="DOG">DOG</option>
+            <option value="CAT">CAT</option>
+            <option value="BIRD"> BIRD</option>
+            <option value="FISH">FISH</option>
+            <option value="GUINEA PIG">GUINEA PIG</option>
+            <option value="HAMSTER">HAMSTER</option>
+            <option value="TURTLE">TURTLE</option>
+            </select>
+        </div>
+        <div className="mb-3">
             <label htmlFor="category" className="form-label">Category:</label>
             <select className="form-control" id="category" name="category" {...register("category",{required:true})}>
             <option value="">SELECT</option>
