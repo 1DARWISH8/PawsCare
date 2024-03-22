@@ -1,5 +1,5 @@
 import React, {useEffect,useState} from 'react'
-import { NavLink,useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import {useDispatch,useSelector} from 'react-redux'
 import axios from 'axios'
 import { productDetailsPromiseStatus } from '../redux/slices/productDetailsSlice' 
@@ -15,6 +15,7 @@ function Store() {
   const [searchResults, setSearchResults] = useState([]);
   let {currentUser}=useSelector(state=>state.userLogin)
   let [alert,setAlert] = useState('')
+  let [wishlist,setWishlist] = useState([])
 
 
   async function viewproducts()
@@ -37,6 +38,25 @@ function Store() {
 
   useEffect(()=>viewproducts,[])
 
+async function getwishlist()
+{
+    try
+    {
+        let products = await axios.get(`http://localhost:5000/user-api/getwishlist/${currentUser.username}`)
+        // console.log(products)
+        if (products)
+        {
+            setWishlist(products.data.payload)
+        }
+    }
+    catch(err)
+    {
+        setError(err.message)
+    }
+}
+
+useEffect(()=>getwishlist,[])
+
   const hideAlert = () =>
   {
     setTimeout(()=>
@@ -58,6 +78,22 @@ function Store() {
     setSearchResults(results);
 };
 
+// async function checkwishlist(item)
+// {
+//   try
+//   {
+//     let present = wishlist.find(product => product._id === item._id && product.name === item.productname) !== undefined;
+//     console.log(wishlist)
+//     console.log(present)
+//     return present
+
+//   }
+//   catch(err)
+//   {
+//     setError(err.message)  
+//   }
+// }
+
   async function addtocart(item)
   {
     try
@@ -74,7 +110,6 @@ function Store() {
         {
           setAlert('PRODUCT ALREADY IN CART')
         }
-
     }
     catch(err)
     {
@@ -89,6 +124,46 @@ function Store() {
       dispatch(productDetailsPromiseStatus(item))
       navigate('/store/productpage')
     }
+    catch(err)
+    {
+      setError(err.message)
+    }
+  }
+
+  async function addtowishlist(item)
+  {
+    try
+    {
+      let username=currentUser.username;
+      item = {...item,username}
+      console.log(item)
+      let addtowishlist = await axios.post('http://localhost:5000/user-api/addtowishlist',item)
+      console.log(addtowishlist)
+      if (addtowishlist.data.message === "PRODUCT ADDED TO WISHLIST")
+      {
+        setAlert('PRODUCT ADDED TO WISHLIST')
+        viewproducts()
+      }
+    }
+    catch(err)
+    {
+      setError(err.message)
+    }
+  }
+
+  async function removefromwishlist(item)
+  {
+    try
+    {
+      let username=currentUser.username;
+      item = {...item,username}
+      let removedfromwishlist = await axios.post('http://localhost:5000/user-api/removefromwishlist',item)
+      // console.log(added)
+      if (removedfromwishlist.data.message === "PRODUCT REMOVED FROM WISHLIST")
+      {
+        setAlert('PRODUCT REMOVED FROM WISHLIST')
+        viewproducts()
+      }    }
     catch(err)
     {
       setError(err.message)
@@ -117,11 +192,21 @@ function Store() {
                     <div className='card' style={{height:'500px'}}>
                         <img src={item.image} className='card-img-top' style={{width:'auto',height:'250px'}} alt={item.name} onClick={()=>openproductpage(item)}/>
                         <div className='card-body'>
-                            <h5 className='card-title'>{item.productname}</h5>
+                            <h5 className='card-title' onClick={()=>openproductpage(item)}>{item.productname}</h5>
                             <p className='card-text'>Rs.{item.price}</p>
                             <span>
-                            <button className='btn btn-success' onClick={()=>addtocart(item)}>ADD TO CART</button>    
-                            <button className='btn' ><span className='text-danger'><i class="bi bi-heart"></i></span></button>    
+                            {
+                              item.stock === 'In Stock'?
+                              <button className='btn btn-success m-1' onClick={()=>addtocart(item)}>ADD TO CART</button>
+                              :
+                              <button className='btn btn-success m-1' disabled={true} onClick={()=>addtocart(item)}>ADD TO CART</button>
+                            }
+                            {/* {
+                              checkwishlist(item)?
+                              <button className='btn' onClick={()=>removefromwishlist(item)} ><span className='text-danger'><i class="bi bi-heart-fill"></i></span></button>    
+                              :
+                              <button className='btn' onClick={()=>addtowishlist(item)} ><span className='text-danger'><i class="bi bi-heart"></i></span></button>    
+                            } */}
                             </span>
                         </div>
                     </div>
