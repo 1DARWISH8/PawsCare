@@ -1,12 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './Cart.css'
 import axios from 'axios'
 import {useNavigate} from 'react-router-dom'
-import {NavLink} from 'react-router-dom'
 import {useDispatch,useSelector} from 'react-redux'
-import { userDetailsPromiseStatus } from '../redux/slices/userDetailsSlice'
+import { productDetailsPromiseStatus } from '../redux/slices/productDetailsSlice' 
+import {Alert} from 'react-bootstrap';
 
-// import {useNavigate} from 'react-router-dom'
 
 function Cart() {
 
@@ -15,6 +14,7 @@ function Cart() {
     let dispatch = useDispatch()
     let [cart,setCart] = useState([])
     let [error,setError] = useState('')
+    let [alert,setAlert] = useState('')
     let sum = 0
     
     const getcart = async()=>
@@ -24,39 +24,31 @@ function Cart() {
     }
     useEffect(()=>getcart,[])
 
-    async function removeitem(item)
+    const hideAlert = () =>
+{
+    setTimeout(()=>
     {
-        try
-        {
-            let username = currentUser.username
-            item = {...item,username}
-            let productdeleted = await axios.post('http://localhost:5000/user-api/removecartproduct',item)
-            if (productdeleted.data.message === "PRODUCT IS DELETED FROM CART")
-            {
-                getcart()
-            }
-            else
-            {
-                setError(productdeleted.data.message)
-            }
-        }
-        catch(err)
-        {
-            setError(err.message)
-        }
-    }
+        setAlert('');
+    },5000);
+}
 
-    async function checkout()
+useState(()=>
+{
+    hideAlert();
+},[])
+
+async function openproductpage(item)
+{
+    try
     {
-        try
-        {
-            
-        }
-        catch(error)
-        {
-            alert(error.message)
-        }        
+        dispatch(productDetailsPromiseStatus(item))
+        navigate('/store/productpage')
     }
+    catch(err)
+    {
+        setError(err.message)
+    }
+}
 
     async function incrementQuantity(item)
     {
@@ -95,9 +87,57 @@ function Cart() {
         }
     };
 
+    async function removeitem(item)
+    {
+        try
+        {
+            let username = currentUser.username
+            item = {...item,username}
+            let productdeleted = await axios.post('http://localhost:5000/user-api/removecartproduct',item)
+            if (productdeleted.data.message === "PRODUCT IS DELETED FROM CART")
+            {
+                getcart()
+            }
+            else
+            {
+                setError(productdeleted.data.message)
+            }
+        }
+        catch(err)
+        {
+            setError(err.message)
+        }
+    }
+
+    async function checkout(user,cart,sum)
+    {
+        try
+        {
+            let username = user.username
+            let phonenumber = user.phonenumber
+            let address = user.address
+            let totalprice = sum
+            let orderitems = cart
+            let order = {username,phonenumber,address,orderitems,totalprice}
+            // console.log(order)
+            let checkedout = await axios.post('http://localhost:5000/user-api/order',order)
+            // console.log(checkedout)
+            if(checkedout)
+            {
+                setAlert(checkedout.data.message)
+                getcart()
+            }
+        }
+        catch(error)
+        {
+            setError(error.message)
+        }        
+    }
 
 return (
     <div className='container'>
+        {error.length!==0&& <p className='fw-bold text-center text-danger border-0'>{error}</p>}
+        {alert.length!==0 && <Alert variant={'dark'} onClose={()=>setAlert('')}>{alert}</Alert> }
     <div >
         <div>
         {cart.length ? 
@@ -108,9 +148,9 @@ return (
         {cart.map((item,index)=>
         (
                 <tr key={index}>
-                <td>
-                    <img src={item.image} style={{width:"50%",height:"50%"}}/>
-                    <p>{item.productname}</p>
+                <td onClick={()=>openproductpage(item)}>
+                    <img src={item.image} style={{width:"50%",height:"50%"}} onClick={()=>openproductpage(item)}/>
+                    <p onClick={()=>openproductpage(item)}>{item.productname}</p>
                 </td>
                 <td className='text-center'>
                     <div>
@@ -132,7 +172,7 @@ return (
             <td></td>
             <td>Total Price:<span className='fw-bold'>Rs.{sum}</span></td>
             <td>
-            <button className='btn btn-success ' onClick={()=>checkout(cart)}>CHECKOUT</button>
+            <button className='btn btn-success ' onClick={()=>checkout(currentUser,cart,sum)}>CHECKOUT</button>
             </td>
         </tr>
         </tbody>
