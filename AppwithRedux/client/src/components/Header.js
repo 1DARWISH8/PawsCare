@@ -65,6 +65,24 @@ function Header() {
                     <li className='nav-item'>
                       <NavLink className='nav-link' id='icon' to='/cart'>CART<i className="bi bi-cart4"></i></NavLink>
                     </li>
+                    {/* <li className='nav-item'>
+                      <NavLink className='nav-link' id='icon' to='profile'>PROFILE<i className="bi bi-person-circle"></i></NavLink>
+                    </li> */}
+                    <div className="dropdown" onMouseEnter={toggleDropdown} onMouseLeave={closeDropdown}>
+                        <button className="dropbtn">
+                        <i className="bi bi-person-circle"></i>
+                        </button>
+                        {isOpen && (
+                          <div className="dropdown-content">
+                            <NavLink to="/profile" onClick={closeDropdown}>PROFILE</NavLink>
+                            <NavLink to="/user/orders" onClick={closeDropdown}>VIEW ORDERS</NavLink>
+                            <NavLink to="/user/wishlist" onClick={closeDropdown}>WISHLIST</NavLink>
+                          </div>
+                        )}
+                      </div>
+                      <div>
+                        
+                      </div>
                   </>
                 }
                 {
@@ -93,12 +111,13 @@ function Header() {
                     <li className='nav-item'>
                       <NavLink className='nav-link' id='icon' to='/admin/manageusers'>MANAGE USERS<i className="bi bi-person"></i></NavLink>
                     </li>
+                    <li className='nav-item'>
+                      <NavLink className='nav-link' id='icon' to='profile'>PROFILE<i className="bi bi-person-circle"></i></NavLink>
+                    </li>
                   </>
                 }
                 
-                <li className='nav-item'>
-                  <NavLink className='nav-link' id='icon' to='profile'>PROFILE<i className="bi bi-person-circle"></i></NavLink>
-                </li>
+                
               </ul>
               </div>
               </>}
