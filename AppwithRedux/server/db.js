@@ -139,7 +139,22 @@ const userSchema = new mongoose.Schema(
             {
                 type:String,
             }
-        }]
+        }],
+        wishlist:
+        [
+            {
+                productname:String,
+                productid:String,
+                status:String,
+                description:String,
+                animal:String,
+                category:String,
+                brand:String,
+                price:Number,
+                stock:String,
+                image:String,
+            }
+        ]
     }
 )
 
@@ -247,6 +262,7 @@ const appointmentSchema = new mongoose.Schema(
         {
             type:Date,
             default: Date.now
+
         },
         appointmentstatus:
         {
@@ -270,6 +286,10 @@ const appointmentDaySchema = new mongoose.Schema(
             required:true,
             enum:['HEALTH CHECK UP','GROOMING','TRAINING']
         },
+        location:
+        {
+            type:String
+        },
         slots:
         [
             {
@@ -277,11 +297,6 @@ const appointmentDaySchema = new mongoose.Schema(
                 {
                     type:String,
                     required:true
-                },
-                location:
-                {
-                    type:String,
-                    default:'HYDERABAD'
                 },
                 status:
                 {
@@ -317,6 +332,11 @@ const productSchema = new mongoose.Schema(
         {
             type:String,
             required:[true,"DESCRIPTION IS REQUIRED"]
+        },
+        animal:
+        {
+            type:String,
+            required:[true,"ANIMAL IS REQUIRED"]
         },
         category:
         {
@@ -360,7 +380,6 @@ const productSchema = new mongoose.Schema(
     }
 )
 
-
 // CREATE ORDERS SCHEMA
 const orderSchema = new mongoose.Schema(
     {
@@ -377,8 +396,13 @@ const orderSchema = new mongoose.Schema(
         orderstatus:
         {
             type:String,
-            enum:['PENDING','ACCEPTED',"IN DELIVERY","DELIVERED"],
+            enum:['PENDING','CANCELLED','ACCEPTED',"IN DELIVERY","DELIVERED"],
             default:'PENDING'
+        },
+        totalprice:
+        {
+            type:Number,
+            required:true
         },
         paymentstatus:
         {
@@ -389,7 +413,8 @@ const orderSchema = new mongoose.Schema(
         paymentmethod:
         {
             type:String,
-            enum:['UPI PAYMENT',"NETBANKING","CASH ON DELIVERY(COD)"]
+            enum:['UPI PAYMENT',"NETBANKING","CASH ON DELIVERY(COD)"],
+            default:'CASH ON DELIVERY(COD)'
         },
         orderitems:
         [
@@ -443,6 +468,11 @@ const orderSchema = new mongoose.Schema(
                 required:true,
             }
         }],
+        phonenumber:
+        {
+            type:Number,
+            required:true
+        }
     }
 )
 
