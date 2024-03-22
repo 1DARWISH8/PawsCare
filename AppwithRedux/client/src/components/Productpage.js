@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect,useState} from 'react'
 import axios from 'axios'
 import {useDispatch,useSelector} from 'react-redux'
 import { productDetailsPromiseStatus } from '../redux/slices/productDetailsSlice' 
@@ -15,8 +15,11 @@ function Productpage() {
     let [error,setError] =useState('')
     let navigate = useNavigate()
     let item = {...presentItem}
+    let [wishlist,setWishlist] = useState([])
+    let [exits,setExistence] = useState(false)
 
-    async function addtocart(item)
+
+async function addtocart(item)
 {
     try
     {
@@ -52,6 +55,93 @@ useState(()=>
 {
     hideAlert();
 },[])
+
+async function getwishlist()
+{
+    try
+    {
+        let products = await axios.get(`http://localhost:5000/user-api/getwishlist/${currentUser.username}`)
+        // console.log(products)
+        if (products)
+        {
+            setWishlist(products.data.payload)
+            checkwishlist(item)
+        }
+    }
+    catch(err)
+    {
+        setError(err.message)
+    }
+}
+
+useEffect(()=>getwishlist,[])
+
+async function checkwishlist(item)
+{
+    try
+    {
+        let username = currentUser.username
+        item = {...item,username}
+        let inwishlist = await axios.post('http://localhost:5000/user-api/inwishlist',item)
+        if (inwishlist.data.message==="PRODUCT IN WISHLIST")
+        {
+            setExistence(true)
+            dispatch(productDetailsPromiseStatus(item))    
+        }
+        else
+        {
+            setExistence(false)
+        }
+    }
+    catch(err)
+    {
+        setError(err.message)
+    }
+}
+
+
+
+async function addtowishlist(item)
+{
+try
+{
+    let username=currentUser.username;
+    item = {...item,username}
+    // console.log(item)
+    let addtowishlist = await axios.post('http://localhost:5000/user-api/addtowishlist',item)
+    if (addtowishlist.data.message === "PRODUCT ADDED TO WISHLIST")
+    {
+        setAlert('PRODUCT ADDED TO WISHLIST')
+        setExistence(true)
+        dispatch(productDetailsPromiseStatus(item))    
+    }
+}
+catch(err)
+{
+    setError(err.message)
+}
+}
+
+async function removefromwishlist(item)
+{
+try
+{
+    let username=currentUser.username;
+    item = {...item,username}
+    let removedfromwishlist = await axios.post('http://localhost:5000/user-api/removefromwishlist',item)
+    // console.log(added)
+    if (removedfromwishlist.data.message === "PRODUCT REMOVED FROM WISHLIST")
+    {
+        setAlert('PRODUCT REMOVED FROM WISHLIST')
+        setExistence(false)
+        dispatch(productDetailsPromiseStatus(item))    
+    }    
+}
+catch(err)
+{
+    setError(err.message)
+}
+}
 
 function edit(item)
     {
@@ -207,9 +297,20 @@ return (
                             <div className="row">
                                 <div className="col-md-6">
                                     {
-                                        currentUser.usertype === 'user' ?
+                                        currentUser.userType === 'user' ?
                                         <>
-                                            <button className='btn btn-success m-1' onClick={()=>addtocart(item)}>ADD TO CART</button>
+                                            {
+                                                item.stock === 'In Stock'?
+                                                <button className='btn btn-success m-1' onClick={()=>addtocart(item)}>ADD TO CART</button>
+                                                :
+                                                <button className='btn btn-success m-1' disabled={true} onClick={()=>addtocart(item)}>ADD TO CART</button>
+                                            }
+                                            {
+                                                exits?
+                                                <button className='btn' onClick={()=>removefromwishlist(item)} ><span className='text-danger'><i class="bi bi-heart-fill"></i></span></button>    
+                                                :
+                                                <button className='btn' onClick={()=>addtowishlist(item)} ><span className='text-danger'><i class="bi bi-heart"></i></span></button> 
+                                            }
                                         </>
                                         :
                                         <>
