@@ -31,6 +31,8 @@ import Bookuserappointment from './components/admin/Bookuserappointment';
 import Adminbookappointment from './components/admin/Adminbookappointment';
 import Userprofile from './components/admin/Userprofile';
 import Productpage from './components/Productpage';
+import Orders from './components/Orders';
+import Wishlist from './components/Wishlist';
 
 
 function App() {
@@ -105,6 +107,14 @@ function App() {
         {
           path:'profile',
           element:<Profile/>
+        },
+        {
+          path:'/user/orders',
+          element:<Orders/>
+        },
+        {
+          path:'/user/wishlist',
+          element:<Wishlist/>
         },
         {
           path:'/home/appointment',
