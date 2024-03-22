@@ -20,7 +20,7 @@ userApp.use(cors(
 ))
 
 // import req handlers from controllers
-const {getuser,getusers,registerUser,userLogin,bookAppointment,appointments,editappointment,getproducts,cart,addcartproduct,removecartproduct,editquantity} = require('../Controllers/user-controller')
+const {getuser,getusers,registerUser,userLogin,bookAppointment,appointments,editappointment,getproducts,cart,addcartproduct,removecartproduct,editquantity,order,getorders,cancelorder,getwishlist,addtowishlist,removefromwishlist,inwishlist} = require('../Controllers/user-controller')
 
 // CRUD OPERATIONS
 
@@ -59,5 +59,22 @@ userApp.post('/addcartproduct',expressAsyncHandler(addcartproduct))
 userApp.post('/removecartproduct',expressAsyncHandler(removecartproduct))
 // EDIT PRODUCT QUANTITY
 userApp.post('/editquantity',expressAsyncHandler(editquantity))
+
+// ORDER
+userApp.post('/order',expressAsyncHandler(order))
+// GET ORDER
+userApp.get('/getorders/:username',expressAsyncHandler(getorders))
+// CANCEL ORDER
+userApp.post('/cancelorder',expressAsyncHandler(cancelorder))
+
+// WISHLIST
+// GET WISHLIST
+userApp.get('/getwishlist/:username',expressAsyncHandler(getwishlist))
+//ADD TO WISHLIST
+userApp.post('/addtowishlist',expressAsyncHandler(addtowishlist))
+// REMOVE FROM WISHLIST
+userApp.post('/removefromwishlist',expressAsyncHandler(removefromwishlist))
+// CHECK IF ITEM IN USER WISHLIST
+userApp.post('/inwishlist',expressAsyncHandler(inwishlist))
 
 module.exports=userApp;
