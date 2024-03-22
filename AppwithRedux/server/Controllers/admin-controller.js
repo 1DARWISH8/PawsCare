@@ -22,30 +22,46 @@ async function autoFilldays()
 {
     try
     {
-        // Get the current year
-    const currentYear = new Date().getFullYear();
-    let servicetype = ['HEALTH CHECK UP','GROOMING','TRAINING']
-    // Loop through all dates in the current year
-    for (let count = 0; count <3; count++)
-    {
-        for (let month = 0; month < 12; month++)
+        // CHECK IF THE COLLECTION IS ALREADY PREPOPULATED
+        const documentcount = await Appointmentday.countDocuments({})
+        // console.log(documentcount)
+        if (documentcount === 0)
         {
-            const daysInMonth = new Date(currentYear, month + 1, 0).getDate();
-            for (let day = 1; day <= daysInMonth; day++) 
+            // Get the current year
+            const currentYear = new Date().getFullYear();
+            let servicetype = ['HEALTH CHECK UP','GROOMING','TRAINING']
+            let locations = ['BANGALORE','CHENNAI','HYDERABAD','VISAKHAPATNAM']
+            // loop through locations
+            for (let locationcount = 0; locationcount <=3 ; locationcount++)
             {
-                // Generate document for each date
-                let date = new Date(currentYear, month, day)
-                date.setHours(5,30,0,0)
-                const service = servicetype[count]
-                const slots = generateSlots(); // Function to generate time slots
-                const dayAppointment = new Appointmentday({ date,  service, slots });
-                // Insert document into the collection
-                await dayAppointment.save();
+                // loop through services
+                for (let count = 0; count <3; count++)
+                {
+                    // Loop through all dates in the current year
+                    for (let month = 0; month < 12; month++)
+                    {
+                        // get the date
+                        const daysInMonth = new Date(currentYear, month + 1, 0).getDate();
+                        // loop through days of the month
+                        for (let day = 1; day <= daysInMonth; day++) 
+                        {
+                            // Generate document for each date
+                            let date = new Date(currentYear, month, day)
+                            date.setHours(5,30,0,0) //Function to set the time to 00:00:00 hrs
+                            const service = servicetype[count]
+                            const location = locations[locationcount]
+                            const slots = generateSlots(); // Function to generate time slots
+                            const dayAppointment = new Appointmentday({date,service,location,slots });
+                            // Insert document into the collection
+                            await dayAppointment.save();
+                        }
+                    }
+                }
             }
+            console.log('Day appointments auto-filled successfully');
         }
     }
-    console.log('Day appointments auto-filled successfully');
-    }
+    
     catch(err)
     {
         console.error('Error auto-filling day appointments:', err);
