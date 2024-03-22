@@ -373,4 +373,212 @@ const editquantity = async (req,res)=>
     }
 }
 
-module.exports={getuser,getusers,registerUser,userLogin,bookAppointment,appointments,editappointment,getproducts,cart,addcartproduct,removecartproduct,editquantity}
+// CREATE ORDER
+const order = async(req,res)=>
+{
+    try
+    {
+        let orderdetails = req.body
+        // console.log(orderdetails)
+        const ordered = await Order.create(orderdetails)
+        // console.log(ordered)
+        if (ordered)
+        {
+            let user = await User.findOneAndUpdate({username:req.body.username},
+                {
+                    $set:
+                    {
+                        cart:[]
+                    }
+                },
+                {
+                    new:false
+                })
+            if (user)
+            {
+                res.status(201).send({message:"ORDER PLACED",payload:ordered})
+            }
+            else
+            {
+                res.status(200).send({message:"UNABLE TO EMPTY CART"})
+            }
+        }
+        else
+        {
+            res.status(200).send({message:"UNABLE TO PLACE ORDER"})
+        }
+    }
+    catch(err)
+    {
+        res.status(200).send(err.message)
+    }
+}
+
+
+// GET A USER ORDER
+const getorders = async(req,res)=>
+{
+    try
+    {
+        let username = req.params.username
+        let orders = await Order.find({username:username})
+        if (orders)
+        {
+            res.status(200).send({message:"ORDERS",payload:orders})
+        }
+        else
+        {
+            res.status(200).send({message:"UNABLE TO FETCH ORDERS"})
+        }
+    }
+    catch(err)
+    {
+        res.status(200).send(err.message)
+    }
+}
+
+const cancelorder = async(req,res)=>
+{
+    try
+    {
+        let order = req.body
+        let cancelled = await Order.findOneAndUpdate({_id:order._id},
+            {
+                $set:
+                {
+                    orderstatus:"CANCELLED"
+                }
+            },
+            {
+                new:false
+            })
+        if (cancelled)
+        {
+            res.status(200).send({message:"ORDER CANCELLED SUCCESSFULLY",payload:cancelled})
+        }
+        else
+        {
+            res.status(200).send({message:"UNABLE TO CANCEL ORDER"})
+        }
+    }
+    catch(err)
+    {
+        res.status(200).send(err.message)
+    }
+}
+
+
+// WISHLIST
+
+// GET WISHLIST
+const getwishlist = async (req,res)=>
+{
+    try
+    {
+        let username = req.params.username
+        let user = await User.findOne({username:username})
+        if (user)
+        {
+            res.status(200).send({message:"WISHLIST",payload:user.wishlist})
+        }
+        else
+        {
+            res.status(200).send({message:"UNABLE TO FETCH WISHLIST"})
+        }
+    }
+    catch(err)
+    {
+        res.status(200).send(err.message)
+    }
+}
+
+// ADD TO WISHLIST
+const addtowishlist = async (req,res)=>
+{
+    try
+    {
+        let productdata = req.body
+        let addedtowishlist = await User.findOneAndUpdate({username:productdata.username},
+            {
+                $push:
+                {
+                    "wishlist":productdata
+                }
+            },
+            {
+                returnOriginal:false
+            })
+        // console.log(addedtowishlist)
+        if (addedtowishlist)
+        {
+            res.status(201).send({message:"PRODUCT ADDED TO WISHLIST",payload:addedtowishlist})
+        }
+        else
+        {
+            res.status(200).send({message:"FAILED TO ADD IN WISHLIST"})
+        }
+    }
+    catch(err)
+    {
+        res.status(200).send(err.message)
+    }
+} 
+
+// REMOVE FROM WISHLIST
+const removefromwishlist = async (req,res)=>
+{
+    try
+    {
+        let productdata = req.body
+        let removed = await User.findOneAndUpdate({username:productdata.username},
+            {
+                $pull:
+                {
+                    wishlist:
+                    {
+                        productid:productdata.productid
+                    }
+                }
+            },
+            {
+                returnOriginal:false
+            })
+        if (removed)
+        {
+            res.status(200).send({message:"PRODUCT REMOVED FROM WISHLIST",payload:removed})
+        }
+        else
+        {
+            res.status(200).send({message:"FAILED TO DELETE"})
+        }
+    }
+    catch(err)
+    {
+        res.status(200).send(err.message)
+    }
+} 
+
+const inwishlist = async(req,res)=>
+{
+    try
+    {
+        let productdata = req.body
+        let user = await User.findOne({username:productdata.username})
+        let wishlistproduct = user.wishlist.find(product=>product._id.equals(productdata._id))
+        if (wishlistproduct)
+        {
+            res.status(200).send({message:'PRODUCT IN WISHLIST'})
+        }
+        else
+        {
+            res.status(200).send({message:'PRODUCT NOT IN WISHLIST'})
+        }
+    }
+    catch(err)
+    {
+        res.status(200).send(err.message)
+    }
+}
+
+
+module.exports={getuser,getusers,registerUser,userLogin,bookAppointment,appointments,editappointment,getproducts,cart,addcartproduct,removecartproduct,editquantity,order,getorders,cancelorder,getwishlist,addtowishlist,removefromwishlist,inwishlist}
