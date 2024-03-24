@@ -50,6 +50,8 @@ async function openproductpage(item)
     }
 }
 
+// console.log(cart[0].stock)
+
     async function incrementQuantity(item)
     {
         try
@@ -91,6 +93,7 @@ async function openproductpage(item)
     {
         try
         {
+            // console.log(item)
             let username = currentUser.username
             item = {...item,username}
             let productdeleted = await axios.post('http://localhost:5000/user-api/removecartproduct',item)
@@ -149,7 +152,18 @@ return (
         (
                 <tr key={index}>
                 <td onClick={()=>openproductpage(item)}>
-                    <img src={item.image} style={{width:"50%",height:"50%"}} onClick={()=>openproductpage(item)}/>
+                    {
+                        item.stock === 'In Stock' ?
+                        <img src={item.image} style={{width:"50%",height:"50%"}} onClick={()=>openproductpage(item)}/>
+                        :
+                        <div className="product-card">
+                            <img src={item.image} style={{width:"50%",height:"50%"}} onClick={()=>openproductpage(item)}/>
+                            <div className={`text-overlay 'out-of-stock'}`}>
+                            <p>{'Out of Stock'}</p>
+                            </div>
+                        </div>
+                    }
+
                     <p onClick={()=>openproductpage(item)}>{item.productname}</p>
                 </td>
                 <td className='text-center'>
