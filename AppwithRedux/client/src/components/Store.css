@@ -75,3 +75,26 @@ h3
     font-size: 1.2rem;
     padding: 3px;
 }
+
+.product-card {
+    position: relative;
+    display: inline-block;
+  }
+   
+  .text-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent white background */
+    text-align: center;
+    padding: 10px;
+}
+
+.text-overlay p {
+    margin: 0;
+}
+
+.out-of-stock {
+    background-color: rgba(209, 17, 17, 1.5); /* Semi-transparent red background for out of stock */
+}
