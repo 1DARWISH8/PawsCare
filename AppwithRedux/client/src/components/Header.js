@@ -1,17 +1,21 @@
 import React, { useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink,useNavigate } from 'react-router-dom'
 // logo image is imported from the images folder
 import logo from "../images/pawscarelogo.png"
 // userLoginContext is imported, to use the created context store
 import './Header.css'
-import {useSelector} from 'react-redux'
+import {useDispatch,useSelector} from 'react-redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { faAngleDown, faHome, faUser, faShoppingCart, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import './Dropdown.css';
+import { logOut } from '../redux/slices/userLoginSlice' 
+
 
 function Header() {
   // import userloginSlice from reducer store
   let {currentUser,loginStatus} = useSelector(state=>state.userLogin)
+  let navigate=useNavigate()
+	let dispatch = useDispatch()
 
         const [isOpen, setIsOpen] = useState(false);
     
@@ -22,6 +26,13 @@ function Header() {
       const closeDropdown = () => {
         setIsOpen(false);
       };
+
+      function logout()
+    {
+        dispatch(logOut())
+		    sessionStorage.removeItem('token')        
+        navigate('/getstarted')
+    }
 
 
   return (
@@ -77,6 +88,9 @@ function Header() {
                             <NavLink to="/profile" onClick={closeDropdown}>PROFILE</NavLink>
                             <NavLink to="/user/orders" onClick={closeDropdown}>VIEW ORDERS</NavLink>
                             <NavLink to="/user/wishlist" onClick={closeDropdown}>WISHLIST</NavLink>
+                            <NavLink>
+                            <button className='btn text-danger fw-bold' onClick={logout}>LOG OUT</button>
+                            </NavLink>
                           </div>
                         )}
                       </div>
@@ -105,18 +119,40 @@ function Header() {
                         )}
                       </div>
                     {/* </li> */}
-                    <li className='nav-item'>
+                    {/* <li className='nav-item'>
                       <NavLink className='nav-link' id='icon' to='/admin/managestore'><i className="bi bi-shop"></i>MANAGE STORE</NavLink>
-                    </li>
+                    </li> */}
+                    <div className="dropdown" onMouseEnter={toggleDropdown} onMouseLeave={closeDropdown}>
+                        <button className="dropbtn">
+                        <i className="bi bi-shop"></i>STORE
+                        </button>
+                        {isOpen && (
+                          <div className="dropdown-content">
+                            <NavLink to="/admin/managestore" onClick={closeDropdown}><i className="bi bi-shop"></i>MANAGE STORE</NavLink>
+                            <NavLink to="/admin/manageorders" onClick={closeDropdown}>MANAGE ORDERS</NavLink>
+                          </div>
+                        )}
+                      </div>
                     <li className='nav-item'>
                       <NavLink className='nav-link' id='icon' to='/admin/manageusers'>MANAGE USERS<i className="bi bi-person"></i></NavLink>
                     </li>
-                    <li className='nav-item'>
-                      <NavLink className='nav-link' id='icon' to='profile'>PROFILE<i className="bi bi-person-circle"></i></NavLink>
-                    </li>
+                    {/* <li className='nav-item'>
+                      <NavLink className='nav-link' id='icon' to='profile'>{currentUser.username}<i className="bi bi-person-circle"></i></NavLink>
+                    </li> */}
+                    <div className="dropdown" onMouseEnter={toggleDropdown} onMouseLeave={closeDropdown}>
+                        <button className="dropbtn">
+                        {currentUser.username}<i className="bi bi-person-circle"></i>
+                        </button>
+                        {isOpen && (
+                          <div className="dropdown-content">
+                            <NavLink>
+                            <button className='btn text-danger fw-bold' onClick={logout}>LOG OUT</button>
+                            </NavLink>
+                          </div>
+                        )}
+                      </div>
                   </>
                 }
-                
                 
               </ul>
               </div>
