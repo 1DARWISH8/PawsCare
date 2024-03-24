@@ -33,6 +33,7 @@ import Userprofile from './components/admin/Userprofile';
 import Productpage from './components/Productpage';
 import Orders from './components/Orders';
 import Wishlist from './components/Wishlist';
+import Manageorders from './components/admin/Manageorders';
 
 
 function App() {
@@ -155,6 +156,10 @@ function App() {
         {
           path:'/admin/managestore',
           element:<Managestore/>
+        },
+        {
+          path:'/admin/manageorders',
+          element:<Manageorders/>
         },
         {
           path:'/admin/addproduct',
