@@ -9,11 +9,15 @@ import {Alert} from 'react-bootstrap';
 
 function Orders() {
 
+    // GET THE CURRENT LOGGED-IN USER 
     let {currentUser}=useSelector(state=>state.userLogin)
+    // INITIALISE AN ARRAY OF ORDERS
     let [orders,setOrders] = useState([])
+    // DECLARE "error" state variable and "setError" Function using setState hook
     let [error,setError] = useState('')
-    let [orderitems,setOrderitems] = useState([])
+    // Declare "navigate" function to using "useNavigate" hook for navigation through specified routes
     let navigate=useNavigate()
+    // Declare "dispatch" function to using "useDispatch" hook from "Redux" to dispatch actions to the Redux store to trigger updates
     let dispatch = useDispatch()
     let [alert,setAlert] = useState('')
 
@@ -39,7 +43,6 @@ useState(()=>
             if (orders)
             {
                 setOrders(orders.data.payload)
-                setOrderitems(orders.data.payload[0].orderitems)
             }
             else
             {
@@ -53,6 +56,7 @@ useState(()=>
     } 
 
     useEffect(()=>getorders,[])
+
 
 async function openproductpage(item)
 {
@@ -94,18 +98,21 @@ return (
         {error.length!==0&& <p className='fw-bold text-center text-danger border-0'>{error}</p>}
         {alert.length!==0 && <Alert variant={'dark'} onClose={()=>setAlert('')}>{alert}</Alert> }    
             <h2 className='text-center'>ORDERS</h2>
-            {orders.length?
+            {orders.length!==0&&
             <div>
                     {orders.map((order,index)=>
                         (
-                        <Table striped bordered hover variant="dark" className='m-1' size='sm'>
+                        <Table striped bordered hover variant="dark" className='m-3' size='sm'>
                         <tbody>
                             <tr key={index}>
                                 <td>
                                     <h5 className='m-2'>
+                                        <span>
                                         ORDER STATUS:
                                             {order.orderstatus==='CANCELLED'&&<p className='text-danger'>{order.orderstatus}</p>}
                                             {order.orderstatus==='DELIVERED'&&<p className='text-success'>{order.orderstatus}</p>}
+                                            {(order.orderstatus!=='DELIVERED'&&order.orderstatus!=='CANCELLED')&&<p>{order.orderstatus}</p>}
+                                        </span>
                                     </h5>
                                     <p><span className='fw-bold m-2'>ORDERED ON:</span>{order.orderdate}</p>
                                 </td>
@@ -121,33 +128,40 @@ return (
                                     </Accordion>
                                 </td>
                             </tr>
-                            {
-                                orderitems.map((orderitem,indice)=>
-                                <>
-                                <tr key={indice}>
-                                    <td colSpan={2}>
-                                    <Accordion >
+                            <tr>
+                                <td colSpan={2}>
+                            <Accordion>
                                         <Accordion.Item eventKey="0">
                                             <Accordion.Header className='bg-dark'>ORDERED PRODUCTS:</Accordion.Header>
                                                 <Accordion.Body>
-                                                    <td>
-                                                        <span onClick={()=>openproductpage(orderitem)}>
-                                                            <img src={orderitem.image} style={{width:"30%",height:"30%"}}/>
-                                                            <p>{orderitem.productname}</p>
-                                                        </span>
-                                                    </td>
-                                                    <td>
-                                                        <p><span className='fw-bold'>QUANTITY:</span>{orderitem.quantity}</p>
-                                                        <p><span className='fw-bold'>PRICE:</span>Rs.{orderitem.price}</p>
-                                                    </td>
-                                            </Accordion.Body>
-                                        </Accordion.Item>
-                                    </Accordion>
+                            {
+                                order.orderitems?.map((orderitem,indice)=>
+                                <>
+                                    <Table hover striped>
+                                        <tbody>
+                                        <tr key={indice}>
+                                    <td>
+                                        <span onClick={()=>openproductpage(orderitem)}>
+                                            <img src={order.orderitems[indice].image} style={{width:"30%",height:"30%"}}/>
+                                            <p>{order.orderitems[indice].productname}</p>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <p><span className='fw-bold'>QUANTITY:</span>{order.orderitems[indice].quantity}</p>
+                                        <p><span className='fw-bold'>PRICE:</span>Rs.{order.orderitems[indice].price}</p>
                                     </td>
                                 </tr>
+                                        </tbody>
+                                    </Table>
                                 </>
                                 )
                             }
+                            </Accordion.Body>
+                                        </Accordion.Item>
+                                    </Accordion>
+
+                                </td>
+                            </tr>
                             <tr>
                                 <td>ORDER TOTAL PRICE:</td>
                                 <td>Rs.{order.totalprice}</td>
@@ -163,10 +177,7 @@ return (
                     </Table>
                     ))}
             </div>
-            :
-            <></>}
-            <tr>
-            </tr>
+            }
     </div>
   )
 }
