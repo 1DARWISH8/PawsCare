@@ -4,6 +4,7 @@ import {useDispatch,useSelector} from 'react-redux'
 import axios from 'axios'
 import { productDetailsPromiseStatus } from '../redux/slices/productDetailsSlice' 
 import {Alert} from 'react-bootstrap';
+import {} from './Store.css'
 
 function Store() {
 
@@ -190,7 +191,17 @@ useEffect(()=>getwishlist,[])
             (
                 <div className='col pt-3 pb-3'  key={index}>
                     <div className='card' style={{height:'500px'}}>
-                        <img src={item.image} className='card-img-top' style={{width:'auto',height:'250px'}} alt={item.name} onClick={()=>openproductpage(item)}/>
+                        {
+                          item.stock === 'In Stock' ?
+                          <img src={item.image} className='card-img-top' style={{width:'auto',height:'250px'}} alt={item.name} onClick={()=>openproductpage(item)}/>
+                          :
+                          <div className="product-card">
+                            <img src={item.image} className='card-img-top' style={{width:'auto',height:'250px'}} alt={item.name} onClick={()=>openproductpage(item)}/>
+                            <div className={`text-overlay 'out-of-stock'}`}>
+                              <p>{'Out of Stock'}</p>
+                            </div>
+                          </div>
+                        }
                         <div className='card-body'>
                             <h5 className='card-title' onClick={()=>openproductpage(item)}>{item.productname}</h5>
                             <p className='card-text'>Rs.{item.price}</p>
