@@ -270,7 +270,19 @@ return (
             <div className="cart">
                 <div className="row row1">
                     <div className="col-md-4">
-                        <img src={item.image} width="100%" id="ProductImg" alt="Product" />
+                        {
+                            item.stock === 'In Stock' ?
+                            <div className='product-card'>
+                            <img src={item.image} width="100%" id="ProductImg" alt={item.name} />
+                            </div>
+                            :
+                            <div className="product-card">
+                                <img src={item.image} width="100%" id="ProductImg" alt={item.name} />
+                                <div className={`text-overlay 'out-of-stock'}`}>
+                                    <p>{'Out of Stock'}</p>
+                                </div>
+                            </div>
+                        }
                         <div className="small-imgs">
                             <img src={item.image} width="10%" className="small-img" alt="Product" />
                         </div>
