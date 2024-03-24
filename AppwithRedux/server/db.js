@@ -388,6 +388,10 @@ const orderSchema = new mongoose.Schema(
             type:String,
             required:true
         },
+        // orderid:
+        // {
+        //     type:String
+        // },
         orderdate:
         {
             type:Date,
@@ -396,7 +400,7 @@ const orderSchema = new mongoose.Schema(
         orderstatus:
         {
             type:String,
-            enum:['PENDING','CANCELLED','ACCEPTED',"IN DELIVERY","DELIVERED"],
+            enum:['PENDING','CANCELLED','ACCEPTED',"IN TRANSIT","OUT FOR DELIVERY","DELIVERED"],
             default:'PENDING'
         },
         totalprice:
