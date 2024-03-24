@@ -14,9 +14,6 @@ function Profile() {
 
     function logout()
     {
-		<Alert key={'dark'} variant={'dark'}>
-        	LOGOUT SUCCESSFULL
-        </Alert>
         dispatch(logOut())
 		sessionStorage.removeItem('token')        
         navigate('/getstarted')
