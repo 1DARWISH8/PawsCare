@@ -445,4 +445,71 @@ const updatestock = async(req,res)=>
 } 
 
 
-module.exports={getadmin,getusers,changeuserstatus,getallappointments,pendingappointments,pendingappointment,cancelledappointments,getproducts,addproduct,getaproduct,editproduct,deactivateproduct,activateproduct,inactiveproducts,updatestock,getappointmentdate}
+const getorders = async(req,res)=>
+{
+    try
+    {
+        let orders = await Order.find()
+        if (orders)
+        {
+            res.status(200).send({message:"ORDERS",payload:orders})
+        }
+        else
+        {
+            res.status(200).send({message:"UNABLE TO FETCH ORDERS"})
+
+        }
+    }
+    catch(err)
+    {
+        res.status(200).send(err.message)
+    }
+}
+
+const editorderstatus = async(req,res)=>
+{
+    try
+    {
+        let orderdata = req.body
+        let edited = await Order.findOneAndUpdate({_id:orderdata._id},
+            {
+                $set:
+                {
+                    "orderstatus":orderdata.orderstatus
+                }
+            },
+            {
+                new:true
+            })
+        if (edited.orderstatus==='ACCEPTED')
+        {
+            res.status(200).send({message:'ORDER HAS BEEN ACCEPTED',payload:edited})
+        }
+        else if (edited.orderstatus==='CANCELLED')
+        {
+            res.status(200).send({message:"ORDER HAS BEEN CANCELLED",payload:edited})
+        }
+        else if (edited.orderstatus==='IN TRANSIT')
+        {
+            res.status(200).send({message:"ORDER IS IN TRANSIT",payload:edited})
+        }
+        else if (edited.orderstatus==='OUT FOR DELIVERY')
+        {
+            res.status(200).send({message:"ORDER IS OUT FOR DELIVERY",payload:edited})
+        }
+        else if (edited.orderstatus==='DELIVERED')
+        {
+            res.status(200).send({message:"ORDER HAS BEEN DELIVERED",payload:edited})
+        }
+        else
+        {
+            res.status(200).send({message:'FAILED TO UPDATE ORDER STATUS'})
+        }
+    }
+    catch(err)
+    {
+        res.status(200).send(err.message)
+    }
+}
+
+module.exports={getadmin,getusers,changeuserstatus,getallappointments,pendingappointments,pendingappointment,cancelledappointments,getproducts,addproduct,getaproduct,editproduct,deactivateproduct,activateproduct,inactiveproducts,updatestock,getappointmentdate,getorders,editorderstatus}
