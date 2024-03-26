@@ -228,6 +228,39 @@ const editappointment = async(req,res)=>
 }
 
 
+// GET BOOKING SLOTS INFORMATION
+const getallslots = async(req,res)=>
+{
+    try
+    {
+        console.log(req.query)
+        let query = req.originalUrl.split('?')[1]
+        console.log(query)
+        let datequery = query.split('&')[0]
+        console.log(datequery)
+        let date = new URLSearchParams(datequery)
+        console.log(decodeURIComponent(date.get('date')))
+        let {service,location} = req.query
+        // let service = req.body.selectedService
+        // let location = req.body.selectedLocation
+        // let date = req.body.selectedDate
+        // console.log(req.body)
+        // console.log(service)
+        // console.log(location)
+        // console.log(date)
+        let slots = await Appointmentday.findOne({date:date,service:service,location:location})
+        console.log(slots)
+        if (slots)
+        {
+            res.status(200).send({message:TIMESLOTS,payload:slots})
+        }
+    }
+    catch(err)
+    {
+        res.status(200).send(err.message)
+    }
+}
+
 
 //STORE
 const getproducts = async(req,res)=>
@@ -581,4 +614,4 @@ const inwishlist = async(req,res)=>
 }
 
 
-module.exports={getuser,getusers,registerUser,userLogin,bookAppointment,appointments,editappointment,getproducts,cart,addcartproduct,removecartproduct,editquantity,order,getorders,cancelorder,getwishlist,addtowishlist,removefromwishlist,inwishlist}
+module.exports={getuser,getusers,registerUser,userLogin,bookAppointment,appointments,editappointment,getallslots,getproducts,cart,addcartproduct,removecartproduct,editquantity,order,getorders,cancelorder,getwishlist,addtowishlist,removefromwishlist,inwishlist}
