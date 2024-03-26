@@ -107,12 +107,11 @@ return (
                             <tr key={index}>
                                 <td>
                                     <h5 className='m-2'>
-                                        <span>
                                         ORDER STATUS:
-                                            {order.orderstatus==='CANCELLED'&&<p className='text-danger'>{order.orderstatus}</p>}
-                                            {order.orderstatus==='DELIVERED'&&<p className='text-success'>{order.orderstatus}</p>}
-                                            {(order.orderstatus!=='DELIVERED'&&order.orderstatus!=='CANCELLED')&&<p>{order.orderstatus}</p>}
-                                        </span>
+                                            {order.orderstatus==='CANCELLED'&&<span className='text-danger m-2'>{order.orderstatus}</span>}
+                                            {order.orderstatus==='DELIVERED'&&<span className='text-success m-2'>{order.orderstatus}</span>}
+                                            {order.orderstatus==='ACCEPTED'&&<span className='text-primary m-2'>{order.orderstatus}</span>}
+                                            {(order.orderstatus!=='DELIVERED'&&order.orderstatus!=='CANCELLED'&&order.orderstatus!=='ACCEPTED')&&<span className='m-2'>{order.orderstatus}</span>}
                                     </h5>
                                     <p><span className='fw-bold m-2'>ORDERED ON:</span>{order.orderdate}</p>
                                 </td>
