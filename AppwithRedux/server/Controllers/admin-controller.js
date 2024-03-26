@@ -47,7 +47,8 @@ async function autoFilldays()
                         {
                             // Generate document for each date
                             let date = new Date(currentYear, month, day)
-                            date.setHours(5,30,0,0) //Function to set the time to 00:00:00 hrs
+                            // console.log(date)
+                            // date.setHours(5,30,0,0) //Function to set the time to 00:00:00 hrs
                             const service = servicetype[count]
                             const location = locations[locationcount]
                             const slots = generateSlots(); // Function to generate time slots
@@ -254,8 +255,6 @@ const addproduct = async (req,res)=>
     try
     {
         let data = JSON.parse(req.body.data)
-        console.log(data)
-
         let added = await Product.create(data)
         if (added)
         {
