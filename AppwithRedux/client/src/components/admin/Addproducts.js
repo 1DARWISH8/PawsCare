@@ -64,6 +64,7 @@ return (
             <option value="">SELECT</option>
             <option value="DOG">DOG</option>
             <option value="CAT">CAT</option>
+            <option value="DOG & CAT">DOG & CAT</option>
             <option value="BIRD"> BIRD</option>
             <option value="FISH">FISH</option>
             <option value="GUINEA PIG">GUINEA PIG</option>
