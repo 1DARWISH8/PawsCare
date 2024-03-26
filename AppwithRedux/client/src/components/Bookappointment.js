@@ -1,17 +1,54 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
 import {useNavigate} from 'react-router-dom'
 import { NavLink } from 'react-router-dom'
 import {useSelector} from 'react-redux'
+import Accordion from 'react-bootstrap/Accordion';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+
 
 
 function Bookappointment() {
+
 
     let navigate= useNavigate()
     let {currentUser}=useSelector(state=>state.userLogin)
     let [error,setError]=useState('')
     let {register,handleSubmit,formState:{errors}}=useForm()
+    const [selectedDate, setSelectedDate] = useState('');
+    const [selectedService, setService] = useState('');
+    const [selectedLocation, setLocation] = useState('');
+    const [timeslots,setTimeslots]=useState([])
+    // Get today's date
+    const today = new Date();
+
+
+    useEffect(()=>
+    {
+        // Check if all inputs are provided
+        if(selectedService&&selectedLocation&&selectedDate)
+        {
+            // retrieve slots according to the inputs
+            getallslots(selectedService,selectedLocation,selectedDate)
+        }
+    },[selectedService,selectedLocation,selectedDate])
+
+    async function getallslots(selectedService,selectedLocation,selectedDate)
+    {
+        try
+        {
+            console.log(selectedDate)
+            let slots = await axios.get(`http://localhost:5000/user-api/getallslots?date=${selectedDate}&location=${selectedLocation}&service=${selectedService}`)
+            setTimeslots(slots)
+        }
+        catch(err)
+        {
+            setError(err.message)
+        }
+    }
+    console.log(timeslots)
 
 
 
@@ -21,22 +58,24 @@ function Bookappointment() {
         try
         {
             let username = currentUser.username
-            let petname = currentUser.petname
+            data.date = selectedDate
+            let petname = currentUser.petdetails[0].petname
             data = {username,petname,...data}
-            // console.log(data)
-            let booked = await axios.post(`http://localhost:5000/user-api/bookappointment`,data)
-            if(booked.status===200)
+            console.log(data)
+            // let booked = await axios.post(`http://localhost:5000/user-api/bookappointment`,data)
+            // if(booked.status===201)
+            // {
+                //     navigate('/appointment/appointsuccess')
+                // }
+            }
+            catch(err)
             {
-                navigate('/appointment/appointsuccess')
+                setError(err.message)
             }
         }
-        catch(err)
-        {
-            setError(err.message)
-        }
-    }
-
-    const today = new Date().toISOString().split('T')[0];
+        
+        // console.log(selectedDate)
+    // const today = new Date().toISOString().split('T')[0];
 
     // const availableTimeSlots = [];
     // for (let hour = 9; hour < 18; hour++)
@@ -68,7 +107,9 @@ function Bookappointment() {
         }
     }
 
-  return (
+    
+
+return (
     <div>
         <h1 className='text-center fs-3 text-decoration-underline'>BOOK APPOINTMENT</h1>
         {error.length!==0&& <p className='fw-bold text-center text-danger border-0'>{error}</p>}
@@ -76,11 +117,11 @@ function Bookappointment() {
         {/* <NavLink className='bg-secondary btn text-white' to='/home'>ᐊ Back</NavLink> */}
         <button className='btn btn-warning' onClick={getappointments}>MY APPOINTMENTS</button>
             <div className='sm-3 pt-4'>
-            <label className='text-center fw-bold form-label'>PETNAME:<span className='text-secondary fs-6 border border-secondary rounded m-2 p-1'>{currentUser.petname}</span></label>
+            <label className='text-center fw-bold form-label'>PETNAME:<span className='text-secondary fs-6 border border-secondary rounded m-2 p-1'>{currentUser.petdetails[0].petname}</span></label>
             </div>
             <div className='sm-3 '>
             <label className='text-center fw-bold form-label' htmlFor='service'>SELECT SERVICE TYPE:</label>
-            <select className='m-1 text-secondary fw-bold form-control border border-secondary' id='service' {...register('service',{required:true})}>
+            <select {...register('service',{required:true})} className='m-1 text-secondary fw-bold form-control border border-secondary' value={selectedService} onChange={(e) => setService(e.target.value)} id='service' >
                 <option value=''>--SELECT--</option>
                 <option value='HEALTH CHECK UP'>HEALTH CHECK UP</option>
                 <option value='GROOMING'>GROOMING</option>
@@ -90,7 +131,7 @@ function Bookappointment() {
             </div>
             <div className='sm-3'>
             <label className='text-center fw-bold form-label' htmlFor='location'>SELECT LOCATION:</label>
-            <select className='m-1 text-secondary fw-bold form-control border border-secondary' id='location' {...register('location',{required:true})}>
+            <select {...register('location',{required:true})} className='m-1 text-secondary fw-bold form-control border border-secondary' value={selectedLocation} onChange={(e) => setLocation(e.target.value)} id='location' >
                 <option value=''>--SELECT--</option>
                 <option value='BANGALORE'>BANGALORE</option>
                 <option value='CHENNAI'>CHENNAI</option>
@@ -101,23 +142,31 @@ function Bookappointment() {
             </div>
             <div className='sm-3' >
                 <label className='text-center fw-bold form-label' htmlFor='date'>SELECT DATE:</label>
-                <input type='date' id='date' min={today} className='form-control border border-secondary text-secondary fw-bold' {...register('date',{required:true})}></input>
+                {/* <input type='date' id='date' min={today} className='form-control border border-secondary text-secondary fw-bold' on  {...register('date',{required:true})}></input> */}
+                <div></div>
+                <input type="hidden"  {...register('date')} value={selectedDate} />
+                <DatePicker
+                    className='m-1 text-secondary fw-bold form-control border border-secondary'
+                    selected={selectedDate}
+                    onChange={(date) => setSelectedDate(date)}
+                    minDate={today}
+                    inline // Display the calendar inline
+                />
             </div>
             {errors.date?.type==='required'&&<p className='text-danger fw-bold text-center'>*DATE needs to be SELECTED*</p>}
-            <div className='sm-3' >
+            {
+                timeslots.length!==0 &&
+                <div className='sm-3' >
                 <label className='text-center fw-bold form-label' htmlFor='time'>SELECT TIME:</label>
-                <select className='sm-3' id='time' {...register('time',{required:true})}>
-                    <option value=''>
-                        Select Time
-                    </option>
-                    {availableTimeSlots.map((timeSlot,index)=>
-                    (
-                        <option key={index} value={timeSlot}>
-                            {timeSlot}
-                        </option>
-                    ))}
-                </select>
+                <Accordion>
+                    <Accordion.Item eventKey="0">
+                        <Accordion.Header className='fw-bold'>SELECT TIME SLOT</Accordion.Header>
+                        <Accordion.Body>
+                        </Accordion.Body>
+                    </Accordion.Item>
+                </Accordion>
             </div>
+            }
             {errors.time?.type==='required'&&<p className='text-danger fw-bold text-center'>*TIME needs to be SELECTED*</p>}
             <div className='text-center pt-3'>
             <button className='btn btn-success' type='submit'>BOOK</button>
