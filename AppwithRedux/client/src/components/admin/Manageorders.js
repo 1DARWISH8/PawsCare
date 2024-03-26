@@ -91,7 +91,7 @@ const renderFormInputs = () => {
 
   // Function to sort orders by date
   const sortOrders = (filteredOrders) => {
-    return sortOrder === 'oldest' ? filteredOrders.sort((a, b) => new Date(a.date) - new Date(b.date)) :
+    return sortOrder === 'oldest' ? filteredOrders.sort((a, b) => new Date(a.orderdate) - new Date(b.orderdate)) :
     filteredOrders.sort((a, b) => new Date(b.orderdate) - new Date(a.orderdate));
       };
 
@@ -188,7 +188,8 @@ return (
                                         ORDER STATUS:
                                             {order.orderstatus==='CANCELLED'&&<span className='text-danger m-2'>{order.orderstatus}</span>}
                                             {order.orderstatus==='DELIVERED'&&<span className='text-success m-2'>{order.orderstatus}</span>}
-                                            {(order.orderstatus!=='DELIVERED'&&order.orderstatus!=='CANCELLED')&&<span className='m-2'>{order.orderstatus}</span>}
+                                            {order.orderstatus==='ACCEPTED'&&<span className='text-primary m-2'>{order.orderstatus}</span>}
+                                            {(order.orderstatus!=='DELIVERED'&&order.orderstatus!=='CANCELLED'&&order.orderstatus!=='ACCEPTED')&&<span className='m-2'>{order.orderstatus}</span>}
                                     </h5>
                                     <p><span className='fw-bold m-2'>ORDERED ON:</span>{order.orderdate}</p>
                                 </td>
