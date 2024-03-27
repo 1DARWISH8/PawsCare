@@ -39,16 +39,16 @@ function Bookappointment() {
     {
         try
         {
-            console.log(selectedDate)
+            // console.log(selectedService,selectedLocation,selectedDate)
             let slots = await axios.get(`http://localhost:5000/user-api/getallslots?date=${selectedDate}&location=${selectedLocation}&service=${selectedService}`)
-            setTimeslots(slots)
+            setTimeslots(slots.data.payload)
         }
         catch(err)
         {
             setError(err.message)
         }
     }
-    console.log(timeslots)
+    // console.log(timeslots)
 
 
 
@@ -58,7 +58,8 @@ function Bookappointment() {
         try
         {
             let username = currentUser.username
-            data.date = selectedDate
+            data.appointment_date = selectedDate
+            
             let petname = currentUser.petdetails[0].petname
             data = {username,petname,...data}
             console.log(data)
@@ -87,13 +88,13 @@ function Bookappointment() {
     //     }
     // }
 
-    const availableTimeSlots = [];
-    for (let hour = 9; hour <= 19; hour++) {
-    const hour12 = hour > 12 ? hour - 12 : hour;
-    const meridiem = hour >= 12 ? 'PM' : 'AM';
-    availableTimeSlots.push(`${hour12.toString().padStart(2, '0')}:00 ${meridiem}`);
-    availableTimeSlots.push(`${hour12.toString().padStart(2, '0')}:30 ${meridiem}`);
-    }
+    // const availableTimeSlots = [];
+    // for (let hour = 9; hour <= 19; hour++) {
+    // const hour12 = hour > 12 ? hour - 12 : hour;
+    // const meridiem = hour >= 12 ? 'PM' : 'AM';
+    // availableTimeSlots.push(`${hour12.toString().padStart(2, '0')}:00 ${meridiem}`);
+    // availableTimeSlots.push(`${hour12.toString().padStart(2, '0')}:30 ${meridiem}`);
+    // }
 
     async function getappointments()
     {
@@ -121,7 +122,7 @@ return (
             </div>
             <div className='sm-3 '>
             <label className='text-center fw-bold form-label' htmlFor='service'>SELECT SERVICE TYPE:</label>
-            <select {...register('service',{required:true})} className='m-1 text-secondary fw-bold form-control border border-secondary' value={selectedService} onChange={(e) => setService(e.target.value)} id='service' >
+            <select {...register('appointment_service',{required:true})} className='m-1 text-secondary fw-bold form-control border border-secondary' value={selectedService} onChange={(e) => setService(e.target.value)} id='service' >
                 <option value=''>--SELECT--</option>
                 <option value='HEALTH CHECK UP'>HEALTH CHECK UP</option>
                 <option value='GROOMING'>GROOMING</option>
@@ -131,12 +132,12 @@ return (
             </div>
             <div className='sm-3'>
             <label className='text-center fw-bold form-label' htmlFor='location'>SELECT LOCATION:</label>
-            <select {...register('location',{required:true})} className='m-1 text-secondary fw-bold form-control border border-secondary' value={selectedLocation} onChange={(e) => setLocation(e.target.value)} id='location' >
+            <select {...register('appointment_location',{required:true})} className='m-1 text-secondary fw-bold form-control border border-secondary' value={selectedLocation} onChange={(e) => setLocation(e.target.value)} id='location' >
                 <option value=''>--SELECT--</option>
                 <option value='BANGALORE'>BANGALORE</option>
                 <option value='CHENNAI'>CHENNAI</option>
-                <option value='DELHI'>DELHI</option>
                 <option value='HYDERABAD'>HYDERABAD</option>
+                <option value='VISAKHAPATNAM'>VISAKHAPATNAM</option>
             </select>
             {errors.location?.type==='required'&&<p className='text-danger fw-bold text-center'>*LOCATION needs to be SELECTED*</p>}
             </div>
@@ -144,7 +145,7 @@ return (
                 <label className='text-center fw-bold form-label' htmlFor='date'>SELECT DATE:</label>
                 {/* <input type='date' id='date' min={today} className='form-control border border-secondary text-secondary fw-bold' on  {...register('date',{required:true})}></input> */}
                 <div></div>
-                <input type="hidden"  {...register('date')} value={selectedDate} />
+                <input type="hidden"  {...register('appointment_date')} value={selectedDate} />
                 <DatePicker
                     className='m-1 text-secondary fw-bold form-control border border-secondary'
                     selected={selectedDate}
@@ -162,6 +163,24 @@ return (
                     <Accordion.Item eventKey="0">
                         <Accordion.Header className='fw-bold'>SELECT TIME SLOT</Accordion.Header>
                         <Accordion.Body>
+                        {
+                            timeslots.map((slot,index)=>
+                            (
+                                <>
+                                {slot.appointment_status==='available'?
+                                <div className='text-center'>
+                                <button className='btn btn-light m-2'>
+                                    {slot.appointment_time}
+                                </button>
+                                </div>
+                                :
+                                <button className='btn btn-light m-2' disabled>
+                                    {slot.appointment_time}
+                                </button>
+                                }
+                                </>
+                            ))
+                        }
                         </Accordion.Body>
                     </Accordion.Item>
                 </Accordion>
