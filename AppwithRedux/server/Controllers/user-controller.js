@@ -233,26 +233,21 @@ const getallslots = async(req,res)=>
 {
     try
     {
-        console.log(req.query)
         let query = req.originalUrl.split('?')[1]
-        console.log(query)
         let datequery = query.split('&')[0]
-        console.log(datequery)
         let date = new URLSearchParams(datequery)
-        console.log(decodeURIComponent(date.get('date')))
-        let {service,location} = req.query
-        // let service = req.body.selectedService
-        // let location = req.body.selectedLocation
-        // let date = req.body.selectedDate
-        // console.log(req.body)
-        // console.log(service)
-        // console.log(location)
+        date = decodeURIComponent(date.get('date'))
+        let [beforeGMT,afterGMT]=date.split("GMT")
+        afterGMT= afterGMT.trim()
+        date=`${beforeGMT}GMT+${afterGMT}`;
+        console.log(req.query)
         // console.log(date)
-        let slots = await Appointmentday.findOne({date:date,service:service,location:location})
-        console.log(slots)
+        let {service,location} = req.query
+        let slots = await Appointmentday.findOne({appointment_date:date,appointment_service:service,appointment_location:location})
+        // console.log(slots)
         if (slots)
         {
-            res.status(200).send({message:TIMESLOTS,payload:slots})
+            res.status(200).send({message:"TIMESLOTS",payload:slots.slots})
         }
     }
     catch(err)
