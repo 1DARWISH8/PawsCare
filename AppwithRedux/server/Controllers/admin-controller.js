@@ -46,13 +46,13 @@ async function autoFilldays()
                         for (let day = 1; day <= daysInMonth; day++) 
                         {
                             // Generate document for each date
-                            let date = new Date(currentYear, month, day)
+                            let appointment_date = new Date(currentYear, month, day)
                             // console.log(date)
                             // date.setHours(5,30,0,0) //Function to set the time to 00:00:00 hrs
-                            const service = servicetype[count]
-                            const location = locations[locationcount]
+                            const appointment_service = servicetype[count]
+                            const appointment_location = locations[locationcount]
                             const slots = generateSlots(); // Function to generate time slots
-                            const dayAppointment = new Appointmentday({date,service,location,slots });
+                            const dayAppointment = new Appointmentday({appointment_date,appointment_service,appointment_location,slots });
                             // Insert document into the collection
                             await dayAppointment.save();
                         }
@@ -75,12 +75,12 @@ function generateSlots() {
     // Example: Generate slots for every hour from 9 AM to 5 PM
     const slots = [];
     for (let hour = 9; hour <= 11; hour++) {
-        slots.push({ time: `${hour}:00 AM`, status: 'available' });
-        slots.push({ time: `${hour}:30 AM`, status: 'available' });
+        slots.push({ appointment_time: `${hour}:00 AM`, status: 'available' });
+        slots.push({ appointment_time: `${hour}:30 AM`, status: 'available' });
     }
     for (let hour = 1; hour <= 5; hour++) {
-        slots.push({ time: `${hour}:00 PM`, status: 'available' });
-        slots.push({ time: `${hour}:30 PM`, status: 'available' });
+        slots.push({ appointment_time: `${hour}:00 PM`, status: 'available' });
+        slots.push({ appointment_time: `${hour}:30 PM`, status: 'available' });
     }
     return slots
 }
