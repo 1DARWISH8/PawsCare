@@ -238,36 +238,36 @@ const appointmentSchema = new mongoose.Schema(
             type:String,
             required:[true,"PETNAME IS REQUIRED"]
         },
-        service:
+        appointment_service:
         {
             type:String,
             required:[true,"SERVICE TYPE IS REQUIRED"]
         },
-        location:
+        appointment_location:
         {
             type:String,
             required:[true,"SERVICE LOCATION IS REQUIRED"]
         },
-        date:
+        appointment_date:
         {
             type:Date,
             required:[true,"APPOINTMENT DATE IS REQUIRED"]
         },
-        time:
+        appointment_time_slot:
         {
             type:String,
             required:[true,"APPOINTMENT TIME IS REQUIRED"]
         },
-        bookingtime:
+        appointment_booked_on:
         {
             type:Date,
             default: Date.now
-
         },
-        appointmentstatus:
+        appointment_status:
         {
             type:String,
-            default:"PENDING"
+            default:"PENDING",
+            enum:['PENDING',"COMPLETE"]
         }
     }
 )
@@ -275,30 +275,30 @@ const appointmentSchema = new mongoose.Schema(
 // DAY APPOINTMENT SCHEMA TO KEEP TRACK OF APPOINTMENTS
 const appointmentDaySchema = new mongoose.Schema(
     {
-        date:
+        appointment_date:
         {
             type:String,
             required:true
         },
-        service:
+        appointment_service:
         {
             type:String,
             required:true,
             enum:['HEALTH CHECK UP','GROOMING','TRAINING']
         },
-        location:
+        appointment_location:
         {
             type:String
         },
         slots:
         [
             {
-                time:
+                appointment_time:
                 {
                     type:String,
                     required:true
                 },
-                status:
+                appointment_status:
                 {
                     type:String,
                     enum:['available','booked'],
