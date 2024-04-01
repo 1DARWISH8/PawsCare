@@ -14,10 +14,9 @@ import Profile from './components/Profile';
 import Appointment from './components/Appointment';
 import Appointsuccess from './components/Appointsuccess';
 import Healthcard from './components/Healthcard';
-import Food from './components/Food';
-import Treats from './components/Treats';
-import Toys from './components/Toys';
-import Essentials from './components/Essentials';
+// import Food from './components/Food';
+// import Treats from './components/Treats';
+// import Essentials from './components/Essentials';
 import Cart from './components/Cart';
 import Checkout from './components/Checkout';
 import Checkappointment from './components/admin/Checkappointments';
@@ -61,25 +60,7 @@ function App() {
         },
         {
           path:'store',
-          element:<Store/>,
-          children:[
-            {
-              path:'/store/food',
-              element:<Food/>
-            },
-            {
-              path:'/store/treats',
-              element:<Treats/>
-            },
-            {
-              path:'/store/toys',
-              element:<Toys/>
-            },
-            {
-              path:'/store/essentials',
-              element:<Essentials/>
-            }
-          ]
+          element:<Store/>
         },
         {
           path:"/cart",
@@ -94,7 +75,7 @@ function App() {
           element:<GetStarted/>,
         },
         {
-          path:'getstarted/register',
+          path:'/getstarted/register',
           element:<Register/>
         },
         {
