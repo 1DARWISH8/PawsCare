@@ -46,16 +46,10 @@ function Register() {
         // console.log(data)
         const formData = new FormData();
         formData.append('data',JSON.stringify(data))
-        // if(userType==='user')
-        // {
-            //     formData.append('userpic',file)
-        //     formData.append('petpic',file)
-        
-        // }
-        // else
+
         formData.append('userpic',file)
-        // {
-        // }
+
+
         try
         {
             let res = await axios.post('http://localhost:5000/user-api/registeruser',formData)
@@ -76,11 +70,6 @@ function Register() {
     }
 
     // console.log(errors)
-
-    function Back()
-    {
-        navigate('/getstarted')
-    }
 
 
 return (
