@@ -87,7 +87,9 @@ function Header() {
                         </button>
                         {isOpen && (
                           <div className="dropdown-content">
-                            <NavLink to="/profile" onClick={closeDropdown}>PROFILE</NavLink>
+                            <NavLink to="/profile" onClick={closeDropdown}>PROFILE
+                              {/* {currentUser.username}<img src={currentUser.profileImageURL} alt='userprofile image' className='rounded-circle m-1' width="40"></img> */}
+                            </NavLink>
                             <NavLink to="/user/orders" onClick={closeDropdown}>VIEW ORDERS</NavLink>
                             <NavLink to="/user/wishlist" onClick={closeDropdown}>WISHLIST</NavLink>
                             <NavLink>
@@ -143,7 +145,7 @@ function Header() {
                     </li> */}
                     <div className="dropdown" onMouseEnter={toggleDropdown} onMouseLeave={closeDropdown}>
                         <button className="dropbtn">
-                        {currentUser.username}<i className="bi bi-person-circle"></i>
+                        {currentUser.username}<img src={currentUser.profileImageURL} alt='userprofile image' className='rounded-circle m-1' width="40"></img>
                         </button>
                         {isOpen && (
                           <div className="dropdown-content">
