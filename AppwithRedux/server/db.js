@@ -58,7 +58,7 @@ const userSchema = new mongoose.Schema(
             type:Number,
             required:[true,"PHONE NUMBER IS REQUIRED"]
         },
-        userpic:
+        profileImageURL:
         {
             type:String
         },
@@ -177,7 +177,7 @@ const adminSchema = new mongoose.Schema(
             type:String,
             required:[true,"EMAIL IS REQUIRED"]
         },
-        userpic:
+        profileImageURL:
         {
             type:String
         },
