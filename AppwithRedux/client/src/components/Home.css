@@ -1,0 +1,78 @@
+#image
+{
+    width: 200px;
+    height: 100px;
+    max-width: auto;
+    max-height: auto;
+}
+h4
+{
+    font-family: Arial, Helvetica, sans-serif;
+}
+h1
+{
+    .bebas-neue-regular
+    {
+        font-family: "Bebas Neue", sans-serif;
+        font-weight: 1000;
+        font-style: normal;
+    }  
+}
+.card
+{
+    display: flex;
+    box-shadow: 2px 2px 4px ;
+}
+.container
+{
+    box-shadow: 2px 2px 4px;
+}
+
+#welcome
+{
+    font-family: "Caveat", cursive;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-style: normal;
+    font-size: xx-large;
+}
+#intro
+{
+    font-family: "Acme", sans-serif;
+    font-weight: 400;
+}
+
+#health
+{
+    font-family: "Acme", sans-serif;
+    font-size: 1.3rem;
+}
+
+@media (min-width: 992px)
+{
+    /* #header
+    {
+        display: flexbox;
+        align-items: center;
+        left: 12px;
+        position:absolute;
+    } */
+    /* #carouselcard
+    {
+        display: flex;
+        align-items: center;
+        position:relative;
+        
+
+    }
+    #carousel
+    {
+        height: 225px;
+        width: 200px;
+    }
+    #carouselimg
+    {
+        height: 225px;
+        width: 200px;
+    } */
+}

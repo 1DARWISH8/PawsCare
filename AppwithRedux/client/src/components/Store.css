@@ -1,0 +1,100 @@
+h3
+{
+    text-align: center;
+    font-size: 30px;
+    margin: 0;
+    padding-top: 10px;
+}
+.item
+{
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    margin: 50px 0;
+    max-width: 1100px;
+}
+
+.image
+{
+    filter: drop-shadow(0 10px 10px rgba(39, 36, 36, 0.6));
+    width: 100px;
+}
+
+.productlist
+{
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 20px;
+}
+
+.productlist .item
+{
+    background-color:beige;
+    padding: 20px;
+    border-radius: 20px;
+    font-weight: 500;
+}
+.card
+{
+    background-color:beige;
+    border-radius: 20px;
+    font-weight: 500;
+}
+
+.price
+{
+    letter-spacing: 10px;
+}
+
+.number
+{
+    background-color: rgb(233, 94, 94);
+    border-radius: 50%;
+    padding: 3px;
+    margin: 3px;
+    color: beige;
+}
+
+.cart
+{
+    font-weight: 500;
+    color: var(--logo);
+    font-size: 1.25rem;
+}
+
+.nav-item.active
+{
+    background-color: chartreuse;
+}
+
+#headertext
+{
+    font-family: "Acme", sans-serif;
+    font-size: 1.2rem;
+    padding: 3px;
+}
+
+.product-card {
+    position: relative;
+    display: inline-block;
+  }
+   
+  .text-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent white background */
+    text-align: center;
+    padding: 10px;
+}
+
+.text-overlay p {
+    margin: 0;
+}
+
+.out-of-stock {
+    background-color: rgba(209, 17, 17, 1.5); /* Semi-transparent red background for out of stock */
+}
