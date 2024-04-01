@@ -1,14 +1,14 @@
 // useContext hook is imported to read and access data from context
-import React from 'react'
+import React, { useState, useEffect } from 'react';
 // To navigate from one components to other according to user interaction useNavigate hook is imported from React Router library
 import {useNavigate} from 'react-router-dom'
 import {useSelector} from 'react-redux'
 
 
 // images are imported for the carousel
-import haircut from '../images/haircut.jpg'
-import training from '../images/training.jpg'
-import checkup from '../images/checkup.jpg'
+// import haircut from '../images/haircut.jpg'
+// import training from '../images/training.jpg'
+// import checkup from '../images/checkup.jpg'
 
 // carousel is imported from the react-bootstrap which was installed using the command "npm i react-bootstrap bootstrap" 
 import Carousel from 'react-bootstrap/Carousel';
@@ -16,6 +16,9 @@ import Carousel from 'react-bootstrap/Carousel';
 import {Outlet} from 'react-router-dom'
 // styles are imported from the css file
 import './Home.css'
+
+
+
 
 function Home() {
 
@@ -66,16 +69,21 @@ function Home() {
     <div>
         <div className='text-center' id='header'>
           {
+            currentUser.userType==='admin'&&
+
+            <>
+            <h3>WELCOME, {currentUser.username}</h3>
+            <h5>TO DASHBOARD</h5>
+            </>
+          }
+          {
             currentUser.userType === 'user' &&
             <>
               <h4 className='pt-4' id="welcome">Welcome to</h4>
               <h1 className='pt-2' id='intro'>PAWSCARE🌟</h1>
               <div className='fs-3 pt-2 pb-5'> Your {loginStatus===true?<span id='intro'>{currentUser.petdetails[0].petname}</span>:<span>Pet</span>}'s Wellbeing Central! 🐾</div>
-            </>
-          }
-          {/* checks if user is logged in or not and renders the component accordingly */}
-        </div>
-        <div className="card m-3 mt-2" id='carouselcard'>
+            
+              <div className="card m-3 mt-2" id='carouselcard'>
           <div className="card-header border-0">
             <div className=' text-center fw-bold'>Explore our premium pet services, including expert health checkups, haircut and training sessions to ensure your pets feel and look their best. 
             </div>          
@@ -88,13 +96,13 @@ function Home() {
             {/* carousel is added */}
             <Carousel fade nextIcon={<span aria-hidden="true" className="carousel-control-next-icon changed" id='carousel' />}>
               <Carousel.Item>
-                <img className="d-block w-100" id='carouselimg' src={haircut}/>
+                {/* <img className="d-block w-100" id='carouselimg' src={haircut}/> */}
               </Carousel.Item>
               <Carousel.Item>
-                <img className="d-block w-100" id='carouselimg' src={checkup}/>
+                {/* <img className="d-block w-100" id='carouselimg' src={checkup}/> */}
               </Carousel.Item>
               <Carousel.Item>
-                <img className="d-block w-100" id='carouselimg' src={training}/>
+                {/* <img className="d-block w-100" id='carouselimg' src={training}/> */}
               </Carousel.Item>
             </Carousel>
           </div>
@@ -109,6 +117,12 @@ function Home() {
             {/* the component is dynamically rendered in the outlet */}
             <Outlet/>
           </div>
+            
+            </>
+          }
+          {/* checks if user is logged in or not and renders the component accordingly */}
+        </div>
+
     </div>
   )
 }
