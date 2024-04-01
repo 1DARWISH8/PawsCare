@@ -31,7 +31,7 @@ userApp.get('/getusers',expressAsyncHandler(getusers))
 userApp.post('/getuser',expressAsyncHandler(getuser))
 
 // CREATE A USER IN USER COLLECTION OF PAWSCARE
-userApp.post('/registeruser',upload.single('pic'),expressAsyncHandler(registerUser))
+userApp.post('/registeruser',upload.single('userpic'),expressAsyncHandler(registerUser))
 
 // USER LOGIN
 userApp.post('/login',expressAsyncHandler(userLogin))
