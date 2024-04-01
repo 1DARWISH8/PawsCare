@@ -1,5 +1,4 @@
 import React from 'react'
-import logo from '../images/pawscarelogo.png'
 // import styled from 'styled-components'
 
 
@@ -24,6 +23,7 @@ import logo from '../images/pawscarelogo.png'
 // `;
 
 function Contact() {
+  let logo = 'https://res.cloudinary.com/dozacgfl7/image/upload/v1711878050/logo_with_name_l2vh5v.png'
   return (
     <div>
       <div className='card-group p-5'>
