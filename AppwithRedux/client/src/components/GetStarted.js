@@ -1,6 +1,6 @@
 import React from 'react'
 import { NavLink,Outlet } from 'react-router-dom'
-import logo from '../images/gradlogofromai_prev_ui.png'
+// import logo from '../images/gradlogofromai_prev_ui.png'
 
 function GetStarted() {
 return (
@@ -9,7 +9,7 @@ return (
             <h1>WELCOME TO</h1>
         </div>
         <div className='nav justify-content-center p-3'>
-            <img width='300px' src={logo} alt=' '></img>
+            {/* <img width='300px' src={logo} alt=' '></img> */}
         </div>
         <ul className='nav justify-content-center'>
             <li className='nav-item'>
