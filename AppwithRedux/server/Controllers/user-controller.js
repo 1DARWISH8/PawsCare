@@ -5,7 +5,7 @@ const bcryptjs = require('bcryptjs')
 // import jsonwebtokens for JWT
 const jwt = require('jsonwebtoken')
 // import cloudinary middleware for image and other fileupload
-// const {cloudinary} = require('../Middlewares/cloudinaryUpload')
+const {cloudinary} = require('../Middlewares/cloudinaryUpload')
 // import fs (filesystem) module
 const fs = require('fs');
 
@@ -43,17 +43,17 @@ const registerUser = async(req,res)=>
             let hashedpassword = await bcryptjs.hash(userdata.password,5)
             userdata.password = hashedpassword;
             // upload the image into cloudinary
-            // let upload = await cloudinary.uploader.upload(req.file.path);
-            // userdata.profileImageURL = upload.url;
+            let upload = await cloudinary.uploader.upload(req.file.path);
+            userdata.profileImageURL = upload.url;
             let user = await User.create(userdata)
             // remove image from local user
-            // fs.unlink(req.file.path,err=>
-            //     {
-            //         if(err)
-            //         {
-            //             throw err
-            //         }
-            //     })
+            fs.unlink(req.file.path,err=>
+                {
+                    if(err)
+                    {
+                        throw err
+                    }
+                })
             res.status(201).send({message:"USER CREATED",payload:user})
         }
         else
@@ -63,14 +63,25 @@ const registerUser = async(req,res)=>
     }
     else if (userType==="admin")
     {
-        console.log("in else if")
         let adminexists = await Admin.findOne({username:userdata.username})
         if (adminexists===null)
         {
             let hashedpassword = await bcryptjs.hash(userdata.password,5)
             userdata.password=hashedpassword;
 
-            let admin = await Admin.create(userdata)
+            // upload the image into cloudinary
+            let upload = await cloudinary.uploader.upload(req.file.path);
+            userdata.profileImageURL = upload.url;
+
+            let admin = await Admin.create(userdata)           
+            // remove image from local user
+            fs.unlink(req.file.path,err=>
+                {
+                    if(err)
+                    {
+                        throw err
+                    }
+                })
             res.status(201).send({message:"ADMIN PROFILE CREATED",payload:admin})
         }
         else
