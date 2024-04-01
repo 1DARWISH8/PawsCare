@@ -1,14 +1,15 @@
 import React, { useState } from 'react'
 import { NavLink,useNavigate } from 'react-router-dom'
 // logo image is imported from the images folder
-import logo from "../images/pawscarelogo.png"
+// import logo from "../images/pawscarelogo.png"
 // userLoginContext is imported, to use the created context store
 import './Header.css'
 import {useDispatch,useSelector} from 'react-redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { faAngleDown, faHome, faUser, faShoppingCart, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import './Dropdown.css';
-import { logOut } from '../redux/slices/userLoginSlice' 
+import { logOut } from '../redux/slices/userLoginSlice'
+/* Import Bootstrap Icons CSS */
 
 
 function Header() {
@@ -16,6 +17,7 @@ function Header() {
   let {currentUser,loginStatus} = useSelector(state=>state.userLogin)
   let navigate=useNavigate()
 	let dispatch = useDispatch()
+  let logo = 'https://res.cloudinary.com/dozacgfl7/image/upload/v1711878050/logo_hjylkr.png'
 
         const [isOpen, setIsOpen] = useState(false);
     
@@ -49,7 +51,7 @@ function Header() {
                     <NavLink className='nav-link' id='icon' to=''><i className="bi bi-house-door-fill"></i><span>HOME</span></NavLink>
                   </li>
                   <li className='nav-item'>
-                    <NavLink className='nav-link' id='icon' to='/store/food'><i className="bi bi-shop"></i>STORE</NavLink>
+                    <NavLink className='nav-link' id='icon' to='/store'><i className="bi bi-shop"></i>STORE</NavLink>
                   </li>
                   <li className='nav-item'>
                     <NavLink className='nav-link' id='icon' to='/getstarted'>GET STARTED</NavLink>
@@ -71,7 +73,7 @@ function Header() {
                       <NavLink className='nav-link' id='icon' to='/home/appointment'><i className="bi bi-calendar"></i>APPOINTMENTS</NavLink>
                     </li>
                     <li className='nav-item'>
-                      <NavLink className='nav-link' id='icon' to='/store/food'><i className="bi bi-shop"></i>STORE</NavLink>
+                      <NavLink className='nav-link' id='icon' to='/store'><i className="bi bi-shop"></i>STORE</NavLink>
                     </li>
                     <li className='nav-item'>
                       <NavLink className='nav-link' id='icon' to='/cart'>CART<i className="bi bi-cart4"></i></NavLink>
