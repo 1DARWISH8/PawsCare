@@ -7,7 +7,7 @@ import {useSelector} from 'react-redux'
 import Accordion from 'react-bootstrap/Accordion';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-
+import {Alert} from 'react-bootstrap';
 
 
 function Bookappointment() {
@@ -21,8 +21,25 @@ function Bookappointment() {
     const [selectedService, setService] = useState('');
     const [selectedLocation, setLocation] = useState('');
     const [timeslots,setTimeslots]=useState([])
+    // State to store the selected option
+    const [selectedOption, setSelectedOption] = useState(""); 
     // Get today's date
     const today = new Date();
+    let [alert,setAlert] = useState('')
+
+
+    const hideAlert = () =>
+    {
+        setTimeout(()=>
+        {
+        setAlert('');
+        },5000);
+    }
+
+    useState(()=>
+    {
+        hideAlert();
+    },[])
 
 
     useEffect(()=>
@@ -51,6 +68,10 @@ function Bookappointment() {
     // console.log(timeslots)
 
 
+    // const handleOptionClick = (optionValue) => 
+    // {
+    //     setSelectedOption(optionValue); // Update the value of the "selectedOption" field
+    // };
 
     async function formSubmit(data)
     {
@@ -59,15 +80,15 @@ function Bookappointment() {
         {
             let username = currentUser.username
             data.appointment_date = selectedDate
-            
             let petname = currentUser.petdetails[0].petname
-            data = {username,petname,...data}
+            let appointment_time = selectedOption
+            data = {username,petname,...data,appointment_time}
             console.log(data)
-            // let booked = await axios.post(`http://localhost:5000/user-api/bookappointment`,data)
-            // if(booked.status===201)
-            // {
-                //     navigate('/appointment/appointsuccess')
-                // }
+            let booked = await axios.post(`http://localhost:5000/user-api/bookappointment`,data)
+            if(booked.status===201)
+            {
+                setAlert(booked.data.message)
+            }
             }
             catch(err)
             {
@@ -114,6 +135,7 @@ return (
     <div>
         <h1 className='text-center fs-3 text-decoration-underline'>BOOK APPOINTMENT</h1>
         {error.length!==0&& <p className='fw-bold text-center text-danger border-0'>{error}</p>}
+        {alert.length!==0 && <Alert variant={'dark'} onClose={()=>setAlert('')}>{alert}</Alert> }
         <form className='col-sm-6 mx-auto m-3 p-3 ' onSubmit={handleSubmit(formSubmit)}>
         {/* <NavLink className='bg-secondary btn text-white' to='/home'>ᐊ Back</NavLink> */}
         <button className='btn btn-warning' onClick={getappointments}>MY APPOINTMENTS</button>
@@ -141,10 +163,8 @@ return (
             </select>
             {errors.location?.type==='required'&&<p className='text-danger fw-bold text-center'>*LOCATION needs to be SELECTED*</p>}
             </div>
-            <div className='sm-3' >
-                <label className='text-center fw-bold form-label' htmlFor='date'>SELECT DATE:</label>
-                {/* <input type='date' id='date' min={today} className='form-control border border-secondary text-secondary fw-bold' on  {...register('date',{required:true})}></input> */}
-                <div></div>
+            <label className='text-center fw-bold form-label' htmlFor='date'>SELECT DATE:</label>
+            <div className='sm-3 text-center' >
                 <input type="hidden"  {...register('appointment_date')} value={selectedDate} />
                 <DatePicker
                     className='m-1 text-secondary fw-bold form-control border border-secondary'
@@ -168,15 +188,30 @@ return (
                             (
                                 <>
                                 {slot.appointment_status==='available'?
-                                <div className='text-center'>
-                                <button className='btn btn-light m-2'>
+                                <div className='text-center' key={index}>
+                                {/* <button type='button' className={`btn btn-light m-2 ${clickedButton === slot.appointment_time ? 'btn-primary':''}`} 
+                                onClick={() => handleOptionClick(slot.appointment_time)}>
                                     {slot.appointment_time}
-                                </button>
+                                </button> */}
+                                <label>
+                                    <input 
+                                    type='checkbox' 
+                                    value={slot.appointment_time}
+                                    checked={selectedOption === slot.appointment_time}
+                                    onChange={(e)=>setSelectedOption(e.target.value)}/>
+                                    {slot.appointment_time}
+                                </label>
                                 </div>
                                 :
-                                <button className='btn btn-light m-2' disabled>
+                                <div className='text-center' key={index}>
+                                {/* <button className='btn btn-light m-2' disabled>
                                     {slot.appointment_time}
-                                </button>
+                                </button> */}
+                                <label>
+                                    <input type="checkbox" disabled/>
+                                    {slot.appointment_time}
+                                </label>
+                                </div>
                                 }
                                 </>
                             ))
@@ -186,9 +221,9 @@ return (
                 </Accordion>
             </div>
             }
-            {errors.time?.type==='required'&&<p className='text-danger fw-bold text-center'>*TIME needs to be SELECTED*</p>}
+            {errors.time&&<p className='text-danger fw-bold text-center'>*TIME needs to be SELECTED*</p>}
             <div className='text-center pt-3'>
-            <button className='btn btn-success' type='submit'>BOOK</button>
+            <button className='btn btn-success' type='submit' disabled={!selectedOption}>BOOK</button>
             </div>
         </form>
     </div>
