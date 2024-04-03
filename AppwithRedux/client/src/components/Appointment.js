@@ -3,6 +3,12 @@ import axios from 'axios'
 import {useNavigate} from 'react-router-dom'
 import {useSelector} from 'react-redux'
 import Card from 'react-bootstrap/Card';
+import {Alert} from 'react-bootstrap';
+import { useForm } from 'react-hook-form'
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import DatePicker from 'react-datepicker';
+import Accordion from 'react-bootstrap/Accordion';
 
 function Appointment() {
 
@@ -11,7 +17,32 @@ function Appointment() {
     let [error,setError]=useState('')
     let [appointmentsdata,setAppointmentsdata]=useState('')
     // console.log(booking)
+    let {register,handleSubmit,formState:{errors}}=useForm()
+    const [timeslots,setTimeslots]=useState([])
+    let [alert,setAlert] = useState('')
 
+    const [show, setShow] = useState(false);
+    const [selectedDate, setSelectedDate] = useState('');
+    const handleShow = () => setShow(true);
+    const handleClose = () => setShow(false);
+    // State to store the selected option
+    const [selectedOption, setSelectedOption] = useState(""); 
+    const today = new Date();
+    const [selectedAppointment, setSelectedAppointment] = useState(null);
+
+
+    const hideAlert = () =>
+    {
+        setTimeout(()=>
+        {
+        setAlert('');
+        },5000);
+    }
+
+    useState(()=>
+    {
+        hideAlert();
+    },[])
 
     async function getappointments()
     {
@@ -40,10 +71,36 @@ function Appointment() {
     {
         try
         {
-            appointment.appointmentstatus="CANCELLED"
-            let cancelled = await axios.post('http://localhost:5000/user-api/editappointment',appointment)
-            // console.log(cancelled)
+            let cancelled = await axios.post('http://localhost:5000/user-api/cancelappointment',appointment)
+            if(cancelled)
+            {
+                setAlert(cancelled.data.message)
+            }
             getappointments()
+        }
+        catch(err)
+        {
+            setError(err.message)
+        }
+    }
+    // console.log(timeslots)
+
+    async function rescheduleappointment(selectedAppointment)
+    {
+        try
+        {
+            let new_appointment_date = selectedDate
+            let new_appointment_time = selectedOption
+            let appointment_data = {...selectedAppointment,new_appointment_time,new_appointment_date}
+            console.log(appointment_data)
+            let rescheduled = await axios.post('http://localhost:5000/user-api/rescheduleappointment',appointment_data)
+            console.log(rescheduled)
+            if(rescheduled.data.message==="APPOINTMENT RESCHEDULED SUCCESSFULLY")
+            {
+                setAlert(rescheduled.data.message)
+                handleClose()
+                getappointments()
+            }
         }
         catch(err)
         {
@@ -51,25 +108,41 @@ function Appointment() {
         }
     }
 
-    async function rescheduleappointment(appointment)
+    useEffect(()=>
+    {
+        if (selectedAppointment)
+        {
+            if(selectedAppointment.appointment_service&&selectedAppointment.appointment_location&&selectedDate)
+                {
+                    getallslots(selectedAppointment.appointment_service,selectedAppointment.appointment_location,selectedDate)
+                }
+        }
+    },[selectedDate])
+
+    async function getallslots(selectedService,selectedLocation,selectedDate)
     {
         try
         {
-            // appointment.appointmentstatus="CANCELLED"
-            // let cancelled = await axios.post('http://localhost:5000/user-api/editappointment',appointment)
-            // console.log(cancelled)
-            getappointments()
+            // console.log(selectedService,selectedLocation,selectedDate)
+            let slots = await axios.get(`http://localhost:5000/user-api/getallslots?date=${selectedDate}&location=${selectedAppointment.appointment_location}&service=${selectedAppointment.appointment_service}`)
+            setTimeslots(slots.data.payload)
         }
         catch(err)
         {
             setError(err.message)
         }
     }
+
+    const handleRescheduleClick = (appointment) => {
+        setSelectedAppointment(appointment); // Set the selected appointment
+        handleShow(); // Show the modal
+    };
 
 return (
     <div className='text-center'>
         <button className='btn btn-warning' onClick={bookappointment}>BOOK APPOINTMENTS</button>
         {error.length!==0&& <p className='fw-bold text-center text-danger border-0'>{error}</p>}
+        {alert.length!==0 && <Alert variant={'dark'} onClose={()=>setAlert('')}>{alert}</Alert> }
         {appointmentsdata.length&&
         <table>
             <tbody>
@@ -79,19 +152,22 @@ return (
                             <Card className='m-3'>
                                 <Card.Body>
                                     <Card.Title>
-                                        SERVICE:{appointment.service}
+                                        SERVICE:{appointment.appointment_service}
                                         <span>
-                                            {appointment.appointmentstatus==="PENDING"&&
+                                            {appointment.appointment_status==="PENDING"&&
                                             <>
-                                            <button className='btn btn-danger' onClick={()=>cancelappointment(appointment)}>CANCEL</button>
-                                            <button className='btn btn-primary' onClick={()=>rescheduleappointment(appointment)}>RESCHEDULE</button>
+                                            <button className='btn btn-danger m-2' onClick={()=>cancelappointment(appointment)}>CANCEL</button>
+                                            <button className='btn btn-primary m-2' onClick={() => handleRescheduleClick(appointment)}>RESCHEDULE</button>
+                                            
                                             </>
                                             }
                                         </span>
                                     </Card.Title>
-                                    <Card.Text>STATUS:{appointment.appointmentstatus}</Card.Text>
+                                    <Card.Text>STATUS:{appointment.appointment_status}</Card.Text>
                                 </Card.Body>
-                                <Card.Footer>APPOINTMENT LOCATION:{appointment.location},DATE&TIME:{appointment.date}&{appointment.time}</Card.Footer>
+                                <Card.Footer>APPOINTMENT LOCATION:{appointment.appointment_location}
+                                <p>DATE:{appointment.appointment_date}</p>
+                                TIME:{appointment.appointment_time}</Card.Footer>
                             </Card>
                         </tr>
                     ))
@@ -99,6 +175,88 @@ return (
             </tbody>
         </table>
         }
+        {/* <Button variant="primary" onClick={handleShow}>
+        Reschedule Appointment
+        </Button> */}
+
+        <Modal show={show}  onHide={handleClose}>
+        <Modal.Header closeButton>
+            <Modal.Title> Reschedule Appointment</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+        <p><span className='fw-bold'>Previous Appointment Details</span> 
+            <p><span className='fw-bold'>Date:</span>{selectedAppointment && selectedAppointment.appointment_date}
+            <p><span className='fw-bold'>Time:</span>{selectedAppointment && selectedAppointment.appointment_time}</p>
+            </p>
+            
+        </p>
+            <label className='text-center fw-bold form-label' htmlFor='date'>SELECT DATE:</label>
+        <div className='text-center'>
+            <input type="hidden"  {...register('new_appointment_date')} value={selectedDate} />
+            <DatePicker
+                className='m-1 text-secondary fw-bold form-control border border-secondary'
+                selected={selectedDate}
+                onChange={(date) => setSelectedDate(date)}
+                minDate={today}
+                inline // Display the calendar inline
+            />
+        </div>
+        {
+                timeslots.length!==0 &&
+                <div className='sm-3' >
+                <label className='text-center fw-bold form-label' htmlFor='time'>SELECT TIME:</label>
+                <Accordion>
+                    <Accordion.Item eventKey="0">
+                        <Accordion.Header className='fw-bold'>SELECT TIME SLOT</Accordion.Header>
+                        <Accordion.Body>
+                        {
+                            timeslots.map((slot,index)=>
+                            (
+                                <>
+                                {slot.appointment_status==='available'?
+                                <div className='text-center' key={index}>
+                                {/* <button type='button' className={`btn btn-light m-2 ${clickedButton === slot.appointment_time ? 'btn-primary':''}`} 
+                                onClick={() => handleOptionClick(slot.appointment_time)}>
+                                    {slot.appointment_time}
+                                </button> */}
+                                <label>
+                                    <input 
+                                    type='checkbox' 
+                                    value={slot.appointment_time}
+                                    checked={selectedOption === slot.appointment_time}
+                                    onChange={(e)=>setSelectedOption(e.target.value)}/>
+                                    {slot.appointment_time}
+                                </label>
+                                </div>
+                                :
+                                <div className='text-center' key={index}>
+                                {/* <button className='btn btn-light m-2' disabled>
+                                    {slot.appointment_time}
+                                </button> */}
+                                <label>
+                                    <input type="checkbox" disabled/>
+                                    {slot.appointment_time}
+                                </label>
+                                </div>
+                                }
+                                </>
+                            ))
+                        }
+                        </Accordion.Body>
+                    </Accordion.Item>
+                </Accordion>
+            </div>
+            }
+        </Modal.Body>
+        <Modal.Footer>
+            <Button variant="danger" onClick={handleClose}>
+            Cancel
+            </Button>
+            <Button variant="primary" onClick={()=>rescheduleappointment(selectedAppointment)} disabled={!selectedOption}>
+            RESCHEDULE
+            </Button>
+        </Modal.Footer>
+        </Modal>
     </div>
 )
 }
