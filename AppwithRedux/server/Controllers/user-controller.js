@@ -180,21 +180,6 @@ const userLogin = async(req,res)=>
     // }
 }
 
-// USER BOOKING APPOINTMENT
-const bookAppointment = async(req,res)=>
-{
-    let details = req.body;
-    let bookappointment = await Appointment.create(details)
-    if (bookappointment)
-    {
-        res.status(201).send({message:"APPOINTMENT IS BOOKED",payload:bookappointment})
-    }
-    else
-    {
-        res.status(200).send({message:"UNABLE TO BOOK"})
-    }
-}
-
 // SEE ALL APPOINTMENTS
 const appointments = async(req,res)=>
 {
@@ -210,26 +195,179 @@ const appointments = async(req,res)=>
     }
 }
 
+// USER BOOKING APPOINTMENT
+const bookAppointment = async(req,res)=>
+{
+    let details = req.body;
+    let appointment_date = details.appointment_date 
+    // Create a new Date object from the ISO 8601 formatted string
+    appointment_date = new Date(appointment_date)
+    // Get the date
+    appointment_date.setDate(appointment_date.getDate());
+    // Use Date methods to get the desired date string format
+    details.appointment_date = appointment_date.toDateString() + " " + appointment_date.toTimeString().substring(0, 8) + " GMT+0530 (India Standard Time)";
+    // console.log(details)
+    let slotbooked = await Appointmentday.findOneAndUpdate(
+        {appointment_date:details.appointment_date,appointment_service:details.appointment_service,appointment_location:details.appointment_location,'slots.appointment_time':details.appointment_time},
+        {
+            $set:
+            {
+                'slots.$.appointment_status':'booked'
+            }
+        },
+        {
+            new:true
+        }
+        )
+    // console.log(slotbooked)
+    if (slotbooked)
+    {
+        let bookappointment = await Appointment.create(details)
+        if(bookappointment)
+        {
+            res.status(201).send({message:"APPOINTMENT HAS BEEN BOOKED",payload:bookappointment})        
+        }
+        else
+        {
+            res.status(200).send({message:"BOOKING ERROR"})
+        }
+    }
+    else
+    {
+        res.status(200).send({message:"BOOKING ERROR"})
+    }
+}
+
+
+
 // EDIT APPOINTMENT STATUS
-const editappointment = async(req,res)=>
+const cancelappointment = async(req,res)=>
 {
     try
     {
-        let username = req.body.username
-        let _id = req.body._id
-        let update = req.body.appointmentstatus
-        let appointment = await Appointment.findOneAndUpdate({username:username,_id:_id},
+        let details = req.body
+        let slotbooked = await Appointmentday.findOneAndUpdate(
+            {appointment_date:details.appointment_date,appointment_service:details.appointment_service,appointment_location:details.appointment_location,'slots.appointment_time':details.appointment_time},
             {
-                $set:{
-                    "appointmentstatus":update
-                    }
+                $set:
+                {
+                    'slots.$.appointment_status':'available'
+                }
             },
             {
-                returnOriginal:false
-            })
-        if (appointment)
+                new:true
+            }
+            )
+            if(slotbooked)
+            {
+                let bookedappointment = await Appointment.findOneAndUpdate({_id:details._id},
+                    {
+                        $set:
+                        {
+                            "appointment_status":"CANCELLED"
+                        }
+                    },
+                    {
+                        returnOriginal:false
+                    })
+            if (bookedappointment)
+            {
+                res.status(200).send({message:"APPOINTMENT CANCELLED",payload:bookedappointment})
+            }
+            else
+            {
+                res.status(200).send({message:"ERROR WHILE CANCELLING APPOINTMENT"})
+            }
+        }
+        
+    }
+    catch(err)
+    {
+        console.log(err)
+        res.status(200).send(err.message)
+    }
+}
+
+// RESCEHDULE APPOINTMENT
+const rescheduleappointment = async (req,res)=>
+{
+    try
+    {
+        let details = req.body
+        console.log(details)
+        let appointment_date = details.appointment_date 
+        // Create a new Date object from the ISO 8601 formatted string
+        appointment_date = new Date(appointment_date)
+        // Get the date
+        appointment_date.setDate(appointment_date.getDate());
+        // Use Date methods to get the desired date string format
+        details.appointment_date = appointment_date.toDateString() + " " + appointment_date.toTimeString().substring(0, 8) + " GMT+0530 (India Standard Time)";
+        let new_appointment_date = details.new_appointment_date 
+        // Create a new Date object from the ISO 8601 formatted string
+        new_appointment_date = new Date(new_appointment_date)
+        // Get the date
+        new_appointment_date.setDate(new_appointment_date.getDate());
+        // Use Date methods to get the desired date string format
+        details.new_appointment_date = new_appointment_date.toDateString() + " " + new_appointment_date.toTimeString().substring(0, 8) + " GMT+0530 (India Standard Time)";
+        let appointmentday_unbooked = await Appointmentday.findOneAndUpdate(
+            {appointment_date:details.appointment_date,appointment_service:details.appointment_service,appointment_location:details.appointment_location,'slots.appointment_time':details.appointment_time},
+            {
+                $set:
+                {
+                    'slots.$.appointment_status':'available'
+                }
+            },
+            {
+                returnOriginal:true
+            }
+        )
+        if(appointmentday_unbooked)
         {
-            res.status(200).send({message:"APPOINTMENT SUCCESSFULLY EDITED",payload:appointment})
+            let appointmentday_booking = await Appointmentday.findOneAndUpdate(
+                {appointment_date:details.new_appointment_date,appointment_service:details.appointment_service,appointment_location:details.appointment_location,'slots.appointment_time':details.new_appointment_time},
+                {
+                    $set:
+                    {
+                        'slots.$.appointment_status':'booked'
+                    }
+                },
+                {
+                    returnOriginal:true
+                }
+            )
+            if (appointmentday_booking)
+            {
+                let rescheduled_appointment = await Appointment.findOneAndUpdate({_id:details._id},
+                {
+                    $set:
+                    {
+                        "appointment_date":details.new_appointment_date,
+                        "appointment_time":details.new_appointment_time,
+                        "rescheduled_status":"yes",
+                        "reschedule_details.previous_appointment_date":details.appointment_date,
+                        "reschedule_details.previous_appointment_time":details.appointment_time
+                    }
+                },
+                {
+                    new:true
+                })
+                if (rescheduled_appointment)
+                {
+                    res.status(200).send({message:"APPOINTMENT RESCHEDULED SUCCESSFULLY",payload:rescheduled_appointment})
+                }
+                else
+                {
+                    res.status(200).send({message:"FAILED TO RESCHEDULE"})
+                }
+            }
+            else
+            {
+                res.status(200).send({message:"FAILED TO RESCHEDULE"})
+            }
+        }
+        else
+        {
+            res.status(200).send({message:"FAILED TO RESCHEDULE"})
         }
     }
     catch(err)
@@ -251,7 +389,7 @@ const getallslots = async(req,res)=>
         let [beforeGMT,afterGMT]=date.split("GMT")
         afterGMT= afterGMT.trim()
         date=`${beforeGMT}GMT+${afterGMT}`;
-        console.log(req.query)
+        // console.log(req.query)
         // console.log(date)
         let {service,location} = req.query
         let slots = await Appointmentday.findOne({appointment_date:date,appointment_service:service,appointment_location:location})
@@ -620,4 +758,4 @@ const inwishlist = async(req,res)=>
 }
 
 
-module.exports={getuser,getusers,registerUser,userLogin,bookAppointment,appointments,editappointment,getallslots,getproducts,cart,addcartproduct,removecartproduct,editquantity,order,getorders,cancelorder,getwishlist,addtowishlist,removefromwishlist,inwishlist}
+module.exports={getuser,getusers,registerUser,userLogin,bookAppointment,appointments,cancelappointment,rescheduleappointment,getallslots,getproducts,cart,addcartproduct,removecartproduct,editquantity,order,getorders,cancelorder,getwishlist,addtowishlist,removefromwishlist,inwishlist}
