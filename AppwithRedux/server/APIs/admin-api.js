@@ -7,7 +7,7 @@ const adminApp = express.Router()
 // import express-async-handler to handle async errors (error handler in server.js cannot handle async errors)
 const expressAsyncHandler = require('express-async-handler')
 // import req handlers from controllers
-const {getadmin,getusers,changeuserstatus,getallappointments,pendingappointments,pendingappointment,cancelledappointments,getproducts,addproduct,getaproduct,editproduct,deactivateproduct,activateproduct,inactiveproducts,updatestock,getappointmentdate,getorders,editorderstatus} = require('../Controllers/admin-controller')
+const {getadmin,getusers,changeuserstatus,getallappointments,bookappointment,cancelappointment,appointmentcompleted,rescheduleappointment,pendingappointments,pendingappointment,cancelledappointments,getproducts,addproduct,getaproduct,editproduct,deactivateproduct,activateproduct,inactiveproducts,updatestock,getappointmentdate,getorders,editorderstatus} = require('../Controllers/admin-controller')
 // import token verification middleware
 const verifytoken = require('../Middlewares/verifytoken')
 // import upload and/(or) cloudinary configurations
@@ -36,11 +36,23 @@ adminApp.post('/changeuserstatus',expressAsyncHandler(changeuserstatus))
 // GET ALL APPOINTMENTS
 adminApp.get('/getallappointments',expressAsyncHandler(getallappointments))
 
+// BOOK APPOINTMENT
+adminApp.post('/bookappointment',expressAsyncHandler(bookappointment))
+
 // GET PENDING APPOINTMENTS
 adminApp.get('/pendingappointments',expressAsyncHandler(pendingappointments))
 
 // GET PENDING APPOINTMENTS ACCORDING TO THE LOCATION,SERVICE,DATE
 adminApp.post('/pendingappointment',expressAsyncHandler(pendingappointment))
+
+// CANCEL APPOINTMENTS
+adminApp.post('/cancelappointment',expressAsyncHandler(cancelappointment))
+
+// APPOINTMENT COMPLETED
+adminApp.post('/appointmentcompleted',expressAsyncHandler(appointmentcompleted))
+
+// RESCHEDULE APPOINTMENT
+adminApp.post('/rescheduleappointment',expressAsyncHandler(rescheduleappointment))
 
 // GET CANCELLED APPOINTMENTS
 adminApp.get('/cancelledappointments',expressAsyncHandler(cancelledappointments))
