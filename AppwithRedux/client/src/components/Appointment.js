@@ -163,7 +163,12 @@ return (
                                             }
                                         </span>
                                     </Card.Title>
-                                    <Card.Text>STATUS:{appointment.appointment_status}</Card.Text>
+                                    <Card.Text>
+                                        STATUS:
+                                        {appointment.appointment_status === "CANCELLED" && <span className='text-danger'>{appointment.appointment_status}</span>}
+                                        {appointment.appointment_status === "COMPLETED" && <span className='text-success'>{appointment.appointment_status}</span>}
+                                        {(appointment.appointment_status !== "COMPLETED" && appointment.appointment_status !== "CANCELLED") && <span className='text-primary'>{appointment.appointment_status}</span>}
+                                    </Card.Text>
                                 </Card.Body>
                                 <Card.Footer>APPOINTMENT LOCATION:{appointment.appointment_location}
                                 <p>DATE:{appointment.appointment_date}</p>
@@ -199,6 +204,7 @@ return (
                 onChange={(date) => setSelectedDate(date)}
                 minDate={today}
                 inline // Display the calendar inline
+                autoFocus
             />
         </div>
         {
