@@ -1,16 +1,196 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { NavLink } from 'react-router-dom'
 
 function Footer() {
+
+  useEffect(() => {
+    const handleNavLinkClick = () => {
+      window.scrollTo(0, 0);
+    };
+
+    // Add event listeners to all NavLink elements
+    const navLinks = document.querySelectorAll('nav a');
+    navLinks.forEach((link) => {
+      link.addEventListener('click', handleNavLinkClick);
+    });
+
+    // Remove event listeners when the component unmounts
+    return () => {
+      navLinks.forEach((link) => {
+        link.removeEventListener('click', handleNavLinkClick);
+      });
+    };
+  }, []);
+
   return (
-    <div className=''>
-      <ul className="nav justify-content-center">
-        <li className='nav-item '>
-          <NavLink className='nav-link fw-bold' to='contact'>CONTACT US</NavLink>
-        </li>
-      </ul>
-    </div>
-  )
+        <div className="mt-5">
+            {/* Footer */}
+            <footer className="text-center text-lg-start text-dark" style={{ backgroundColor: "#11c739" }}>
+                {/* Grid container */}
+                <div className=" p-4 pb-0">
+                    {/* Section: Links */}
+                    <section className="">
+                        {/* Grid row */}
+                        <div className="row">
+                            {/* Grid column */}
+                            <div className="col-md-3 col-lg-3 col-xl-3 mx-auto mt-3">
+                                <h6 className="mb-4 fs-3 fw-bold ">PAWSCARE</h6>
+                                <nav>
+                                  Welcome to PawsCare – Your Pet's Wellbeing Central! 🐾
+                                  <nav>
+                                    At PawsCare Hub, we prioritize your furry companions' health and happiness.
+                                  </nav>
+                                  Explore our premium pet services, including expert haircuts and pampering sessions to ensure your pets look and feel their best. Our dedicated store offers a delightful array of treats, toys, and essentials, curated with love to cater to every pet's unique needs
+                                </nav>
+                            </div>
+                            {/* Grid column */}
+
+                            <hr className="w-100 clearfix d-md-none" />
+                            {/* Grid column */}
+                            <div className="col-md-3 col-lg-2 col-xl-2 mx-auto mt-3">
+                                <h6 className="text-uppercase mb-4 fw-bold">Useful links</h6>
+                                <p>
+                                  <nav>
+                                    <NavLink className="text-white text-decoration-none " to="/home/bookappointment">BOOK APPOINTMENT</NavLink>
+                                  </nav>
+                                </p>
+                                <p>
+                                  <nav>
+                                    <NavLink className="text-white text-decoration-none" to="/home/myappointments">MY APPOINTMENTS</NavLink>
+                                  </nav>
+                                </p>
+                                <p>
+                                  <nav>
+                                    <NavLink className="text-white text-decoration-none" to="/profile">PROFILE</NavLink>
+                                  </nav>                                </p>
+                                <p>
+                                  <nav>
+                                    <NavLink className="text-white text-decoration-none" to="contact">CONTACT US</NavLink>
+                                  </nav>                                
+                                </p>
+
+                            </div>
+
+                            {/* Grid column */}
+
+                            <hr className="w-100 clearfix d-md-none" />
+
+                            {/* Grid column */}
+                            <div className="col-md-2 col-lg-2 col-xl-2 mx-auto mt-3">
+                                <h6 className="text-uppercase mb-4 fw-bold">SHOP ON PAWSCARE</h6>
+                                <p>
+                                  <nav>
+                                    <NavLink className="text-dark text-decoration-none" to="/store">STORE</NavLink>
+                                  </nav>                                
+                                </p>
+                                <p>
+                                  <nav>
+                                    <NavLink className="text-dark text-decoration-none" to="/cart">CART</NavLink>
+                                  </nav>                                
+                                </p>
+                                <p>
+                                  <nav>
+                                  <NavLink className="text-dark text-decoration-none" to="/user/wishlist">WISHLIST</NavLink>
+                                  </nav>                                
+                                </p>
+                                <p>
+                                  <nav>
+                                    <NavLink className="text-dark text-decoration-none" to="/user/orders">ORDERS</NavLink>
+                                  </nav>                                
+                                </p>
+                            </div>
+                            
+
+
+                            {/* Grid column */}
+                            <hr className="w-100 clearfix d-md-none" />
+
+                            {/* Grid column */}
+                            <div className="col-md-4 col-lg-3 col-xl-3 mx-auto mt-3">
+                                <h6 className="text-uppercase mb-4 fw-bold">PRODUCTS BY CATEGORY</h6>
+                                <p>
+                                  <nav>
+                                  <NavLink className="text-white text-decoration-none">
+                                    <i className="fas fa-dog mr-3"></i> DOG 
+                                  </NavLink>                                  </nav>                                
+                                </p>
+                                <p>
+                                <nav>
+                                  <NavLink className="text-white text-decoration-none">
+                                    <i className="fas fa-cat mr-3"></i> CAT 
+                                  </NavLink>
+                                </nav>                               
+                                </p>
+                                <p>
+                                <nav>
+                                <NavLink className="text-white text-decoration-none">
+                                    <i className="fas fa-dove mr-3"></i> BIRD 
+                                  </NavLink>
+                                </nav>                               
+                                </p>
+                                <p>
+                                <nav>
+                                <NavLink className="text-white text-decoration-none">
+                                    <i className="fas fa-fish mr-3"></i> FISH 
+                                </NavLink>
+                                </nav>                               
+                                </p>
+                            </div>
+                            {/* Grid column */}
+                        </div>
+                        {/* Grid row */}
+                    </section>
+                    {/* Section: Links */}
+
+                    <hr className="my-3" />
+
+                    {/* Section: Copyright */}
+                    <section className="p-3 pt-0">
+                        <div className="row d-flex align-items-center">
+                            {/* Grid column */}
+                            <div className="col-md-7 col-lg-8 text-center text-md-start">
+                                {/* Copyright */}
+                                <div className="p-3">
+                                    © 2023
+                                    <NavLink className="p-3 fw-bold text-white text-decoration-none">PawsCare.com</NavLink>
+                                </div>
+                                {/* Copyright */}
+                            </div>
+                            {/* Grid column */}
+
+                            {/* Grid column */}
+                            <div className="col-md-5 col-lg-4 ml-lg-0 text-center text-md-end">
+                                {/* Facebook */}
+                                <a className="btn btn-outline-dark btn-floating m-1 text-white" role="button">
+                                    <i className="fab fa-facebook-f"></i>
+                                </a>
+
+                                {/* Twitter */}
+                                <a className="btn btn-outline-dark btn-floating m-1 text-white " role="button">
+                                    <i className="fab fa-twitter"></i>
+                                </a>
+
+                                {/* Google */}
+                                <a className="btn btn-outline-dark btn-floating m-1 text-white" role="button">
+                                    <i className="fab fa-google"></i>
+                                </a>
+
+                                {/* Instagram */}
+                                <a className="btn btn-outline-dark btn-floating m-1 text-white" href="www.instagram.com" target="_blank" role="button">
+                                    <i className="fab fa-instagram"></i>
+                                </a>
+                            </div>
+                            {/* Grid column */}
+                        </div>
+                    </section>
+                    {/* Section: Copyright */}
+                </div>
+                {/* Grid container */}
+            </footer>
+            {/* Footer */}
+        </div>
+        /* End of .container */
+    );
 }
 
-export default Footer
+export default Footer;
