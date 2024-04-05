@@ -1,22 +1,19 @@
-import React from 'react'
-import Header from './components/Header'
-import {Outlet} from 'react-router-dom'
-import Footer from './components/Footer'
+import React from 'react';
+import Header from './components/Header';
+import { Outlet } from 'react-router-dom';
+import Footer from './components/Footer';
+import './RootLayout.css'; // Import CSS for custom styling
 
-function Rootlayout() {
+function RootLayout() {
   return (
-    <div>
-        <div>
-            <Header/>
-        </div>
-        <div style={{minHeight:'82vh'}}>
-            <Outlet/>
-        </div>
-        <div>
-            <Footer/>
-        </div>
+    <div className="root-layout">
+      <Header />
+      <div className="content-wrapper">
+        <Outlet />
+      </div>
+      <Footer />
     </div>
-  )
+  );
 }
 
-export default Rootlayout
+export default RootLayout;
