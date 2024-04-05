@@ -154,6 +154,12 @@ const userSchema = new mongoose.Schema(
                 stock:String,
                 image:String,
             }
+        ],
+        notifications:
+        [
+            {
+                
+            }
         ]
     }
 )
@@ -250,10 +256,10 @@ const appointmentSchema = new mongoose.Schema(
         },
         appointment_date:
         {
-            type:Date,
+            type:String,
             required:[true,"APPOINTMENT DATE IS REQUIRED"]
         },
-        appointment_time_slot:
+        appointment_time:
         {
             type:String,
             required:[true,"APPOINTMENT TIME IS REQUIRED"]
@@ -267,8 +273,24 @@ const appointmentSchema = new mongoose.Schema(
         {
             type:String,
             default:"PENDING",
-            enum:['PENDING',"COMPLETE"]
-        }
+            enum:['PENDING',"COMPLETED","CANCELLED"]
+        },
+        rescheduled_status:
+        {
+            type:String,
+            default:"no",
+            enum:["yes","no"]
+        },
+        reschedule_details:
+        [{
+            previous_appointment_date:String,
+            previous_appointment_time:String,
+            rescheduled_on:
+            {
+                type:Date,
+                default:Date.now
+            }
+        }]
     }
 )
 
