@@ -99,11 +99,13 @@ async function openprofile(user)
             <tbody>
                 {
                     searchResults.map((user,index)=>(
-                        <tr key={index} onClick={()=>openprofile(user)}>
+                        <tr key={index} >
                             <Card className='m-3'>
                                 <Card.Body>
                                     <Card.Title>
+                                      <span onClick={()=>openprofile(user)}>
                                         USER:{user.username}
+                                      </span>
                                         <span>
                                             {user.accountstatus==="ACTIVE"?
                                             <button className='btn btn-danger' onClick={()=>deactivateuser(user)}>DEACTIVATE</button>
@@ -112,9 +114,8 @@ async function openprofile(user)
                                             }
                                         </span>
                                     </Card.Title>
-                                    <Card.Text>STATUS:{user.accountstatus}</Card.Text>
+                                    <Card.Text onClick={()=>openprofile(user)}>STATUS:{user.accountstatus}</Card.Text>
                                 </Card.Body>
-                                <Card.Footer>LOCATION:{user.location},DATE&TIME:{user.date}&{user.time}</Card.Footer>
                             </Card>
                         </tr>
                     ))
