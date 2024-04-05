@@ -294,7 +294,7 @@ const rescheduleappointment = async (req,res)=>
     try
     {
         let details = req.body
-        console.log(details)
+        // console.log(details)
         let appointment_date = details.appointment_date 
         // Create a new Date object from the ISO 8601 formatted string
         appointment_date = new Date(appointment_date)
@@ -344,13 +344,25 @@ const rescheduleappointment = async (req,res)=>
                         "appointment_date":details.new_appointment_date,
                         "appointment_time":details.new_appointment_time,
                         "rescheduled_status":"yes",
-                        "reschedule_details.previous_appointment_date":details.appointment_date,
-                        "reschedule_details.previous_appointment_time":details.appointment_time
                     }
                 },
                 {
                     new:true
                 })
+                let added_previous_details = await Appointment.findOneAndUpdate({_id:details._id},
+                    {
+                        $push:
+                        {
+                            reschedule_details:
+                            {
+                                previous_appointment_date:details.appointment_date,
+                                previous_appointment_time:details.appointment_time
+                            }
+                        }
+                    },
+                    {
+                        new:true
+                    })
                 if (rescheduled_appointment)
                 {
                     res.status(200).send({message:"APPOINTMENT RESCHEDULED SUCCESSFULLY",payload:rescheduled_appointment})
