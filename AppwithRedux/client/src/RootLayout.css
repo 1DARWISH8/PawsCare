@@ -1,0 +1,12 @@
+.root-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ensures the layout covers the entire viewport */
+    }
+    
+    .content-wrapper {
+        flex: 1; /* Makes the content area expand to fill available space */
+    }
+    .footer {
+        margin-top: auto; /* Pushes the footer to the bottom */
+    }
