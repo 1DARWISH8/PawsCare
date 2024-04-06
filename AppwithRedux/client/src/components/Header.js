@@ -76,12 +76,12 @@ function Header() {
                       <NavLink className='nav-link' id='icon' to='/store'><i className="bi bi-shop"></i>STORE</NavLink>
                     </li>
                     <li className='nav-item'>
-                      <NavLink className='nav-link' id='icon' to='/cart'>CART<i className="bi bi-cart4"></i></NavLink>
+                      <NavLink className='nav-link' id='icon' to='/cart'><i className="bi bi-cart4"></i></NavLink>
                     </li>
                     {/* <li className='nav-item'>
                       <NavLink className='nav-link' id='icon' to='profile'>PROFILE<i className="bi bi-person-circle"></i></NavLink>
                     </li> */}
-                    <div className="dropdown" onMouseEnter={toggleDropdown} onMouseLeave={closeDropdown}>
+                    <div className="dropdown" onClick={toggleDropdown} onMouseLeave={closeDropdown}>
                         <button className="dropbtn">
                         <i className="bi bi-person-circle"></i>
                         </button>
@@ -90,6 +90,7 @@ function Header() {
                             <NavLink to="/profile" onClick={closeDropdown}>PROFILE
                               {/* {currentUser.username}<img src={currentUser.profileImageURL} alt='userprofile image' className='rounded-circle m-1' width="40"></img> */}
                             </NavLink>
+                            <NavLink to="/home/myappointments" onClick={closeDropdown}>MY APPOINTMENTS</NavLink>
                             <NavLink to="/user/orders" onClick={closeDropdown}>VIEW ORDERS</NavLink>
                             <NavLink to="/user/wishlist" onClick={closeDropdown}>WISHLIST</NavLink>
                             <NavLink>
