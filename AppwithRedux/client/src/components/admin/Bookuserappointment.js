@@ -124,11 +124,13 @@ function Bookuserappointment() {
             <tbody>
                 {
                     searchResults.map((user,index)=>(
-                        <tr key={index} className='text-center' onClick={()=>openprofile(user)}>
+                        <tr key={index} className='text-center' >
                             <Card className='m-3'>
                                 <Card.Body>
                                     <Card.Title>
+                                        <span onClick={()=>openprofile(user)}>
                                         USER:{user.username}
+                                        </span>
                                         <span>
                                             <button className='btn btn-success' onClick={()=>bookappointment(user)}>BOOK APPOINTMENT</button>
                                             {/* {booking===true&&</>} */}
