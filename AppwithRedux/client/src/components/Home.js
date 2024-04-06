@@ -1,9 +1,9 @@
 // useContext hook is imported to read and access data from context
 import React, { useState, useEffect } from 'react';
 // To navigate from one components to other according to user interaction useNavigate hook is imported from React Router library
-import {useNavigate} from 'react-router-dom'
+import {NavLink, useNavigate} from 'react-router-dom'
 import {useSelector} from 'react-redux'
-
+import './Video.css';
 
 // images are imported for the carousel
 // import haircut from '../images/haircut.jpg'
@@ -68,9 +68,23 @@ function Home() {
   return (
     <div>
         <div className='text-center' id='header'>
+
+        <img src='https://res.cloudinary.com/dozacgfl7/image/upload/v1712338808/videoframe_2487_czzbmy.png' width="100%"></img>
+        {/* <Carousel >
+      <Carousel.Item>
+        <NavLink to="/store">
+          <img src='https://res.cloudinary.com/dozacgfl7/image/upload/v1712338808/videoframe_2487_czzbmy.png' width="100%"></img>
+        </NavLink>
+      </Carousel.Item>
+      <Carousel.Item>
+        <NavLink to="/home/bookappointment">
+            <img src='https://res.cloudinary.com/dozacgfl7/image/upload/v1712339150/appointment_w5z8cn.png' width="100%" />
+        </NavLink>
+      </Carousel.Item>
+    </Carousel> */}
+        
           {
             currentUser.userType==='admin'&&
-
             <>
             <h3>WELCOME, {currentUser.username}</h3>
             <h5>TO DASHBOARD</h5>
