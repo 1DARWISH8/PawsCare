@@ -26,6 +26,12 @@ return (
             <Carousel.Item>
               <img className="d-block w-100" src="https://res.cloudinary.com/dozacgfl7/image/upload/v1712398173/cat_training_siz65t.png" alt="" />
             </Carousel.Item>
+            <Carousel.Item>
+              <img className="d-block w-100" src="https://res.cloudinary.com/dozacgfl7/image/upload/v1712481800/dog_training_fatb1h.png" alt="" />
+            </Carousel.Item>
+            <Carousel.Item>
+              <img className="d-block w-100" src="https://res.cloudinary.com/dozacgfl7/image/upload/v1712481800/bird_training_lmskfq.png" alt="" />
+            </Carousel.Item>
           </Carousel>
         </div>
 
@@ -35,7 +41,7 @@ return (
             <   h4 className="card-title fw-bold m-3">Book Your Appointment Today!!! </h4>
                 <NavLink className="btn btn-dark fw-bold" to="/home/bookappointment">BOOK APPOINTMENT</NavLink>
             </div>
-            <p className="card-text m-3">
+            <p className="card-text m-2" id="health">
                 <p>
                     Choose PawsCare for exceptional care and support for your beloved companion.
                 </p>
@@ -54,7 +60,7 @@ return (
       </div>
     </div>
 
-    <div className='mt-5'>
+    <div >
         <img src='https://res.cloudinary.com/dozacgfl7/image/upload/v1712381158/appointment_features_gplzwu.png' width="100%"/>
     </div>
 
