@@ -1,23 +1,17 @@
 import React, { useState } from 'react'
 import { NavLink,useNavigate } from 'react-router-dom'
-// logo image is imported from the images folder
-// import logo from "../images/pawscarelogo.png"
-// userLoginContext is imported, to use the created context store
 import './Header.css'
 import {useDispatch,useSelector} from 'react-redux'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { faAngleDown, faHome, faUser, faShoppingCart, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import './Dropdown.css';
 import { logOut } from '../redux/slices/userLoginSlice'
 /* Import Bootstrap Icons CSS */
 import './Header.css'
-
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import Offcanvas from 'react-bootstrap/Offcanvas';
+// import Offcanvas from 'react-bootstrap/Offcanvas';
 
 function Header() {
   // import userloginSlice from reducer store
@@ -26,23 +20,12 @@ function Header() {
 	let dispatch = useDispatch()
   let logo = 'https://res.cloudinary.com/dozacgfl7/image/upload/v1711878050/logo_hjylkr.png'
 
-        const [isOpen, setIsOpen] = useState(false);
-        const [expand, setExpand] = useState(false)
-      const toggleDropdown = () => {
-        setIsOpen(!isOpen);
-      };
-
-      const closeDropdown = () => {
-        setIsOpen(false);
-      };
-
       function logout()
     {
         dispatch(logOut())
 		    sessionStorage.removeItem('token')        
         navigate('/getstarted')
     }
-
 
   return (
     <>
@@ -75,10 +58,9 @@ function Header() {
       </>
       :
       <>
-      {currentUser.userType==='user'?
+      {currentUser.userType==='user'&&
         <>
         <Navbar collapseOnSelect expand="lg" className="bg-body-tertiary">
-      {/* <Container> */}
         <Navbar.Brand >
           <NavLink className='nav-link fw-bold fs-5' id='pawscare' to='/home'><img width='70px' src={logo} alt='logo'/>PAWS CARE</NavLink>
         </Navbar.Brand>
@@ -110,9 +92,8 @@ function Header() {
                 <NavDropdown.Item >
                   <NavLink to="/user/wishlist" className='nav-link'>WISHLIST</NavLink>
                 </NavDropdown.Item>
-                {/* <NavDropdown.Divider /> */}
                 <NavDropdown.Item className='bg-danger'>
-                  <NavLink className='nav-link bg-danger text-light fw-bold m-0' onClick={logout}>LOG OUT</NavLink>
+                  <NavLink className='nav-link  bg-danger text-light fw-bold' onClick={logout}>LOG OUT</NavLink>
                 </NavDropdown.Item>
               </NavDropdown>
               <NavLink className='nav-link' id='icon' to='/home/appointment'><i className="bi bi-calendar"></i>APPOINTMENTS</NavLink>
@@ -121,11 +102,46 @@ function Header() {
         </Navbar.Collapse>
         </Navbar>
         </>
-        :
-        <div>
+      }
 
-        </div>
-      
+      {
+        currentUser.userType==='admin'&&
+        <>
+          <Navbar collapseOnSelect expand="lg" className="bg-body-tertiary">
+          <Navbar.Brand >
+            <NavLink className='nav-link fw-bold fs-5' id='pawscare' to='/home'><img width='70px' src={logo} alt='logo'/>PAWS CARE</NavLink>
+          </Navbar.Brand>
+          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+          <Navbar.Collapse id="responsive-navbar-nav">
+            <Nav>
+                <NavDropdown title="APPOINTMENTS" className='nav-item mx-2' id="collapsible-nav-dropdown">
+                  <NavDropdown.Item >
+                    <NavLink to="/admin/checkappointment" className='nav-link' ><i className="bi bi-calendar"></i> CHECK APPOINTMENTS</NavLink>
+                  </NavDropdown.Item>
+                  <NavDropdown.Item >
+                    <NavLink to="/admin/bookuserappointment" className='nav-link' ><i className="bi bi-calendar"></i> BOOK APPOINTMENTS</NavLink>
+                  </NavDropdown.Item>
+                </NavDropdown>
+                <NavDropdown title="STORE" className='nav-item mx-2' id="collapsible-nav-dropdown">
+                  <NavDropdown.Item >
+                  <NavLink to="/admin/managestore" className='nav-link'><i className="bi bi-shop"></i>MANAGE STORE</NavLink>
+                  </NavDropdown.Item>
+                  <NavDropdown.Item >
+                    <NavLink to="/admin/manageorders" className='nav-link' >MANAGE ORDERS</NavLink>
+                  </NavDropdown.Item>
+                </NavDropdown>
+                <NavLink className='nav-link' id='icon' to='/admin/manageusers'>MANAGE USERS<i className="bi bi-person"></i></NavLink>
+                <NavDropdown title="PROFILE" className='nav-item mx-2' id="collapsible-nav-dropdown">
+                  <NavDropdown.Item className='bg-danger'>
+                    <NavLink className='nav-link bg-danger text-light fw-bold' onClick={logout}>
+                      LOGOUT
+                    </NavLink>                  
+                  </NavDropdown.Item>
+                </NavDropdown>
+            </Nav>
+          </Navbar.Collapse>
+          </Navbar>
+        </>
       }
         
       </>}
