@@ -96,8 +96,8 @@ function Header() {
                   <NavLink className='nav-link  bg-danger text-light fw-bold' onClick={logout}>LOG OUT</NavLink>
                 </NavDropdown.Item>
               </NavDropdown>
-              <NavLink className='nav-link' id='icon' to='/home/appointment'><i className="bi bi-calendar"></i>APPOINTMENTS</NavLink>
-            <NavLink className='nav-link' id='icon' to='/cart'><i className="bi bi-cart4"></i>CART</NavLink>
+              <NavLink className='nav-link mx-2' id='icon' to='/home/appointment'><i className="bi bi-calendar"></i>BOOK APPOINTMENT</NavLink>
+            <NavLink className='nav-link mx-2' id='icon' to='/cart'><i className="bi bi-cart4"></i>CART</NavLink>
           </Nav>
         </Navbar.Collapse>
         </Navbar>
@@ -130,7 +130,9 @@ function Header() {
                     <NavLink to="/admin/manageorders" className='nav-link' >MANAGE ORDERS</NavLink>
                   </NavDropdown.Item>
                 </NavDropdown>
-                <NavLink className='nav-link' id='icon' to='/admin/manageusers'>MANAGE USERS<i className="bi bi-person"></i></NavLink>
+                <NavDropdown.Item>
+                  <NavLink className='nav-link mx-2' id='icon' to='/admin/manageusers'>MANAGE USERS<i className="bi bi-person"></i></NavLink>
+                </NavDropdown.Item>
                 <NavDropdown title="PROFILE" className='nav-item mx-2' id="collapsible-nav-dropdown">
                   <NavDropdown.Item className='bg-danger'>
                     <NavLink className='nav-link bg-danger text-light fw-bold' onClick={logout}>
