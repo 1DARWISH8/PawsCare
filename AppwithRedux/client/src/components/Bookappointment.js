@@ -99,8 +99,6 @@ function Bookappointment() {
         }
     }
     
-
-    
     async function close()
     {
         navigate('/home/appointment')
@@ -108,7 +106,7 @@ function Bookappointment() {
 
 return (
     <div>
-        <h1 className='text-center fs-3 text-decoration-underline'>BOOK APPOINTMENT</h1>
+        <h1 className='text-center text-dark fs-3 text-decoration-underline'>BOOK APPOINTMENT</h1>
         {error.length!==0&& <p className='fw-bold text-center text-danger border-0'>{error}</p>}
         {alert.length!==0 && <Alert variant={'dark'} onClose={()=>setAlert('')}>{alert}</Alert> }
         <form className='col-sm-6 mx-auto m-3 p-3 ' onSubmit={handleSubmit(formSubmit)}>
@@ -151,7 +149,7 @@ return (
             {
                 timeslots.length!==0 &&
                 <div className='sm-3' >
-                <label className='text-center fw-bold form-label' htmlFor='time'>SELECT TIME:</label>
+                <label className=' fw-bold form-label' htmlFor='time'>SELECT TIME:</label>
                 <Accordion>
                     <Accordion.Item eventKey="0">
                         <Accordion.Header className='fw-bold'>SELECT TIME SLOT</Accordion.Header>
@@ -176,7 +174,7 @@ return (
                                 </label>
                                 </div>
                                 :
-                                <div className='text-center' key={index}>
+                                <div className='text-start' key={index}>
                                 {/* <button className='btn btn-light m-2' disabled>
                                     {slot.appointment_time}
                                 </button> */}
