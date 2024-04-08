@@ -38,10 +38,10 @@ return (
         <div className="col-md-7 px-3">
           <div className="card-block px-6" text-start>
           <div className='text-center'>
-            <   h4 className="card-title fw-bold m-3">Book Your Appointment Today!!! </h4>
+            <h4 className="card-title fw-bold m-3 text-dark">Book Your Appointment Today!!! </h4>
                 <NavLink className="btn btn-dark fw-bold" to="/home/bookappointment">BOOK APPOINTMENT</NavLink>
             </div>
-            <p className="card-text m-2" id="health">
+            <p className="card-text m-2 text-dark" id="health">
                 <p>
                     Choose PawsCare for exceptional care and support for your beloved companion.
                 </p>
