@@ -141,7 +141,8 @@ async function openprofile(user)
             {
                 let res = await axios.post('http://localhost:5000/user-api/registeruser',formData)
                 console.log(res)
-                if (res.status===201)
+            res.status(201).send({message:"USER CREATED",payload:user})
+            if (res.data.message==="USER CREATED")
                 {
                     await dispatch(userselectedDetailsPromiseSlice(user))
                     settype('Existing')
@@ -165,8 +166,6 @@ async function openprofile(user)
       { 
       bookingtype==='Existing'?
       <>
-        {searchResults.length?
-        <>
         <div className='search'>
           <form className='text-start mt-4 mx-4'>
             <input
@@ -176,17 +175,21 @@ async function openprofile(user)
             onChange={handleChange}/>  
           </form>
         </div>
+        {searchResults.length?
+        <>
+        <section>
+        <div class="row text-center">
         {
           searchResults.map((user,index)=>(
-            <div key={index} className="col-md-4 m-5">
-    		    <div className="card profile-card-3">
-    		        <div className="background-block">
-    		            <img src="https://res.cloudinary.com/dozacgfl7/image/upload/v1712649955/paws_qnn5le.jpg" alt="profile-sample1" className="background"/>
-    		        </div>
-    		        <div className="profile-thumb-block">
-    		            <img src={user.profileImageURL} alt="profile-image" className="profile"/>
-    		        </div>
-    		        <div className="card-content">
+            <div key={index} className="col-md-3 m-5">
+            <div className="card profile-card-3 m-3">
+                <div className="background-block">
+                    {/* <img src="https://res.cloudinary.com/dozacgfl7/image/upload/v1712649955/paws_qnn5le.jpg" alt="profile-sample1" className="background"/> */}
+                </div>
+                <div className="profile-thumb-block">
+                    <img src={user.profileImageURL} alt="profile-image" className="profile"/>
+                </div>
+                  <div className="card-content">
                     <h2 className='btn' onClick={()=>openprofile(user)}>
                       {user.username}
                     </h2>
@@ -217,15 +220,31 @@ async function openprofile(user)
               </div>
     		</div>
           ))
-        }						
+        }
+        </div>
+        </section>						
       </>:
       <>
       {/* <Spinner animation="border" role="status">
         <span className="visually-hidden">Loading...</span>
       </Spinner> */}
-      <h5>NO USERS TO SHOW</h5>
+      <div className='text-center m-5 fw-bold'>
+        <h5>NO USERS TO SHOW</h5>
+      </div>
       </>
         }
+        <div className="hover-container">
+      <button className="stickyButton" onClick={toggleFloatingButton}>
+        <i className="fas fa-plus rotated"></i>
+      </button>
+      {showFloatingButton && (
+        <div  onClick={toggleFloatingButton}>
+          <button className="floatingButton" onClick={()=>settype('New')}>
+            Create User
+          </button>
+        </div>
+      )}
+    </div>
     </>
     :
     <>
@@ -362,18 +381,7 @@ async function openprofile(user)
         </form>
     </>
 }
-    <div className="hover-container">
-      <button className="stickyButton" onClick={toggleFloatingButton}>
-        <i className="fas fa-plus rotated"></i>
-      </button>
-      {showFloatingButton && (
-        <div  onClick={toggleFloatingButton}>
-          <button className="floatingButton" onClick={()=>settype('New')}>
-            Create User
-          </button>
-        </div>
-      )}
-    </div>
+    
     </div>
   )
 }
