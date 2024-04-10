@@ -180,13 +180,13 @@ function Checkappointments() {
                     <option value="asc">Oldest to Newest</option>
                     <option value="desc">Newest to Oldest</option>
                 </select>
-                </div>
+            </div>
     {sortedAppointments.length>0?
         <>
             {
                 sortedAppointments.map((appointment,index)=>
                 (
-                    <article class="postcard light red m-4">
+                    <article key={index} class="postcard light red m-4">
                         {
                             appointment.appointment_service==="HEALTH CHECK UP"&&
                             <img class="postcard__img" src="https://res.cloudinary.com/dozacgfl7/image/upload/v1712573019/Health_checkup_docs_itqetq.png" alt="Image Title" />	
