@@ -88,7 +88,7 @@ function Bookuserappointment() {
                         value={searchTerm}
                         onChange={handleChange}/>  
                     </form>
-                </div>
+        </div>
 {searchResults.length?
     <>
         <div class="list w-100">
@@ -127,9 +127,17 @@ function Bookuserappointment() {
                         </button>
                     </td>
                 }
-                <td>
-                    <button className='btn btn-success' onClick={()=>bookappointment(user)}>BOOK</button>
-                </td>
+                {
+                    user.accountstatus==="ACTIVE"?
+                    <td>
+                        <button className='btn btn-success' onClick={()=>bookappointment(user)}>BOOK</button>
+                    </td>
+                    :
+                    <td  >
+                        <button className='btn btn-success' disabled onClick={()=>bookappointment(user)}>BOOK</button>
+                    </td>
+                }
+                
                 <td>+91 {user.phonenumber}</td>
             </tr>
         ))}
