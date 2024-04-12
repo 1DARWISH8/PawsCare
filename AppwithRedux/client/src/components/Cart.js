@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import './Cart.css'
 import axios from 'axios'
-import {useNavigate} from 'react-router-dom'
+import {NavLink, useNavigate} from 'react-router-dom'
 import {useDispatch,useSelector} from 'react-redux'
 import { productDetailsPromiseStatus } from '../redux/slices/productDetailsSlice' 
 import {Alert} from 'react-bootstrap';
@@ -15,7 +15,7 @@ function Cart() {
     let [cart,setCart] = useState([])
     let [error,setError] = useState('')
     let [alert,setAlert] = useState('')
-    let sum = 0
+    let [total,setTotal] = useState(0)
     
     const getcart = async()=>
     {
@@ -41,7 +41,7 @@ async function openproductpage(item)
 {
     try
     {
-        dispatch(productDetailsPromiseStatus(item))
+        await dispatch(productDetailsPromiseStatus(item))
         navigate('/store/productpage')
     }
     catch(err)
@@ -137,11 +137,106 @@ async function openproductpage(item)
         }        
     }
 
+    async function get_total()
+    {
+        try
+        {
+            let total_price = 0
+            for (const item of cart)
+            {
+                total_price += item.discounted_price * item.quantity
+            }
+            setTotal(total_price)
+        }
+        catch(err)
+        {
+
+        }
+    }
+
+    useEffect(()=>
+{get_total()},[cart])
+
 return (
-    <div className='container'>
+    <>
         {error.length!==0&& <p className='fw-bold text-center text-danger border-0'>{error}</p>}
         {alert.length!==0 && <Alert variant={'dark'} onClose={()=>setAlert('')}>{alert}</Alert> }
-    <div >
+
+        {
+            cart.length>0?
+            <section className="m-3">
+                    <div className="row w-100">
+                        <div className="col-lg-12 col-md-12 col-12">
+                            <h3 className="display-5 mb-2 text-center">Cart</h3>
+                            <p className="mb-5 text-center">
+                                <i className="text-info font-weight-bold">{cart.length}</i> items in your cart</p>
+                            <table id="shoppingCart" className="table table-condensed table-hover table-responsive">
+                                <thead>
+                                    <tr>
+                                        <th style={{ width: '60%' }}>Product</th>
+                                        <th   className='text-center' style={{ width: '10%' }}>Price</th>
+                                        <th className='text-center' style={{ width: '20%' }}>Quantity</th>
+                                        <th style={{ width: '8%' }}>Remove</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {cart.map((item,index)=>
+            (
+                    
+                    <tr key={index}>
+                    <td data-th="Product">
+                                <div className="row">
+                                    <div className="col-md-3 text-left">
+                                        <img src={item.image[0].ImageURL} alt="" className="img-fluid d-none d-md-block rounded mb-2 shadow "/>
+                                    </div>
+                                    <div className="col-md-9 text-start mt-sm-2 btn" id='product_name' onClick={()=>openproductpage(item)}>
+                                        <h4>{item.productname}</h4>
+                                    </div>
+                                </div>
+                            </td>
+                            <td data-th="Price" className='text-center p-3'>₹{item.discounted_price}</td>
+                            <td data-th="Quantity">
+                                <div className='text-center'>
+                                    <button className='btn btn-dark m-2' onClick={()=>decrementQuantity(item)}>-</button>
+                                    <span >{item.quantity}</span>
+                                    <button className='btn btn-dark m-2' onClick={()=>incrementQuantity(item)}>+</button>
+                                </div>
+                            </td>
+                            <td className="actions pt-3 px-3">
+                                    <button className="btn btn-dark border-secondary bg-danger btn-md mb-2" onClick={()=>removeitem(item)}>
+                                        <i className="fas fa-trash"></i>
+                                    </button>
+                            </td>
+                </tr>
+            ))}
+                                </tbody>
+                            </table>
+                            <div className='text-end'>
+                                <h4>Subtotal:</h4>
+                                <h1>₹{total}</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="row mt-4 d-flex">
+                        <div className="btn col-sm-6 mb-3 mb-m-1 order text-start">
+                            <NavLink to='/store'>
+                                <i className="fas fa-arrow-left mr-2"></i> Continue Shopping
+                            </NavLink>
+                        </div>
+                        <div className="col-sm-6 order text-end">
+                            <a href="catalog.html" className="btn btn-primary mb-4 btn-lg pl-5 pr-5">Checkout</a>
+                        </div>
+                    </div>
+            </section>
+            :
+            <>
+            </>
+}
+
+
+
+
+    {/* <div >
         <div>
         {cart.length ? 
         <table className='table table-responsive table-hover'>
@@ -154,10 +249,10 @@ return (
                 <td onClick={()=>openproductpage(item)}>
                     {
                         item.stock === 'In Stock' ?
-                        <img src={item.image} style={{width:"50%",height:"50%"}} onClick={()=>openproductpage(item)}/>
+                        <img src={item.image[0].ImageURL} style={{width:"50%",height:"50%"}} onClick={()=>openproductpage(item)}/>
                         :
                         <div className="product-card">
-                            <img src={item.image} style={{width:"50%",height:"50%"}} onClick={()=>openproductpage(item)}/>
+                            <img src={item.image[0].ImageURLe} style={{width:"50%",height:"50%"}} onClick={()=>openproductpage(item)}/>
                             <div className={`text-overlay 'out-of-stock'}`}>
                             <p>{'Out of Stock'}</p>
                             </div>
@@ -198,8 +293,8 @@ return (
         
         </div>
         
-    </div>
-</div>
+    </div> */}
+</>
 )
 }
 
