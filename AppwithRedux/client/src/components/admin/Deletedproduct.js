@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useNavigate,NavLink } from 'react-router-dom'
+import {useDispatch} from 'react-redux'
+import { productDetailsPromiseStatus } from '../../redux/slices/productDetailsSlice'
 
 function Deletedproduct() {
 
   let [products,setProducts]=useState([])
   let [error,setError] =useState('')
   let navigate = useNavigate()
+  let dispatch = useDispatch()
 
   async function viewproducts()
   {
@@ -43,27 +46,82 @@ function Deletedproduct() {
     }
   }
 
+  async function edit(item)
+    {
+      // console.log(item)
+      try
+      {
+        await dispatch(productDetailsPromiseStatus(item))
+        navigate('/admin/editproduct')
+      }
+      catch(err)
+      {
+        setError(err.message)
+      }
+    }
+
+  async function openproductpage(item)
+  {
+    try
+    {
+      await dispatch(productDetailsPromiseStatus(item))
+      navigate('/store/productpage')
+    }
+    catch(err)
+    {
+      setError(err.message)
+    }
+  }
+
   return (
-    <div>
-      <div className='container pt-2'>
-      <NavLink className='btn btn-dark' to='/admin/managestore'>BACK TO PRODUCTS</NavLink>
-    <div className='row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-4 g-4'>
+    <>
+    <NavLink className='btn btn-dark m-4' to='/admin/managestore'>BACK TO PRODUCTS</NavLink>
+    <div className="row">
     {products.map((item,index)=>
-    (
-        <div className='col pt-3 pb-3'  key={index}>
-            <div className='card' style={{height:'500px'}}>
-                <img src={item.image} className='card-img-top' style={{width:'auto',height:'250px'}} alt={item.name}/>
-                <div className='card-body'>
-                    <h5 className='card-title'>{item.productname}</h5>
-                    <p className='card-text'>Rs.{item.price}</p>
-                    <button className='btn btn-danger' onClick={()=>restoreproduct(item)}>RESTORE</button>    
-                </div>
+      (
+    <div className="col-md-3 col-sm-6 mt-4">
+        <div key={index} className="product-grid">
+            <div className="product-image">
+                <a href="#" className="image">
+                  {
+                    item.stock === "In Stock"?
+                    <div>
+                      <img key={index} onClick={()=>openproductpage(item)} src={item.image[0].ImageURL}/>
+                    </div>
+                    :
+                    <div>
+                      <img key={index} onClick={()=>openproductpage(item)} src={item.image[0].ImageURL}/>
+                      <div className={`stock-overlay 'out-of-stock'}`}>
+                          <p className='fw-bold'>{'Out of Stock'}</p>
+                      </div>
+                    </div>
+                  }
+                </a>
+                <span className="product-discount-label">-{item.discount_percent}%</span>
+                <ul className="product-links">
+                    {/* <li><a href="#"><i className="fa fa-search"></i></a></li> */}
+                    <li>
+                      <NavLink className='btn' onClick={()=>edit(item)}><i className="fas fa-pencil-alt"></i></NavLink>
+                    </li>
+                    <li>
+                        <NavLink className='btn' onClick={()=>restoreproduct(item)}><i className="fa fa-undo"></i></NavLink>    
+                    </li>
+                </ul>
+                {/* <a href="" className="add-to-cart text-start">IN STOCK:</a> */}
+            </div>
+            <div className="product-content" onClick={()=>openproductpage(item)}>
+                <h3 className="title">
+                  <div className='btn' >
+                  {item.productname}
+                  </div>
+                </h3>
+                <div className="price">₹{item.discounted_price} <span>₹{item.price}</span></div>
             </div>
         </div>
-    ))}
     </div>
+  ))}
 </div>
-</div>
+</>
 )
 }
 
