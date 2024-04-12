@@ -136,9 +136,16 @@ const userSchema = new mongoose.Schema(
                 enum:['In Stock','Out of Stock']
             },
             image:
+        [
             {
-                type:String,
+                ImageURL:
+                {
+                    type:String
+                }
             }
+        ],
+        discount_percent:Number,
+        discounted_price:Number,
         }],
         wishlist:
         [
@@ -152,13 +159,24 @@ const userSchema = new mongoose.Schema(
                 brand:String,
                 price:Number,
                 stock:String,
-                image:String,
+                discount_percent:Number,
+                discounted_price:Number,
+                image:
+                [
+                    {
+                        ImageURL:
+                        {
+                            type:String
+                        }
+                    }
+                ]
             }
         ],
         notifications:
         [
             {
-                
+                message:String,
+                time:String
             }
         ]
     }
@@ -375,6 +393,15 @@ const productSchema = new mongoose.Schema(
             type:Number,
             required:[true,"PRICE IS REQUIRED"]
         },
+        discount_percent:
+        {
+            type:Number,
+            default:0
+        },
+        discounted_price:
+        {
+            type:Number
+        },
         stock:
         {
             type:String,
@@ -382,9 +409,14 @@ const productSchema = new mongoose.Schema(
             enum:['In Stock','Out of Stock']
         },
         image:
-        {
-            type:String,
-        }
+        [
+            {
+                ImageURL:
+                {
+                    type:String
+                }
+            }
+        ]
         // ,
         // reviews: [{
         //     user: {
