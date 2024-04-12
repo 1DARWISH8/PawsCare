@@ -4,7 +4,7 @@ import {useDispatch,useSelector} from 'react-redux'
 import { productDetailsPromiseStatus } from '../redux/slices/productDetailsSlice' 
 import {Alert} from 'react-bootstrap';
 import { useNavigate,NavLink } from 'react-router-dom'
-
+import { Carousel } from 'react-bootstrap';
 
 function Productpage() {
 
@@ -17,7 +17,7 @@ function Productpage() {
     let item = {...presentItem}
     let [wishlist,setWishlist] = useState([])
     let [exits,setExistence] = useState(false)
-
+    // let discounted_price = item.price - ((item.price * item.discount_percent)/100)
 
 async function addtocart(item)
 {
@@ -25,8 +25,9 @@ async function addtocart(item)
     {
         let username=currentUser.username;
         item = {...item,username}
+        console.log(item)
         let added = await axios.post('http://localhost:5000/user-api/addcartproduct',item)
-        // console.log(added)
+        console.log(added)
         if (added.data.message === "PRODUCT ADDED TO CART")
         {
             setAlert('PRODUCT ADDED')
@@ -143,11 +144,17 @@ catch(err)
 }
 }
 
-function edit(item)
+async function edit(item)
     {
-      // console.log(item)
-        dispatch(productDetailsPromiseStatus(item))
-        navigate('/admin/editproduct')
+        try
+        {
+            await dispatch(productDetailsPromiseStatus(item))
+            navigate('/admin/editproduct')
+        }
+        catch(Err)
+        {
+            setError(Err.message)
+        }
     }
 
     async function deleteproduct(item)
@@ -262,7 +269,6 @@ async function updatestock(item)
     }
 }
 
-
 return (
     <div className="container-fluid">
         {error.length!==0&& <p className='fw-bold text-center text-danger border-0'>{error}</p>}
@@ -273,18 +279,32 @@ return (
                         {
                             item.stock === 'In Stock' ?
                             <div className='product-card'>
-                            <img src={item.image} width="100%" id="ProductImg" alt={item.name} />
+                                <Carousel variant='dark'>
+                                    {item.image.map((item_image,index)=>(
+                                        <Carousel.Item>
+                                            <img key={index} src={item_image.ImageURL} width="100%" id="ProductImg" alt={item.name} />
+                                        </Carousel.Item>
+                                    ))}
+                                </Carousel>
                             </div>
                             :
                             <div className="product-card">
-                                <img src={item.image} width="100%" id="ProductImg" alt={item.name} />
+                                <Carousel variant='dark'>
+                                    {item.image.map((item_image,index)=>(
+                                        <Carousel.Item>
+                                            <img key={index} src={item_image.ImageURL} width="100%" id="ProductImg" alt={item.name} />
+                                        </Carousel.Item>
+                                    ))}
+                                </Carousel>
                                 <div className={`text-overlay 'out-of-stock'}`}>
-                                    <p>{'Out of Stock'}</p>
+                                    <p className='fw-bold'>{'Out of Stock'}</p>
                                 </div>
                             </div>
                         }
                         <div className="small-imgs">
-                            <img src={item.image} width="10%" className="small-img" alt="Product" />
+                            {item.image.map((image,index)=>(
+                                <img key={index} src={image.ImageURL} width="10%" className="small-img m-2" alt="Product" />
+                            ))}
                         </div>
                     </div>
                     <div className="col-md-6">
@@ -297,12 +317,26 @@ return (
                             <i className="far fa-star"></i>
                             <p></p>
                         </div>
-                        <div className="itemprice m-1">
-                            Rs.{item.price}
+                        <div className="itemprice m-1 fw-bold">
+                            <div className='text-success'>
+                            <span className='text-decoration-line-through'>
+                                MRP.{item.price}
+                            </span>
+                            <span className='mx-3'>
+                                {item.discount_percent}% OFF
+                            </span>
+                            </div>
+                            <span className='fs-3'>
+                                Rs.{item.discounted_price}
+                            </span>
                         </div>
                         <div className="row">
-                            <div className="col-md-4 qty">
-                                <h5>Quantity:<span className='text-dark'>1</span></h5>
+                            <div className="col-md-4 qty mx-1 ">
+                                <h5 className='fw-bold'>
+                                        Quantity:
+                                    <span className='text-dark mx-1'>
+                                        1
+                                    </span></h5>
                             </div>
                         </div>
                         <div className="buttons">
@@ -336,7 +370,9 @@ return (
                                             {
                                                 item.stock === 'In Stock' ?
                                                 <p className='fw-bold m-1'> CHANGE STOCK TO:
+                                                <span>
                                                     <button className='btn btn-warning m-2' onClick={()=>updatestock(item)}> Out of Stock</button>
+                                                </span>
                                                 </p>
                                                 :
                                                 <p className='fw-bold m-1'> CHANGE STOCK TO:
