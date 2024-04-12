@@ -2,29 +2,44 @@ import React, { useState } from 'react'
 import {useForm} from 'react-hook-form'
 import axios from 'axios'
 import {NavLink, useNavigate} from 'react-router-dom'
- 
+import {Alert} from 'react-bootstrap';
+
 const Addproducts = () => {
     let {register,handleSubmit,formState:{errors}}=useForm()
         let [error,setError] = useState('')
         let [file,setFile]=useState(null)
         let navigate=useNavigate()
+        let [alert,setAlert] = useState('')
+        
+const hideAlert = () =>
+{
+    setTimeout(()=>
+    {
+        setAlert('');
+    },5000);
+}
+
+useState(()=>
+{
+    hideAlert();
+},[])
+
 
         function uploadPic(e)
     {
         setFile(e.target.files[0])
     }
-
+    
     async function formSubmit(data)
     {
         const formData = new FormData();
         formData.append('data',JSON.stringify(data))
         formData.append('image',file)
-        console.log(data)
-
+        let discounted_price = 0
+        data = {...data,discounted_price}
         try
         {
             let res = await axios.post('http://localhost:5000/admin-api/addproduct',formData)
-            console.log(res)
             if (res.status===201)
             {
                 navigate('/admin/managestore')
@@ -42,9 +57,10 @@ const Addproducts = () => {
 
 
 return (
-    <div className="container">
+<div className="containers m-5">
+    {alert.length!==0 && <Alert variant={'dark'} onClose={()=>setAlert('')}>{alert}</Alert> }
     <NavLink className='btn btn-dark' to='/admin/managestore'>BACK TO PRODUCTS</NavLink>
-    <h2 className="mt-5 mb-4">Product Registration Form</h2>
+    <h2 className="mt-5 mb-4">ADD A PRODUCT</h2>
     <form onSubmit={handleSubmit(formSubmit)}>
         <div className="mb-3">
             <label htmlFor="productname" className="form-label">Product Name:</label>
@@ -70,6 +86,7 @@ return (
             <option value="GUINEA PIG">GUINEA PIG</option>
             <option value="HAMSTER">HAMSTER</option>
             <option value="TURTLE">TURTLE</option>
+            <option value="OTHER">OTHER</option>
             </select>
         </div>
         <div className="mb-3">
@@ -90,7 +107,11 @@ return (
         </div>
         <div className="mb-3">
             <label htmlFor="price" className="form-label">Price:</label>
-            <input type="number"className="form-control" id="price" name="price" {...register("price",{required:true})} />
+            <input type="number"className="form-control" id="price" name="price" min={1} {...register("price",{required:true})} />
+        </div>
+        <div className="mb-3">
+            <label htmlFor="discount_percent" className="form-label">Discount Percent:</label>
+            <input type="number"className="form-control" min={0} max={99} id="discount_percent" name="discount_percent" placeholder='0'{...register("discount_percent",{required:true,min:0,max:99})} />
         </div>
         <div className="sm-3 mb-3">
             <label htmlFor="image" className="form-label">Images:</label>
@@ -102,7 +123,7 @@ return (
         </div> */}
         <button type="submit" className="btn btn-primary">Submit</button>
     </form>
-    </div>
+</div>
 );
 };
 
