@@ -471,14 +471,23 @@ const addproduct = async (req,res)=>
     try
     {
         let data = JSON.parse(req.body.data)
-        let added = await Product.create(data)
-        if (added)
+        let product_exists = await Product.findOne({productid:data.productid})
+        if (product_exists===null)
         {
-            res.status(201).send({message:"Product Added",payload:added})
+            data.discounted_price = Math.round(data.price * ((100 - data.discount_percent) / 100));
+            let added = await Product.create(data)
+            if (added)
+            {
+                res.status(201).send({message:"Product Added",payload:added})
+            }
+            else
+            {
+                res.status(200).send({message:"ERROR IN ADDING PRODUCTS"})
+            }
         }
         else
         {
-            res.status(200).send({message:"ERROR IN ADDING PRODUCTS"})
+            res.status(200).send({message:"PRODUCT WITH THE PRODUCT ID EXISTS"})
         }
     }
     catch(err)
@@ -518,8 +527,7 @@ const editproduct =async (req,res)=>
     try
     {
         let data = JSON.parse(req.body.data)
-        // console.log(data)
-
+        data.discounted_price = Math.round(data.price * (100 - data.discount_percent) / 100);
         let edited = await Product.findOneAndUpdate({_id:data._id},
             {
                 $set:data
