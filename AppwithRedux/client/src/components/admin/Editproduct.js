@@ -64,14 +64,20 @@ useState(()=>
 
     async function refresh()
     {
-        dispatch(reFresh())
-        navigate('/admin/managestore')
+        try
+        {
+            await dispatch(reFresh())
+            navigate('/admin/managestore')        }
+        catch(err)
+        {
+            setError(err.message)
+        }
     }
 
 return (
-<div className="container">
+<div className="containers m-5">
 {alert.length!==0 && <Alert variant={'dark'} onClose={()=>setAlert('')}>{alert}</Alert> }
-    <h2 className="mt-5 mb-4">Product Registration Form</h2>
+    <h2 className="mt-5 mb-4">Edit Product Details </h2>
     <NavLink className='btn btn-dark' to='/admin/managestore' onClick={refresh}>BACK TO PRODUCTS</NavLink>
     <form onSubmit={handleSubmit(formSubmit)}>
         <div className="mb-3">
@@ -80,23 +86,25 @@ return (
         </div>
         <div className="mb-3">
             <label htmlFor="productid" className="form-label">Product ID:</label>
-            <input type="text" className="form-control" id="productid" name="productid" defaultValue={presentItem.productid} {...register("productid",{required:true})} />
+            <input type="text" className="form-control" id="productid" name="productid" defaultValue={presentItem.productid} readOnly {...register("productid",{required:true})} />
         </div>
         <div className="mb-3">
             <label htmlFor="description" className="form-label">Description:</label>
-            <input type="text" className="form-control" id="description" name="description" defaultValue={presentItem.description} {...register("description",{required:true})} />
+            <textarea type="textarea" className="form-control" id="description" name="description" defaultValue={presentItem.description} {...register("description",{required:true})} />
         </div>
         <div className="mb-3">
             <label htmlFor="animal" className="form-label">ANIMAL:</label>
-            <select className="form-control" id="animal" name="animal" {...register("animal",{required:true})}>
+            <select className="form-control" id="animal" name="animal"  {...register("animal",{required:true})}>
             <option value="">SELECT</option>
             <option value="DOG">DOG</option>
             <option value="CAT">CAT</option>
+            <option value="DOG & CAT">DOG & CAT</option>
             <option value="BIRD"> BIRD</option>
             <option value="FISH">FISH</option>
             <option value="GUINEA PIG">GUINEA PIG</option>
             <option value="HAMSTER">HAMSTER</option>
             <option value="TURTLE">TURTLE</option>
+            <option value="OTHER">OTHER</option>
             </select>
         </div>
         <div className="mb-3">
@@ -118,6 +126,10 @@ return (
         <div className="mb-3">
             <label htmlFor="price" className="form-label">Price:</label>
             <input type="number"className="form-control" id="price" name="price" defaultValue={presentItem.price} {...register("price",{required:true})} />
+        </div>
+        <div className="mb-3">
+            <label htmlFor="discount_percent" className="form-label">Discount Percent:</label>
+            <input type="number"className="form-control" min={0} max={99} id="discount_percent" name="discount_percent" defaultValue={presentItem.discount_percent} placeholder={presentItem.discount_percent}{...register("discount_percent",{required:true,min:0,max:99})} />
         </div>
         <div className="sm-3 mb-3">
             <label htmlFor="image" className="form-label">Images:</label>
