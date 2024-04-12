@@ -97,6 +97,7 @@ function Header() {
                 </NavDropdown.Item>
               </NavDropdown>
               <NavLink className='nav-link mx-2' id='icon' to='/home/appointment'><i className="bi bi-calendar"></i>BOOK APPOINTMENT</NavLink>
+              <NavLink className='nav-link mx-2' id='icon' to='/store'><i className="bi bi-calendar"></i>STORE</NavLink>
             <NavLink className='nav-link mx-2' id='icon' to='/cart'><i className="bi bi-cart4"></i>CART</NavLink>
           </Nav>
         </Navbar.Collapse>
