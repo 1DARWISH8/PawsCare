@@ -233,16 +233,16 @@ async function openprofile(user)
       </div>
       </>
         }
-        <div className="hover-container">
+    <div className="hover-container">
       <button className="stickyButton" onClick={toggleFloatingButton}>
         <i className="fas fa-plus rotated"></i>
       </button>
       {showFloatingButton && (
-        <div  onClick={toggleFloatingButton}>
-          <button className="floatingButton" onClick={()=>settype('New')}>
-            Create User
-          </button>
-        </div>
+      <div  onClick={toggleFloatingButton}>
+        <button className="floatingButton" onClick={()=>settype('New')}>
+          Create User
+        </button>
+      </div>
       )}
     </div>
     </>
