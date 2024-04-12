@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useNavigate,NavLink } from 'react-router-dom'
 import { productDetailsPromiseStatus } from '../../redux/slices/productDetailsSlice'
-import {useDispatch,useSelector} from 'react-redux'
+import {useDispatch} from 'react-redux'
 import {Alert} from 'react-bootstrap';
+import '../Store.css'
 
 function Managestore() 
 {
@@ -67,11 +68,18 @@ function Managestore()
       setSearchResults(results);
     };
     
-    function edit(item)
+    async function edit(item)
     {
       // console.log(item)
-      dispatch(productDetailsPromiseStatus(item))
-      navigate('/admin/editproduct')
+      try
+      {
+        await dispatch(productDetailsPromiseStatus(item))
+        navigate('/admin/editproduct')
+      }
+      catch(err)
+      {
+        setError(err.message)
+      }
     }
   
   
@@ -137,7 +145,7 @@ async function openproductpage(item)
   {
     try
     {
-      dispatch(productDetailsPromiseStatus(item))
+      await dispatch(productDetailsPromiseStatus(item))
       navigate('/store/productpage')
     }
     catch(err)
@@ -145,55 +153,88 @@ async function openproductpage(item)
       setError(err.message)
     }
   }
+
+  const [showFloatingButton, setShowFloatingButton] = useState(false);
+
+  const toggleFloatingButton = () => 
+  {
+    setShowFloatingButton(!showFloatingButton);
+  }
   
 
   return (
     <div>
-      <button className='btn btn-primary m-3' onClick={addproducts}>ADD PRODUCTS</button>
-      <button className='btn btn-primary m-3' onClick={deletedproducts}>DELETED PRODUCTS</button>
-      
+      <div className='search'>
+          <form className='text-start mx-4'>
+              <input
+              type="text"
+              placeholder="Search by product name"
+              value={searchTerm}
+              onChange={handleChange}/>  
+          </form>
+      </div>
 
-        <input
-            type="text"
-            placeholder="Search by product name"
-            value={searchTerm}
-            onChange={handleChange}
-        />
-
-
-      <div className='container pt-2'>
-            <div className='row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-4 g-4'>
-            {searchResults.map((item,index)=>
-            (
-                <div className='col pt-3 pb-3'  key={index}>
-                    <div className='card' style={{height:'500px'}}>
-                        <img src={item.image} className='card-img-top' style={{width:'auto',height:'250px'}} alt={item.name} onClick={()=>openproductpage(item)}/>
-                        <div className='card-body'>
-                            <h5 className='card-title'>{item.productname}</h5>
-                            <p className='card-text'>Rs.{item.price}</p>
-                            <span>
-                            <NavLink className='btn btn-success m-3' onClick={()=>edit(item)}>EDIT</NavLink>    
-                            <button className='btn btn-danger' onClick={()=>deleteproduct(item)}>DELETE</button>    
-                            </span>
-                            <div className='text-center'>
-                            {
-                              item.stock === 'In Stock' ?
-                              <p className='fw-bold m-1'> CHANGE STOCK TO:
-                                <button className='btn btn-warning m-2' onClick={()=>updatestock(item)}> Out of Stock</button>
-                              </p>
-                              :
-                              <p className='fw-bold m-1'> CHANGE STOCK TO:
-                                <button className='btn btn-warning m-2' onClick={()=>updatestock(item)}>In Stock</button>
-                              </p>
-                            }
-                            </div>
-                        </div>
+  <div className="row">
+    {searchResults.map((item,index)=>
+      (
+    <div className="col-md-3 col-sm-6 mt-4">
+        <div key={index} className="product-grid">
+            <div className="product-image">
+                <a href="#" className="image">
+                  {
+                    item.stock === "In Stock"?
+                    <div>
+                      <img key={index} onClick={()=>openproductpage(item)} src={item.image[0].ImageURL}/>
                     </div>
-                </div>
-            ))}
+                    :
+                    <div>
+                      <img key={index} onClick={()=>openproductpage(item)} src={item.image[0].ImageURL}/>
+                      <div className={`stock-overlay 'out-of-stock'}`}>
+                          <p className='fw-bold'>{'Out of Stock'}</p>
+                      </div>
+                    </div>
+                  }
+                </a>
+                <span className="product-discount-label">-{item.discount_percent}%</span>
+                <ul className="product-links">
+                    {/* <li><a href="#"><i className="fa fa-search"></i></a></li> */}
+                    <li>
+                      <NavLink className='btn' onClick={()=>edit(item)}><i className="fas fa-pencil-alt"></i></NavLink>
+                    </li>
+                    <li>
+                        <NavLink className='btn' onClick={()=>deleteproduct(item)}><i className="fa fa-trash"></i></NavLink>    
+                    </li>
+                </ul>
+                {/* <a href="" className="add-to-cart text-start">IN STOCK:</a> */}
+            </div>
+            <div className="product-content" onClick={()=>openproductpage(item)}>
+                <h3 className="title">
+                  <div className='btn' >
+                  {item.productname}
+                  </div>
+                </h3>
+                <div className="price">₹{item.discounted_price} <span>₹{item.price}</span></div>
             </div>
         </div>
     </div>
+  ))}
+  <div className="hover-container">
+      <button className="stickyButton" onClick={toggleFloatingButton}>
+        <i className="fas fa-plus rotated"></i>
+      </button>
+      {showFloatingButton && (
+      <div  onClick={toggleFloatingButton}>
+        <button className="floatingButton1" onClick={addproducts}>
+          ADD A PRODUCT
+        </button>
+        <button className="floatingButton2" onClick={deletedproducts}>
+          DELETED PRODUCTS
+        </button>
+      </div>
+      )}
+  </div>
+</div>
+</div>
   )
 }
 
