@@ -14,6 +14,7 @@ function Bookuserappointment() {
     let [error,setError]=useState('')
     let [users,setUsers] = useState([])
     let dispatch = useDispatch()
+    let [order,setOrder] = useState('List')
 
     async function openprofile(user)
     {
@@ -79,76 +80,140 @@ function Bookuserappointment() {
 
         
 
-        <div className='text-center mt-3'>
-                <div className='search'>
-                    <form className='text-start mx-4'>
-                        <input
-                        type="text"
-                        placeholder="Search by username"
-                        value={searchTerm}
-                        onChange={handleChange}/>  
-                    </form>
+    <div className=' mt-3'>
+        <div className='search'>
+            <form className='text-start mx-4'>
+                <input
+                type="text"
+                placeholder="Search by username"
+                value={searchTerm}
+                onChange={handleChange}/>  
+            </form>
+            <span className='mx-4 fw-bold'>
+                VIEW:
+                <button className='listview btn' onClick={()=>(setOrder('List'))}>
+                    <i class="fas fa-list"></i>
+                </button>
+                <button className='cardview btn' onClick={()=>(setOrder('Card'))}>
+                    <i class="fas fa-th-large"></i>
+                </button>
+            </span>
         </div>
 {searchResults.length?
     <>
-        <div class="list w-100">
-        
-        <Table striped responsive hover>
-        <thead>
-            <tr>
-            <th >Image</th>
-            <th>User Name</th>
-            <th>Account Status</th>
-            <th>Book Appointment</th>
-            <th>Phone</th>
-            </tr>
-        </thead>
-        <tbody >
-        {searchResults.map((user,index)=>(
-            <tr key={index} className='text-center' >
-                <td >
-                    <img  src={user.profileImageURL} className='rounded-circle m-1' width="40"/>
-                </td>
-                <td  onClick={()=>openprofile(user)}>
-                    <span className='btn'>
+        {
+            order==="List"?
+            <div class="list w-100">
+                <Table striped responsive hover>
+                <thead className='text-center'>
+                    <tr>
+                    <th >Image</th>
+                    <th>User Name</th>
+                    <th>Account Status</th>
+                    <th>Book Appointment</th>
+                    <th>Phone</th>
+                    </tr>
+                </thead>
+                <tbody >
+                {searchResults.map((user,index)=>(
+                    <tr key={index} className='text-center' >
+                        <td >
+                            <img  src={user.profileImageURL} className='rounded-circle m-1' width="40"/>
+                        </td>
+                        <td  onClick={()=>openprofile(user)}>
+                            <span className='btn'>
+                                {user.username}
+                            </span></td>
+                        {
+                            user.accountstatus==="ACTIVE"?
+                            <td id='active-status' >
+                                <button>
+                                {user.accountstatus}
+                                </button>
+                            </td>
+                            :
+                            <td id='inactive-status' >
+                                <button>
+                                {user.accountstatus}
+                                </button>
+                            </td>
+                        }
+                        {
+                            user.accountstatus==="ACTIVE"?
+                            <td>
+                                <button className='btn btn-success' onClick={()=>bookappointment(user)}>BOOK</button>
+                            </td>
+                            :
+                            <td  >
+                                <button className='btn btn-success' disabled onClick={()=>bookappointment(user)}>BOOK</button>
+                            </td>
+                        }
+                        
+                        <td>+91 {user.phonenumber}</td>
+                    </tr>
+                ))}
+                </tbody>
+                </Table>
+                <div class="bottom">
+                    <div class="showing">
+                    <span>Showing {searchResults.length} Results</span>
+                    </div>
+                </div>
+                </div>
+            :
+            <section>
+            <div class="row text-center">
+            {
+            searchResults.map((user,index)=>(
+                <div key={index} className="col-md-3 m-5">
+                <div className="card profile-card-3 m-3">
+                    <div className="background-block">
+                        {/* <img src="https://res.cloudinary.com/dozacgfl7/image/upload/v1712649955/paws_qnn5le.jpg" alt="profile-sample1" className="background"/> */}
+                    </div>
+                    <div className="profile-thumb-block">
+                        <img src={user.profileImageURL} alt="profile-image" className="profile"/>
+                    </div>
+                    <div className="card-content">
+                        <h2 className='btn' onClick={()=>openprofile(user)}>
                         {user.username}
-                    </span></td>
-                {
-                    user.accountstatus==="ACTIVE"?
-                    <td id='active-status' >
-                        <button>
-                        {user.accountstatus}
-                        </button>
-                    </td>
-                    :
-                    <td id='inactive-status' >
-                        <button>
-                        {user.accountstatus}
-                        </button>
-                    </td>
-                }
-                {
-                    user.accountstatus==="ACTIVE"?
-                    <td>
-                        <button className='btn btn-success' onClick={()=>bookappointment(user)}>BOOK</button>
-                    </td>
-                    :
-                    <td  >
-                        <button className='btn btn-success' disabled onClick={()=>bookappointment(user)}>BOOK</button>
-                    </td>
-                }
-                
-                <td>+91 {user.phonenumber}</td>
-            </tr>
-        ))}
-        </tbody>
-        </Table>
-        <div class="bottom">
-            <div class="showing">
-            <span>Showing {searchResults.length} Results</span>
+                        </h2>
+                        <div>
+                        <small>
+                            STATUS:
+                            {
+                            user.accountstatus === "ACTIVE"?
+                            <span className='m-2 fw-bold text-success'>
+                            {user.accountstatus}
+                            </span>
+                            :
+                            <span className='m-2 fw-bold text-danger'>
+                            {user.accountstatus}
+                            </span>
+                            }
+                        </small>
+                        </div>
+                        {/* <div className="icon-block"><a href="#"><i className="fa fa-facebook"></i></a><a href="#"> <i className="fa fa-twitter"></i></a><a href="#"> <i className="fa fa-google-plus"></i></a></div> */}
+                        <span >
+                            {user.accountstatus==="ACTIVE"?
+                            <button className='btn btn-danger mt-3' onClick={()=>bookappointment(user)}>BOOK</button>
+                            :
+                            <button className='btn btn-success mt-3' disabled onClick={()=>bookappointment(user)}>BOOK</button>
+                            }
+                        </span>
+                    </div>
+                </div>
+                </div>
+            ))
+            }
             </div>
-        </div>
-        </div>
+            <div class="bottom">
+                <div class="showing">
+                <span>Showing {searchResults.length} Results</span>
+                </div>
+            </div>
+            </section>
+        }
+        
     </>:
     <>
     <h5>NO USERS TO SHOW</h5>
