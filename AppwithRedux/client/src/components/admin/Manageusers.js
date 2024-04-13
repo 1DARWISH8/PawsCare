@@ -7,6 +7,7 @@ import {useForm} from "react-hook-form"
 import Spinner from 'react-bootstrap/Spinner';
 import './Manageusers.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Table from 'react-bootstrap/Table'
 
 function Manageusers() {
 
@@ -19,6 +20,7 @@ function Manageusers() {
   let {register,handleSubmit,setValue,formState:{errors}}=useForm()
   let [bookingtype,setBookingType]= useState('Existing')
   let [file,setFile]=useState(null)
+  let [order,setOrder] = useState('Card')
 
   async function deactivateuser(user)
   {
@@ -174,9 +176,19 @@ async function openprofile(user)
             value={searchTerm}
             onChange={handleChange}/>  
           </form>
+          <span className='mx-4 fw-bold'>
+            VIEW:
+          <button className='listview btn' onClick={()=>(setOrder('List'))}>
+            <i class="fas fa-list"></i>
+          </button>
+          <button className='cardview btn' onClick={()=>(setOrder('Card'))}>
+            <i class="fas fa-th-large"></i>
+          </button>
+        </span>
         </div>
         {searchResults.length?
         <>
+        {order==="Card"?
         <section>
         <div class="row text-center">
         {
@@ -218,11 +230,77 @@ async function openprofile(user)
                     </span>
                 </div>
               </div>
-    		</div>
+          </div>
           ))
         }
         </div>
-        </section>						
+        <div class="bottom">
+            <div class="showing">
+            <span>Showing {searchResults.length} Results</span>
+            </div>
+        </div>
+        </section>
+      :
+      <>
+      <div class="list w-100">
+        
+        <Table striped responsive hover>
+        <thead>
+            <tr>
+            <th >Image</th>
+            <th>User Name</th>
+            <th>Account Status</th>
+            <th>Change Status</th>
+            <th>Phone</th>
+            </tr>
+        </thead>
+        <tbody >
+        {searchResults.map((user,index)=>(
+            <tr key={index} className='text-center' >
+                <td >
+                    <img  src={user.profileImageURL} className='rounded-circle m-1' width="40"/>
+                </td>
+                <td  onClick={()=>openprofile(user)}>
+                    <span className='btn'>
+                        {user.username}
+                    </span></td>
+                {
+                    user.accountstatus==="ACTIVE"?
+                    <td id='active-status' >
+                        <button>
+                        {user.accountstatus}
+                        </button>
+                    </td>
+                    :
+                    <td id='inactive-status' >
+                        <button>
+                        {user.accountstatus}
+                        </button>
+                    </td>
+                }
+                {
+                    user.accountstatus==="ACTIVE"?
+                    <td>
+                        <button className='btn btn-success' onClick={()=>deactivateuser(user)}>DEACTIVATE</button>
+                    </td>
+                    :
+                    <td  >
+                        <button className='btn btn-success' disabled onClick={()=>activateuser(user)}>ACTIVATE</button>
+                    </td>
+                }
+                
+                <td>+91 {user.phonenumber}</td>
+            </tr>
+        ))}
+        </tbody>
+        </Table>
+        <div class="bottom">
+            <div class="showing">
+            <span>Showing {searchResults.length} Results</span>
+            </div>
+        </div>
+        </div>
+      </>}
       </>:
       <>
       {/* <Spinner animation="border" role="status">
@@ -377,7 +455,6 @@ async function openprofile(user)
         <div className='text-center p-2'>
             <button type='submit' className='btn btn-dark'>REGISTER</button>
         </div>
-
         </form>
     </>
 }
