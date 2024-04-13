@@ -230,6 +230,12 @@ return (
             </section>
             :
             <>
+                <h3 className='mt-4'>CART IS EMPTY</h3>
+                <div className="text-center">
+                    <NavLink to='/store' className="btn btn-dark">
+                        <i className="fas fa-arrow-left mr-2"></i> Continue Shopping
+                    </NavLink>
+                </div>
             </>
 }
 
