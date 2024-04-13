@@ -208,7 +208,14 @@ useEffect(()=>getwishlist,[])
                     </div>
                   }
                 </a>
-                <span className="product-discount-label">-{item.discount_percent}%</span>
+                {
+                  item.discount_percent===0
+                  ?
+                  <>
+                  </>
+                  :
+                  <span className="product-discount-label">-{item.discount_percent}%</span>
+                }
                 {/* <ul className="product-links">
                     <li>
                       <NavLink className='btn' onClick={()=>edit(item)}><i className="fas fa-pencil-alt"></i></NavLink>
@@ -231,7 +238,15 @@ useEffect(()=>getwishlist,[])
                   {item.productname}
                   </div>
                 </h3>
-                <div className="price">₹{item.discounted_price} <span>₹{item.price}</span></div>
+                <div className="price">₹{item.discounted_price} 
+                  {
+                    item.discount_percent===0?
+                    <>
+                    </>
+                    :
+                    <span>₹{item.price}</span>
+                  }
+                </div>
             </div>
         </div>
     </div>
