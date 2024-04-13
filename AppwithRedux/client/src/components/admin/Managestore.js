@@ -195,7 +195,14 @@ async function openproductpage(item)
                     </div>
                   }
                 </a>
-                <span className="product-discount-label">-{item.discount_percent}%</span>
+                {
+                  item.discount_percent===0
+                  ?
+                  <>
+                  </>
+                  :
+                  <span className="product-discount-label">-{item.discount_percent}%</span>
+                }
                 <ul className="product-links">
                     {/* <li><a href="#"><i className="fa fa-search"></i></a></li> */}
                     <li>
@@ -213,8 +220,16 @@ async function openproductpage(item)
                   {item.productname}
                   </div>
                 </h3>
-                <div className="price">₹{item.discounted_price} <span>₹{item.price}</span></div>
-            </div>
+                <div className="price">₹{item.discounted_price}
+                {
+                    item.discount_percent===0?
+                    <>
+                    </>
+                    :
+                    <span>₹{item.price}</span>
+                  }
+                </div>            
+              </div>
         </div>
     </div>
   ))}
