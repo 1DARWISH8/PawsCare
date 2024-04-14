@@ -8,7 +8,7 @@ function Login() {
   let {register,handleSubmit,formState:{errors}}=useForm()
   let dispatch = useDispatch()
   let navigate=useNavigate()
-  let {loginStatus,errorMessage} = useSelector(state=>state.userLogin)
+  let {currentUser,loginStatus,errorMessage} = useSelector(state=>state.userLogin)
   let [userType,setUserType] = useState('user')
 
   let userTypeChange=(event)=>
@@ -26,7 +26,14 @@ function Login() {
   {
       if(loginStatus===true)
       {
-        navigate('/home')
+        if (currentUser.userType==='user')
+        {
+          navigate('/home')
+        }
+        else
+        {
+          navigate('/dashboard')
+        }
       }
   },[loginStatus])
 
