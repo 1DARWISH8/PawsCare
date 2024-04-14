@@ -33,6 +33,8 @@ import Productpage from './components/Productpage';
 import Orders from './components/Orders';
 import Wishlist from './components/Wishlist';
 import Manageorders from './components/admin/Manageorders';
+import Myappointments from './components/Myappointments';
+import Dashboard from './components/admin/Dashboard';
 
 
 function App() {
@@ -57,6 +59,10 @@ function App() {
         {
           path:'/home',
           element:<Home/>
+        },
+        {
+          path:'/dashboard',
+          element:<Dashboard/>
         },
         {
           path:'store',
@@ -101,6 +107,10 @@ function App() {
         {
           path:'/home/appointment',
           element:<Appointment/>
+        },
+        {
+          path:'/home/myappointments',
+          element:<Myappointments/>
         },
         {
           path:'/home/bookappointment',
