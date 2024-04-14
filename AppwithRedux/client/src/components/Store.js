@@ -174,20 +174,11 @@ useEffect(()=>getwishlist,[])
 
   return (
     <div>
-{/* 
-      <div className='text-center'>
-                <input
-            type="text"
-            placeholder="Search by product name"
-            value={searchTerm}
-            onChange={handleChange}
-        />
-      </div> */}
-
       {error.length!==0&& <p className='fw-bold text-center text-danger border-0'>{error}</p>}
       {alert.length!==0 && <Alert variant={'dark'} onClose={()=>setAlert('')}>{alert}</Alert> }
       
-      <div className="row">
+      
+    <div className="row">
     {searchResults.map((item,index)=>
       (
     <div className="col-md-3 col-sm-6 mt-4">
