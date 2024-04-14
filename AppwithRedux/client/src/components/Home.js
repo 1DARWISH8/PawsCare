@@ -107,18 +107,6 @@ function Home() {
               {/* button is used to help book appointments */}
               <button className='btn btn-primary fw-bold' onClick={navigateTo}>BOOK APPOINTMENT</button>
             </div>
-            {/* carousel is added */}
-            <Carousel fade nextIcon={<span aria-hidden="true" className="carousel-control-next-icon changed" id='carousel' />}>
-              <Carousel.Item>
-                {/* <img className="d-block w-100" id='carouselimg' src={haircut}/> */}
-              </Carousel.Item>
-              <Carousel.Item>
-                {/* <img className="d-block w-100" id='carouselimg' src={checkup}/> */}
-              </Carousel.Item>
-              <Carousel.Item>
-                {/* <img className="d-block w-100" id='carouselimg' src={training}/> */}
-              </Carousel.Item>
-            </Carousel>
           </div>
         </div>
           <div className='text-center p-3' id="health">
