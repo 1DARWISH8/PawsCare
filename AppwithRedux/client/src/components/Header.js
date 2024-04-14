@@ -110,7 +110,7 @@ function Header() {
         <>
           <Navbar collapseOnSelect expand="lg" className="bg-body-tertiary">
           <Navbar.Brand >
-            <NavLink className='nav-link fw-bold fs-5' id='pawscare' to='/home'><img width='70px' src={logo} alt='logo'/>PAWS CARE</NavLink>
+            <NavLink className='nav-link fw-bold fs-5' id='pawscare' to='/dashboard'><img width='70px' src={logo} alt='logo'/>PAWS CARE</NavLink>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
