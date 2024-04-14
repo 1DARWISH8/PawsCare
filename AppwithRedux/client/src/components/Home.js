@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 // To navigate from one components to other according to user interaction useNavigate hook is imported from React Router library
 import {NavLink, useNavigate} from 'react-router-dom'
 import {useSelector} from 'react-redux'
-import './Video.css';
 
 // images are imported for the carousel
 // import haircut from '../images/haircut.jpg'
