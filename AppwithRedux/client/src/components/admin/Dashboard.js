@@ -1,115 +1,278 @@
-import React from 'react'
-import { useEffect } from 'react';
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
+import {useDispatch} from 'react-redux'
+import {useNavigate} from 'react-router-dom'
+import {useForm} from "react-hook-form"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faWallet } from '@fortawesome/free-solid-svg-icons'
 import { BiCalendar } from 'react-icons/bi';
-
-// function AddExternalStyles() {
-//     useEffect(() => {
-//       const addLink = (href) => {
-//         const link = document.createElement('link');
-//         link.rel = 'stylesheet';
-//         link.type = 'text/css';
-//         link.href = href;
-//         document.head.appendChild(link);
-//       };
-  
-//       // Add Bootstrap CSS
-//       addLink('https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css');
-//       addLink('https://pixinvent.com/stack-responsive-bootstrap-4-admin-template/app-assets/css/bootstrap-extended.min.css');
-//       addLink('https://pixinvent.com/stack-responsive-bootstrap-4-admin-template/app-assets/fonts/simple-line-icons/style.min.css');
-//       addLink('https://pixinvent.com/stack-responsive-bootstrap-4-admin-template/app-assets/css/colors.min.css');
-//       addLink('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
-      
-//       // Clean up function
-//       return () => {
-//         // Remove added links if necessary
-//       };
-//     }, []);
-  
-//     return null; // Since this component only handles side effects, return null
-//   }
-
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
+import './Dashboard.css'
+import { Table } from 'react-bootstrap'
+import { userselectedDetailsPromiseSlice } from '../../redux/slices/userselectedDetailsSlice'
 
 function Dashboard() {
-  return (
+
+  let dispatch = useDispatch()
+  let [error,setError] = useState([])
+  let navigate= useNavigate()
+  const [searchResults, setSearchResults] = useState([]);
+  let [users,setUsers] = useState('')
+  let [appointmentsdata,setAppointmentsdata] = useState('')
+  let [products,setProducts]=useState([])
+  let [orders,setOrders] = useState([])
+  let [totalcost,setTotalcost]=useState()
+  let [deliveries,setDeliveries]=useState()
+
+  async function getusers()
+  {
+    try
+    {
+      users = await axios.get('http://localhost:5000/admin-api/getusers')
+      if (users)
+      {
+        setUsers(users.data.payload)
+        setSearchResults(users.data.payload)
+      }     
+    }
+    catch(err)
+    {
+      setError(err.message)
+    }
+  }
+
+  async function openprofile(user)
+    {
+        try
+        {
+            await dispatch(userselectedDetailsPromiseSlice(user))
+            navigate('/admin/userprofile')
+        }
+        catch(err)
+        {
+            setError(err.message)
+        }
+    }
+
+  async function getallappointments()
+  {
+    try
+    {
+      let appointments = await axios.get('http://localhost:5000/admin-api/getallappointments')
+      setAppointmentsdata(appointments.data.payload)
+    }
+    catch(err)
+    {
+      setError(err.message)
+    }
+  }
+
+  async function viewproducts()
+  {
+    try
+    {
+      let products = await axios.get('http://localhost:5000/user-api/getproducts')
+      if (products)
+      {
+        setProducts(products.data.payload)
+      }
+    }
+    catch(err)
+    {
+      setError(err.message)
+    }
+  }
+
+  async function getorders()
+    {
+    try
+        {
+            let orders = await axios.get(`http://localhost:5000/admin-api/getorders`)
+            // console.log(orders.data.payload)
+            setOrders(orders.data.payload)
+            if (orders)
+            {
+              let orders_data = orders.data.payload
+              if(orders_data.length>0)
+              {
+                let total_cost = 0
+                let successful_deliveries = 0
+                for (let order of orders_data)
+                {
+                  total_cost += order.totalprice
+                  if (order.orderstatus==='DELIVERED')
+                  {
+                    successful_deliveries += 1
+                  }
+                }
+                setTotalcost(total_cost)
+                setDeliveries(successful_deliveries)              
+              }
+            }
+            else
+            {
+                setError(orders.data.message)
+            }
+        }
+        catch(err)
+        {
+            setError(err.message)
+        }
+    } 
+
     
+    useEffect(()=>getusers,[])
+    useEffect(()=>getallappointments,[])
+    useEffect(()=>viewproducts,[])
+    useEffect(()=>getorders,[])
+
+  async function Manage_users()
+  {
+    navigate('/admin/manageusers')
+  }
+
+  async function Manage_appointments()
+  {
+    navigate('/admin/checkappointment')
+  }
+  async function Manage_store()
+  {
+    navigate('/admin/managestore')
+  }
+  async function Manage_orders()
+  {
+    navigate('/admin/manageorders')
+  }
+
+
+
+return (
     <div className='container-fluid'>
     <section id="minimal-statistics">
-    <div className="row">
+
+
+    <div className="row mt-4">
+
         <div className="col-xl-3 col-sm-6 col-12 p-3"> 
-        <div className="card">
-            <div className="card-body">
+        <div className="card btn l-bg-cherry" onClick={Manage_users}>
+        <OverlayTrigger
+                      key={'bottom'}
+                      placement={'bottom'}
+                      overlay={
+                        <Tooltip id={`tooltip-users`}>
+                          Manage <strong>Users</strong>.
+                        </Tooltip>
+                      }
+                      >
+            <div className="card-body fw-bold">
                 <div className="row align-items-center">
                 <div className="col-auto">
-                <i className="bi bi-person fs-1 "></i>
+                  <i className="bi bi-person fs-1" id='person'></i>
                 </div>
                 <div className='col'>
                     <div className="text-end">
-                    <h3>278</h3>
-                    <span>USERS</span>
+                    <h3>{users.length}</h3>
+                      <span>
+                        USERS
+                      </span>
                 </div>
                 </div>
             </div>
             </div>
+        </OverlayTrigger>
         </div>
     </div>
+
     <div className="col-xl-3 col-sm-6 col-12 p-3">
-        <div className="card">
-            <div className="card-body">
+        <OverlayTrigger
+          key={'bottom'}
+          placement={'bottom'}
+          overlay=
+          {
+            <Tooltip id={`tooltip-users`}>
+              Manage <strong>Appointments</strong>.
+            </Tooltip>
+          }
+        >
+        <div className="card btn l-bg-green-dark" onClick={Manage_appointments}>
+                <div className="card-body" id='blue'>
                 <div className="row align-items-center">
-                    <div className="col">
-                        <div className="text-start">
-                            <h3>156</h3>
-                            <span>BOOKED APPOINTMENTS</span>
-                        </div>
-                    </div>
                     <div className="col-auto">
-                        <BiCalendar className="fs-1" />
+                        <BiCalendar className="fs-1" id='appointment-calendar'/>
+                    </div>
+                    <div className="col text-end">
+                            <h3>{appointmentsdata.length}</h3>
+                            <span>APPOINTMENTS</span>
                     </div>
                 </div>
             </div>
         </div>
+      </OverlayTrigger>
     </div>
+
     <div className="col-xl-3 col-sm-6 col-12 p-3"> 
-        <div className="card">
+        <div className="card btn l-bg-green-dark" onClick={Manage_store}>
+        <OverlayTrigger
+                      key={'bottom'}
+                      placement={'bottom'}
+                      overlay={
+                        <Tooltip id={`tooltip-users`}>
+                          Manage <strong>Store</strong>.
+                        </Tooltip>
+                      }
+                      >
             <div className="card-body">
                 <div className="row align-items-center">
                     <div className="col-auto">
-                        <i className="bi bi-box fs-1"></i>                    </div>
+                        <i className="bi bi-box fs-1" id='product-box'></i>                    </div>
                     <div className='col'>
                         <div className="text-end">
-                            <h3>278</h3>
+                            <h3>{products.length}</h3>
                             <span>PRODUCTS</span>
                         </div>
                     </div>
                 </div>
             </div>
+            </OverlayTrigger>
         </div>
     </div>
+
+
     <div className="col-xl-3 col-sm-6 col-12 p-3">
-        <div className="card">
+        <div className="card btn l-bg-cherry" onClick={Manage_orders}>
+        <OverlayTrigger
+                      key={'bottom'}
+                      placement={'bottom'}
+                      overlay={
+                        <Tooltip id={`tooltip-users`}>
+                          Manage <strong>Orders</strong>.
+                        </Tooltip>
+                      }
+                      >
             <div className="card-body">
                 <div className="row align-items-center">
+                    <div className="col-auto">
+                        <i className="bi bi-cart fs-1" id='cart'></i>                    
+                    </div>
                     <div className="col">
-                        <div className="text-start">
-                            <h3>156</h3>
+                        <div className="text-end">
+                            <h3>{orders.length}</h3>
                             <span>ORDERS PLACED</span>
                         </div>
                     </div>
-                    <div className="col-auto">
-                        <i className="bi bi-cart fs-1"></i>                    
-                    </div>
                 </div>
             </div>
+        </OverlayTrigger>
         </div>
     </div>
 </div>
 
 
 <div className="row">
+
     <div className="col-xl-3 col-sm-6 col-12 p-3">
-        <div className="card">
+        <div className="card l-bg-green-dark">
             <div className="card-body">
                 <div className="row align-items-center">
                     <div className="col">
@@ -124,43 +287,44 @@ function Dashboard() {
             </div>
         </div>
     </div>
-      <div className="col-xl-3 col-sm-6 col-12 p-3">
-        <div className="card">
-          <div className="card-content">
+
+    <div className="col-xl-3 col-sm-6 col-12 p-3"> 
+        <div className="card l-bg-cherry">
             <div className="card-body">
-              <div className="media d-flex">
-                <div className="media-body text-left">
-                  <h3 className="success">156</h3>
-                  <span>New Clients</span>
+                <div className="row align-items-center">
+                    <div className="col-auto">
+                        <i className="bi bi-truck fs-1"></i>                    </div>
+                    <div className='col'>
+                        <div className="text-end">
+                            <h3>{deliveries}</h3>
+                            <span>ORDERS DELIVERED</span>
+                        </div>
+                    </div>
                 </div>
-                <div className="align-self-center">
-                  <i className="icon-user success font-large-2 float-right"></i>
-                </div>
-              </div>
             </div>
-          </div>
         </div>
-      </div>
+    </div>
   
-      <div className="col-xl-3 col-sm-6 col-12 p-3">
-        <div className="card">
-          <div className="card-content">
+    <div className="col-xl-3 col-sm-6 col-12 p-3">
+        <div className="card l-bg-cherry
+        ">
             <div className="card-body">
-              <div className="media d-flex">
-                <div className="media-body text-left">
-                  <h3 className="warning">64.89 %</h3>
-                  <span>Conversion Rate</span>
+                <div className="row align-items-center">
+                    <div className="col">
+                        <div className="text-start">
+                            <h3><i class="bi bi-currency-rupee">{totalcost}</i></h3>
+                            <span>GROSS SALES</span>
+                        </div>
+                    </div>
+                    <div className="col-auto">
+                      <i class="bi bi-currency-rupee fs-1" id='rupee'></i>                   </div>
                 </div>
-                <div className="align-self-center">
-                  <i className="icon-pie-chart warning font-large-2 float-right"></i>
-                </div>
-              </div>
             </div>
-          </div>
         </div>
-      </div>
+    </div>
+
       <div className="col-xl-3 col-sm-6 col-12 p-3">
-        <div className="card">
+        <div className="card l-bg-orange">
           <div className="card-content">
             <div className="card-body">
               <div className="media d-flex">
@@ -178,113 +342,18 @@ function Dashboard() {
       </div>
     </div>
   
-    <div className="row">
-      <div className="col-xl-3 col-sm-6 col-12 p-3">
-        <div className="card">
-          <div className="card-content">
-            <div className="card-body">
-              <div className="media d-flex">
-                <div className="media-body text-left">
-                  <h3 className="primary">278</h3>
-                  <span>New Posts</span>
-                </div>
-                <div className="align-self-center">
-                  <i className="icon-book-open primary font-large-2 float-right"></i>
-                </div>
-              </div>
-              <div className="progress mt-1 mb-0">
-                 {/* style="height: 7px;"> */}
-                <div className="progress-bar bg-primary" role="progressbar" 
-                // style={{width= 80%}}
-                aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="col-xl-3 col-sm-6 col-12 p-3">
-        <div className="card">
-          <div className="card-content">
-            <div className="card-body">
-              <div className="media d-flex">
-                <div className="media-body text-left">
-                  <h3 className="warning">156</h3>
-                  <span>New Comments</span>
-                </div>
-                <div className="align-self-center">
-                  <i className="icon-bubbles warning font-large-2 float-right"></i>
-                </div>
-              </div>
-              <div className="progress mt-1 mb-0" >
-            {/* //   style="height: 7px; */}
-                <div className="progress-bar bg-warning" role="progressbar"
-                // style="width: 35%"
-                aria-valuenow="35" aria-valuemin="0" aria-valuemax="100"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-  
-      <div className="col-xl-3 col-sm-6 col-12 p-3">
-        <div className="card">
-          <div className="card-content">
-            <div className="card-body">
-              <div className="media d-flex">
-                <div className="media-body text-left">
-                  <h3 className="success">64.89 %</h3>
-                  <span>Bounce Rate</span>
-                </div>
-                <div className="align-self-center">
-                  <i className="icon-cup success font-large-2 float-right"></i>
-                </div>
-              </div>
-              <div className="progress mt-1 mb-0">
-                 {/* style="height: 7px;"> */}
-                <div className="progress-bar bg-success" role="progressbar" 
-                // style="width: 60%" 
-                aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="col-xl-3 col-sm-6 col-12 p-3">
-        <div className="card">
-          <div className="card-content">
-            <div className="card-body">
-              <div className="media d-flex">
-                <div className="media-body text-left">
-                  <h3 className="danger">423</h3>
-                  <span>Total Visits</span>
-                </div>
-                <div className="align-self-center">
-                  <i className="icon-direction danger font-large-2 float-right"></i>
-                </div>
-              </div>
-              <div className="progress mt-1 mb-0">
-                {/* style="height: 7px;"> */}
-                <div className="progress-bar bg-danger" role="progressbar" 
-                // style="width: 40%" 
-                aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
   </section>
   
   <section id="stats-subtitle">
-  <div className="row">
+  {/* <div className="row">
     <div className="col-12 mt-3 mb-1">
       <h4 className="text-uppercase">Statistics With Subtitle</h4>
       <p>Statistics on minimal cards with Title Sub Title.</p>
     </div>
-  </div>
+  </div> */}
 
   <div className="row">
-    <div className="col-xl-6 col-md-12 p-2">
+    <div className="col-xl-12 col-md-12 p-4">
       <div className="card overflow-hidden">
         <div className="card-content">
           <div className="card-body cleartfix">
@@ -293,19 +362,61 @@ function Dashboard() {
                 <i className="icon-pencil primary font-large-2 mr-2"></i>
               </div>
               <div className="media-body">
-                <h4>Total Posts</h4>
-                <span>Monthly blog posts</span>
+                <h4 className='fw-bold'>Users
+                </h4>
+                {/* <span>Monthly blog posts</span> */}
               </div>
-              <div className="align-self-center">
+              {/* <div className="align-self-center">
                 <h1>18,000</h1>
-              </div>
+              </div> */}
+              <Table striped responsive hover>
+        <thead>
+            <tr>
+            <th >Image</th>
+            <th>User Name</th>
+            <th>Pet</th>
+            <th className='text-center'>Account Status</th>
+            </tr>
+        </thead>
+        <tbody >
+        {searchResults.map((user,index)=>(
+            <tr key={index}>
+                <td >
+                    <img  src={user.profileImageURL} className='rounded-circle m-1' width="40"/>
+                </td>
+                <td  onClick={()=>openprofile(user)}>
+                    <span className='btn'>
+                        {user.username}
+                    </span></td>
+                <td>
+                  {user.petdetails[0].petname}
+                </td>
+                {
+                    user.accountstatus==="ACTIVE"?
+                    <td id='active-status' >
+                        <button>
+                        {user.accountstatus}
+                        </button>
+                    </td>
+                    :
+                    <td id='inactive-status' >
+                        <button>
+                        {user.accountstatus}
+                        </button>
+                    </td>
+                }
+            </tr>
+        ))}
+        </tbody>
+        </Table>
             </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
-    <div className="col-xl-6 col-md-12 p-2">
+    {/* <div className="col-xl-6 col-md-12 p-2">
       <div className="card">
         <div className="card-content">
           <div className="card-body cleartfix">
@@ -369,7 +480,7 @@ function Dashboard() {
         </div>
       </div>
     </div>
-  </div>
+  </div> */}
 </section>
     </div>
   )
