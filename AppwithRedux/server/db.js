@@ -308,7 +308,13 @@ const appointmentSchema = new mongoose.Schema(
                 type:Date,
                 default:Date.now
             }
-        }]
+        }],
+        cancelled_by:
+        {
+            type:String,
+            enum:["user","admin","none"],
+            default:"none"
+        }
     }
 )
 
@@ -530,6 +536,12 @@ const orderSchema = new mongoose.Schema(
         {
             type:Number,
             required:true
+        },
+        cancelled_by:
+        {
+            type:String,
+            enum:["user","admin","none"],
+            default:"none"
         }
     }
 )
