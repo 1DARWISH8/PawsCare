@@ -68,11 +68,9 @@ const registerUser = async(req,res)=>
         {
             let hashedpassword = await bcryptjs.hash(userdata.password,5)
             userdata.password=hashedpassword;
-
             // upload the image into cloudinary
             let upload = await cloudinary.uploader.upload(req.file.path);
             userdata.profileImageURL = upload.url;
-
             let admin = await Admin.create(userdata)           
             // remove image from local user
             fs.unlink(req.file.path,err=>
@@ -246,6 +244,7 @@ const cancelappointment = async(req,res)=>
     try
     {
         let details = req.body
+        details.cancelled_by ='admin'
         let slotbooked = await Appointmentday.findOneAndUpdate(
             {appointment_date:details.appointment_date,appointment_service:details.appointment_service,appointment_location:details.appointment_location,'slots.appointment_time':details.appointment_time},
             {
@@ -264,7 +263,8 @@ const cancelappointment = async(req,res)=>
                     {
                         $set:
                         {
-                            "appointment_status":"CANCELLED"
+                            "appointment_status":"CANCELLED",
+                            'cancelled_by':'admin'
                         }
                     },
                     {
