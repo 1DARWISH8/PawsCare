@@ -1,0 +1,48 @@
+.l-bg-orange {
+    background: linear-gradient(to right, #bd4f13, rgb(211, 165, 40)) !important;
+    color: #fff;
+}
+
+.l-bg-cherry span,
+.l-bg-green-dark span
+{
+    font-weight: 700;
+}
+
+.l-bg-blue-dark {
+    background: linear-gradient(to right, #4286f4, #04194d) !important;
+    color: #fff;
+}
+
+.l-bg-cherry {
+    background: linear-gradient(to right,#85272d ,rgb(255, 0, 0)) !important;
+    color: #fff;
+}
+
+#blue:hover
+{
+    color: rgb(0, 0, 0);
+}
+
+.l-bg-green-dark {
+    background: linear-gradient(to right, #042b27, #38ef7d) !important;
+    color: #fff;
+}
+
+#person,
+#appointment-calendar,
+#product-box,
+#cart
+{
+    color: aliceblue;
+}
+
+.bi-geo
+{
+    color: red;
+}
+
+#rupee
+{
+    color: #38ef7d;
+}
