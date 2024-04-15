@@ -195,7 +195,7 @@ function Bookuserappointment() {
                         {/* <div className="icon-block"><a href="#"><i className="fa fa-facebook"></i></a><a href="#"> <i className="fa fa-twitter"></i></a><a href="#"> <i className="fa fa-google-plus"></i></a></div> */}
                         <span >
                             {user.accountstatus==="ACTIVE"?
-                            <button className='btn btn-danger mt-3' onClick={()=>bookappointment(user)}>BOOK</button>
+                            <button className='btn btn-success mt-3' onClick={()=>bookappointment(user)}>BOOK</button>
                             :
                             <button className='btn btn-success mt-3' disabled onClick={()=>bookappointment(user)}>BOOK</button>
                             }
