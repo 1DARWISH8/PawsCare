@@ -8,6 +8,7 @@ import Modal from 'react-bootstrap/Modal';
 import DatePicker from 'react-datepicker';
 import Accordion from 'react-bootstrap/Accordion';
 import '../Myappointments.css'
+import { NavLink } from 'react-router-dom';
 
 function Checkappointments() {
   let {register,handleSubmit,formState:{errors}}=useForm()
@@ -55,6 +56,13 @@ function Checkappointments() {
       hideAlert();
   },[])
 
+  const [showFloatingButton, setShowFloatingButton] = useState(false);
+
+  const toggleFloatingButton = () => 
+  {
+    setShowFloatingButton(!showFloatingButton);
+  }
+
   async function formSubmit(data)
   {
     console.log(data)
@@ -82,12 +90,12 @@ function Checkappointments() {
   {
       try
       {
-          let cancelled = await axios.post('http://localhost:5000/admin-api/cancelappointment',appointment)
+            let cancelled = await axios.post('http://localhost:5000/admin-api/cancelappointment',appointment)
           if(cancelled)
           {
               setAlert(cancelled.data.message)
+              getallappointments()
           }
-          getallappointments()
       }
       catch(err)
       {
@@ -217,7 +225,12 @@ function Checkappointments() {
                             <div class="postcard__bar"></div>
                             <div class="postcard__preview-txt">
                             STATUS:
-                                {appointment.appointment_status === "CANCELLED" && <span className='text-danger fw-bold m-2'>{appointment.appointment_status}</span>}
+                                {appointment.appointment_status === "CANCELLED" && <span className='text-danger fw-bold m-2'>
+                                    {appointment.appointment_status} 
+                                        <span className='m-2 text-primary'>
+                                            By {appointment.cancelled_by}
+                                        </span>
+                                    </span>}
                                 {appointment.appointment_status === "COMPLETED" && <span className='text-success fw-bold m-2'>{appointment.appointment_status}</span>}
                                 {(appointment.appointment_status !== "COMPLETED" && appointment.appointment_status !== "CANCELLED") && <span className='text-primary fw-bold m-2'>{appointment.appointment_status}</span>}
                             </div>
@@ -251,6 +264,18 @@ function Checkappointments() {
                     </article>
                 ))
             }
+    <div className="hover-container">
+        <button className="stickyButton" onClick={toggleFloatingButton}>
+        <i className="fas fa-plus rotated"></i>
+      </button>
+      {showFloatingButton && (
+      <div  onClick={toggleFloatingButton}>
+        <NavLink className="floatingButton btn" to="/admin/bookuserappointment">
+            BOOK APPOINTMENT
+        </NavLink>
+      </div>
+      )}
+    </div>
       </>:
       <>
       <h5>NO APPOINTMENTS TO SHOW</h5>
