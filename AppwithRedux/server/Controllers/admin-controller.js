@@ -230,7 +230,8 @@ const cancelappointment = async(req,res)=>
                     {
                         $set:
                         {
-                            "appointment_status":"CANCELLED"
+                            "appointment_status":"CANCELLED",
+                            "cancelled_by":"admin"
                         }
                     },
                     {
