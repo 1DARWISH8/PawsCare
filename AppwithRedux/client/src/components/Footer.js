@@ -31,10 +31,10 @@ function Footer() {
         <div className="mt-5">
             {/* Footer */}
             {
-              loginStatus==="true"?
+              loginStatus?
               <>
                 {
-              currentUser.userType==="admin"?
+              currentUser.userType==="user"?
                 <footer className="text-center text-lg-start text-dark" style={{ backgroundColor: "#11c739" }}>
                   <div className=" p-4 pb-0">
                       <section className="">
