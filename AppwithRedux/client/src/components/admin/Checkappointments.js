@@ -8,6 +8,7 @@ import Modal from 'react-bootstrap/Modal';
 import DatePicker from 'react-datepicker';
 import Accordion from 'react-bootstrap/Accordion';
 import '../Myappointments.css'
+import './Manageusers.css'
 import { NavLink } from 'react-router-dom';
 
 function Checkappointments() {
