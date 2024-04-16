@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 // To navigate from one components to other according to user interaction useNavigate hook is imported from React Router library
 import {NavLink, useNavigate} from 'react-router-dom'
 import {useSelector} from 'react-redux'
+import './Video.css';
 
 // images are imported for the carousel
 // import haircut from '../images/haircut.jpg'
@@ -64,12 +65,17 @@ function Home() {
     }
   }
 
+  async function openstore()
+  {
+    navigate('/store')
+  }
+
   return (
     <div>
         <div className='text-center' id='header'>
 
-        <img src='https://res.cloudinary.com/dozacgfl7/image/upload/v1712338808/videoframe_2487_czzbmy.png' width="100%"></img>
-        {/* <Carousel >
+        {/* <img src='https://res.cloudinary.com/dozacgfl7/image/upload/v1712338808/videoframe_2487_czzbmy.png' id='shop-now' onClick={openstore} width="100%"></img> */}
+        <Carousel >
       <Carousel.Item>
         <NavLink to="/store">
           <img src='https://res.cloudinary.com/dozacgfl7/image/upload/v1712338808/videoframe_2487_czzbmy.png' width="100%"></img>
@@ -77,11 +83,75 @@ function Home() {
       </Carousel.Item>
       <Carousel.Item>
         <NavLink to="/home/bookappointment">
-            <img src='https://res.cloudinary.com/dozacgfl7/image/upload/v1712339150/appointment_w5z8cn.png' width="100%" />
+            <img src='https://assets.petco.com/petco/image/upload/f_auto,q_auto:best/vet-services-vtc-pets-img-d-600x417.png' width="100%" />
         </NavLink>
       </Carousel.Item>
-    </Carousel> */}
+    </Carousel>
         
+        <h1 className='mt-4 mx-2 text-start fs-4' id='pawscare'>SHOP BY PET :</h1>
+
+  <section class="wrapper">
+    <div class="container">
+      <div class="row">
+
+        <div class="col-sm-6 col-md-6 col-lg-3 mb-4">  
+          <div class="card text-dark card-has-bg click-col" style={{backgroundImage:'url(https://res.cloudinary.com/dozacgfl7/image/upload/v1713275350/shop-by-dog_xodkhv.jpg)'}}>
+            <div class="card-img-overlay d-flex flex-column">
+              <div class="card-body">
+              </div>
+              <div class="card-footer">
+                <div class="media">
+                  <i className="fas fa-dog fs-1"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-6 col-lg-3 mb-4">  
+          <div class="card text-dark card-has-bg click-col" style={{backgroundImage:'url(https://res.cloudinary.com/dozacgfl7/image/upload/v1713275349/shop-by-cat_c6yuws.jpg)'}}>
+            <div class="card-img-overlay d-flex flex-column">
+              <div class="card-body">
+              </div>
+              <div class="card-footer">
+                <div class="media">
+                  <i className="fas fa-cat fs-1"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-6 col-lg-3 mb-4">  
+          <div class="card text-dark card-has-bg click-col" style={{backgroundImage:'url(https://res.cloudinary.com/dozacgfl7/image/upload/v1713275349/shop-by-birds_un6hct.jpg)'}}>
+            <div class="card-img-overlay d-flex flex-column">
+              <div class="card-body">
+              </div>
+              <div class="card-footer">
+                <div class="media">
+                  <i className="fas fa-dove fs-1"></i>                
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-md-6 col-lg-3 mb-4">  
+          <div class="card text-dark card-has-bg click-col" style={{backgroundImage:'url(https://res.cloudinary.com/dozacgfl7/image/upload/v1713275349/shop-by-fish_bszpjt.jpg)'}}>
+            <div class="card-img-overlay d-flex flex-column">
+              <div class="card-body">
+              </div>
+              <div class="card-footer">
+                <div class="media">
+                  <i className="fas fa-fish fs-1"></i>                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>  
+    </div>
+  </section>
+
           {
             currentUser.userType==='admin'&&
             <>
