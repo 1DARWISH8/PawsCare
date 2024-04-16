@@ -635,7 +635,8 @@ const cancelorder = async(req,res)=>
             {
                 $set:
                 {
-                    orderstatus:"CANCELLED"
+                    orderstatus:"CANCELLED",
+                    cancelled_by:"user"
                 }
             },
             {
