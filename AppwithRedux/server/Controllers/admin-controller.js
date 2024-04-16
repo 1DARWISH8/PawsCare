@@ -711,6 +711,17 @@ const editorderstatus = async(req,res)=>
         }
         else if (edited.orderstatus==='CANCELLED')
         {
+            let cancelled = await Order.findOneAndUpdate({_id:orderdata._id},
+                {
+                    $set:
+                    {
+                        cancelled_by:"admin"
+                    }
+                },
+                {
+                    new:false
+                }
+            )
             res.status(200).send({message:"ORDER HAS BEEN CANCELLED",payload:edited})
         }
         else if (edited.orderstatus==='IN TRANSIT')
