@@ -164,22 +164,25 @@ return (
     <div>
         {error.length!==0&& <p className='fw-bold text-center text-danger border-0'>{error}</p>}
         {alert.length!==0 && <Alert variant={'dark'} onClose={()=>setAlert('')}>{alert}</Alert> }   
-        <select value={searchBy} onChange={handleSelectChange}>
+        <select value={searchBy} onChange={handleSelectChange} className='m-3'>
             <option value="">Select search criteria</option>
             <option value="Orderstatus">Order Status</option>
             <option value="Username">Username</option>
             <option value="Date">Date</option>
+            <span className='text-start'>
+            
+            </span>
         </select>
         {renderFormInputs()}
         {filteredOrders.length!==0?
             <div>
-                <select value={sortOrder} onChange={handleSortChange}>
+                <select value={sortOrder} onChange={handleSortChange} className='m-3'>
                     <option value="oldest">Oldest to Newest</option>
                     <option value="newest">Newest to Oldest</option>
                 </select>
                     {filteredOrders.map((order,index)=>
                         (
-                        <Table striped bordered hover variant="dark" className='m-3' size='sm'>
+                        <Table striped bordered hover variant="dark" className='col-xl-10 col-md-10 p-5 ' size='sm'>
                         <tbody>
                             <tr key={index}>
                                 <td>
