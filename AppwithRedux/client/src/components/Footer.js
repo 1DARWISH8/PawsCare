@@ -5,8 +5,6 @@ import { useSelector } from 'react-redux';
 function Footer() {
 
   let {currentUser,loginStatus} = useSelector(state=>state.userLogin)
-  console.log(currentUser.userType)
-  console.log(loginStatus)
 
   useEffect(() => {
     const handleNavLinkClick = () => {
