@@ -219,7 +219,12 @@ function Footer() {
                                 <h6 className="text-uppercase mb-4 fw-bold">STORE</h6>
                                 <p>
                                   <nav>
-                                    <NavLink className="text-dark text-decoration-none" to="/admin/managestore">MANAGE STORE</NavLink>
+                                    <NavLink className="text-dark text-decoration-none" to="/admin/managestore">STORE PRODUCTS</NavLink>
+                                  </nav>                                
+                                </p>
+                                <p>
+                                  <nav>
+                                    <NavLink className="text-dark text-decoration-none" to="/admin/deletedproducts">DELETED PRODUCTS</NavLink>
                                   </nav>                                
                                 </p>
                                 <p>
@@ -244,20 +249,13 @@ function Footer() {
                             {/* Grid column */}
                             <hr className="w-100 clearfix d-md-none" />
                             <div className="col-md-4 col-lg-3 col-xl-3 mx-auto mt-3">
-                                <h6 className="text-uppercase mb-4 fw-bold">PRODUCTS</h6>
+                                <h6 className="text-uppercase mb-4 fw-bold">MANAGE USERS</h6>
                                 <p>
                                 <nav>
-                                  <NavLink className="text-white text-decoration-none">
-                                    ALL PRODUCTS 
+                                  <NavLink className="text-white text-decoration-none" to="/admin/manageusers">
+                                    USERS 
                                   </NavLink>                                  
                                 </nav>                                
-                                </p>
-                                <p>
-                                <nav>
-                                  <NavLink className="text-white text-decoration-none">
-                                    DELETED PRODUCTS
-                                  </NavLink>
-                                </nav>                               
                                 </p>
                             </div>
                             {/* Grid column */}
