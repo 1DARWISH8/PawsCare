@@ -5,6 +5,12 @@
     margin: 0;
     padding-top: 10px;
 } */
+
+#product-cards
+{
+    overflow-x: hidden;
+}
+
 .item
 {
     display: flex;
