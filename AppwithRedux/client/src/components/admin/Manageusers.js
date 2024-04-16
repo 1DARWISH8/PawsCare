@@ -189,7 +189,7 @@ async function openprofile(user)
         {searchResults.length?
         <>
         {order==="Card"?
-        <section>
+        <section id='profile-cards'>
         <div class="row text-center">
         {
           searchResults.map((user,index)=>(
