@@ -161,7 +161,7 @@ function Bookuserappointment() {
                 </div>
                 </div>
             :
-            <section>
+            <section id='profile-cards'>
             <div class="row text-center">
             {
             searchResults.map((user,index)=>(
