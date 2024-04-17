@@ -1,11 +1,13 @@
+
 // import mongoose
 const mongoose = require('mongoose')
 require('dotenv').config()
 
 // connect to the local MongoDB database
-const DB_URL = process.env.LOCAL_DB_URL;
+// const DB_URL = process.env.LOCAL_DB_URL;
+
 // connect to the MongoDB Atlas
-// const DB_URL = process.env.ATLAS_DB_URL;
+const DB_URL = process.env.ATLAS_DB_URL;
 
 // connect to the database using promise handlers
 // mongoose.connect(DB_URL) //returns a promise
