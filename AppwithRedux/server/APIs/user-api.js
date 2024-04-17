@@ -20,7 +20,7 @@ userApp.use(cors(
 ))
 
 // import req handlers from controllers
-const {getuser,getusers,registerUser,userLogin,bookAppointment,appointments,cancelappointment,rescheduleappointment,getallslots,getproducts,cart,addcartproduct,removecartproduct,editquantity,order,getorders,cancelorder,getwishlist,addtowishlist,removefromwishlist,inwishlist} = require('../Controllers/user-controller')
+const {getuser,getusers,registerUser,userLogin,bookAppointment,appointments,cancelappointment,rescheduleappointment,getallslots,petProducts,getproducts,cart,addcartproduct,removecartproduct,editquantity,order,getorders,cancelorder,getwishlist,addtowishlist,removefromwishlist,inwishlist} = require('../Controllers/user-controller')
 
 // CRUD OPERATIONS
 
@@ -50,6 +50,9 @@ userApp.post('/rescheduleappointment',expressAsyncHandler(rescheduleappointment)
 
 // GET SLOTS INFORMATION
 userApp.get('/getallslots',expressAsyncHandler(getallslots))
+
+// HOME
+userApp.get('/getpetproducts/:pet',expressAsyncHandler(petProducts))
 
 // STORE
 
