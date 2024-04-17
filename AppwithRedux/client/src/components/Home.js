@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 // To navigate from one components to other according to user interaction useNavigate hook is imported from React Router library
 import {NavLink, useNavigate} from 'react-router-dom'
 import {useSelector} from 'react-redux'
-import './Video.css';
 
 // images are imported for the carousel
 // import haircut from '../images/haircut.jpg'
@@ -16,8 +15,8 @@ import Carousel from 'react-bootstrap/Carousel';
 import {Outlet} from 'react-router-dom'
 // styles are imported from the css file
 import './Home.css'
-
-
+// react-redux to dispatch actions
+import { useDispatch } from 'react-redux';
 
 
 function Home() {
@@ -30,6 +29,8 @@ function Home() {
   // let [currentUser,,userLoginStatus]=useContext(userLoginContext)
   // useNavigate() hook is assigned to navigate 
   let navigate= useNavigate()
+  // dispatch is assigned to a hook
+  let dispatch = useDispatch()
 
   // This function is called when the "APPOINTMENT" button is clicked on
   function navigateTo()
@@ -65,6 +66,18 @@ function Home() {
     }
   }
 
+  async function get_pet_products()
+  {
+    try
+    {
+      await dispatch()
+    }
+    catch(err)
+    {
+      
+    }
+  }
+
   async function openstore()
   {
     navigate('/store')
@@ -81,11 +94,11 @@ function Home() {
           <img src='https://res.cloudinary.com/dozacgfl7/image/upload/v1712338808/videoframe_2487_czzbmy.png' width="100%"></img>
         </NavLink>
       </Carousel.Item>
-      <Carousel.Item>
+      {/* <Carousel.Item>
         <NavLink to="/home/bookappointment">
             <img src='https://assets.petco.com/petco/image/upload/f_auto,q_auto:best/vet-services-vtc-pets-img-d-600x417.png' width="100%" />
         </NavLink>
-      </Carousel.Item>
+      </Carousel.Item> */}
     </Carousel>
         
         <h1 className='mt-4 mx-2 text-start fs-4' id='pawscare'>SHOP BY PET :</h1>
