@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken')
 const {cloudinary} = require('../Middlewares/cloudinaryUpload')
 // import fs (filesystem) module
 const fs = require('fs');
+const { query } = require('express');
 
 // get users
 const getusers = async(req,res)=>
@@ -417,6 +418,27 @@ const getallslots = async(req,res)=>
     }
 }
 
+// HOME
+const petProducts = async(req,res)=>
+{
+    try
+    {
+        let data = req.params.pet
+        let pet_products = await Product.find({status:"ACTIVE",animal:data})
+        if (pet_products)
+        {
+            res.status(200).send({message:"RETRIEVED PET PRODUCTS",payload:pet_products})
+        }
+        else
+        {
+            res.status(200).send({message:"FAILED TO RETRIEVE PRODUCTS"})
+        }
+    }
+    catch(err)
+    {
+        res.status(200).send(err.message)
+    }
+}
 
 //STORE
 const getproducts = async(req,res)=>
@@ -635,8 +657,7 @@ const cancelorder = async(req,res)=>
             {
                 $set:
                 {
-                    orderstatus:"CANCELLED",
-                    cancelled_by:"user"
+                    orderstatus:"CANCELLED"
                 }
             },
             {
@@ -771,4 +792,4 @@ const inwishlist = async(req,res)=>
 }
 
 
-module.exports={getuser,getusers,registerUser,userLogin,bookAppointment,appointments,cancelappointment,rescheduleappointment,getallslots,getproducts,cart,addcartproduct,removecartproduct,editquantity,order,getorders,cancelorder,getwishlist,addtowishlist,removefromwishlist,inwishlist}
+module.exports={getuser,getusers,registerUser,userLogin,bookAppointment,appointments,cancelappointment,rescheduleappointment,getallslots,petProducts,getproducts,cart,addcartproduct,removecartproduct,editquantity,order,getorders,cancelorder,getwishlist,addtowishlist,removefromwishlist,inwishlist}
