@@ -1,11 +1,15 @@
 import React, {useEffect} from 'react'
-import { NavLink } from 'react-router-dom'
+import {NavLink, useNavigate} from 'react-router-dom'
 import { useSelector } from 'react-redux';
+import { petProductsPromiseStatus } from '../redux/slices/petProductsSlice';
+import { useDispatch } from 'react-redux';
 
 function Footer() {
 
   let {currentUser,loginStatus} = useSelector(state=>state.userLogin)
-
+  let navigate= useNavigate()
+  let dispatch = useDispatch()
+  
   useEffect(() => {
     const handleNavLinkClick = () => {
       window.scrollTo(0, 0);
@@ -24,6 +28,19 @@ function Footer() {
       });
     };
   }, []);
+
+  async function get_pet_products(pet)
+  {
+    try
+    {
+      await dispatch(petProductsPromiseStatus(pet))
+      navigate('/shop')
+    }
+    catch(err)
+    {
+      
+    }
+  }
 
   return (
         <div className="mt-5">
@@ -106,27 +123,28 @@ function Footer() {
                                   <h6 className="text-uppercase mb-4 fw-bold">PRODUCTS BY CATEGORY</h6>
                                   <p>
                                     <nav>
-                                    <NavLink className="text-white text-decoration-none">
+                                    <NavLink className="text-white text-decoration-none" onClick={()=>get_pet_products('DOG')}>
                                       <i className="fas fa-dog mr-3"></i> DOG 
-                                    </NavLink>                                  </nav>                                
+                                    </NavLink>                                  
+                                    </nav>                                
                                   </p>
                                   <p>
                                   <nav>
-                                    <NavLink className="text-white text-decoration-none">
+                                    <NavLink className="text-white text-decoration-none" onClick={()=>get_pet_products('CAT')}>
                                       <i className="fas fa-cat mr-3"></i> CAT 
                                     </NavLink>
                                   </nav>                               
                                   </p>
                                   <p>
                                   <nav>
-                                  <NavLink className="text-white text-decoration-none">
+                                  <NavLink className="text-white text-decoration-none" onClick={()=>get_pet_products('BIRD')}>
                                       <i className="fas fa-dove mr-3"></i> BIRD 
                                     </NavLink>
                                   </nav>                               
                                   </p>
                                   <p>
                                   <nav>
-                                  <NavLink className="text-white text-decoration-none">
+                                  <NavLink className="text-white text-decoration-none" onClick={()=>get_pet_products('FISH')}>
                                       <i className="fas fa-fish mr-3"></i> FISH 
                                   </NavLink>
                                   </nav>                               
@@ -396,27 +414,27 @@ function Footer() {
                                   <h6 className="text-uppercase mb-4 fw-bold">PRODUCTS BY CATEGORY</h6>
                                   <p>
                                     <nav>
-                                    <NavLink className="text-white text-decoration-none">
+                                    <NavLink className="text-white text-decoration-none" onClick={()=>get_pet_products('DOG')}>
                                       <i className="fas fa-dog mr-3"></i> DOG 
                                     </NavLink>                                  </nav>                                
                                   </p>
                                   <p>
                                   <nav>
-                                    <NavLink className="text-white text-decoration-none">
+                                    <NavLink className="text-white text-decoration-none" onClick={()=>get_pet_products('CAT')}>
                                       <i className="fas fa-cat mr-3"></i> CAT 
                                     </NavLink>
                                   </nav>                               
                                   </p>
                                   <p>
                                   <nav>
-                                  <NavLink className="text-white text-decoration-none">
+                                  <NavLink className="text-white text-decoration-none" onClick={()=>get_pet_products('BIRD')}>
                                       <i className="fas fa-dove mr-3"></i> BIRD 
                                     </NavLink>
                                   </nav>                               
                                   </p>
                                   <p>
                                   <nav>
-                                  <NavLink className="text-white text-decoration-none">
+                                  <NavLink className="text-white text-decoration-none" onClick={()=>get_pet_products('FISH')}>
                                       <i className="fas fa-fish mr-3"></i> FISH 
                                   </NavLink>
                                   </nav>                               
