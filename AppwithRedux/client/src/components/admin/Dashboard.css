@@ -1,3 +1,19 @@
+.cards
+{
+    border-radius: 10px;
+    padding: 10px;
+}
+.card-btn
+{
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.card-btn:hover
+{
+    cursor: pointer;
+}
+
 .l-bg-orange {
     background: linear-gradient(to right, #bd4f13, rgb(211, 165, 40)) !important;
     color: #fff;
