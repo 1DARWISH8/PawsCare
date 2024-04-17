@@ -17,6 +17,7 @@ import {Outlet} from 'react-router-dom'
 import './Home.css'
 // react-redux to dispatch actions
 import { useDispatch } from 'react-redux';
+import { petProductsPromiseStatus } from '../redux/slices/petProductsSlice';
 
 
 function Home() {
@@ -66,11 +67,12 @@ function Home() {
     }
   }
 
-  async function get_pet_products()
+  async function get_pet_products(pet)
   {
     try
     {
-      await dispatch()
+      await dispatch(petProductsPromiseStatus(pet))
+      navigate('/shop')
     }
     catch(err)
     {
@@ -100,6 +102,36 @@ function Home() {
         </NavLink>
       </Carousel.Item> */}
     </Carousel>
+
+    {
+            currentUser.userType === 'user' &&
+            <>
+              <h4 className='pt-4' id="welcome">Welcome to</h4>
+              <h1 className='pt-2' id='intro'>PAWSCARE🌟</h1>
+              <div className='fs-3 pt-2 pb-5'> Your {loginStatus===true?<span id='intro'>{currentUser.petdetails[0].petname}</span>:<span>Pet</span>}'s Wellbeing Central! 🐾</div>
+            
+              {/* <div className="card m-3 mt-2" id='carouselcard'>
+          <div className="card-header border-0">
+            <div className=' text-center fw-bold'>Explore our premium pet services, including expert health checkups, haircut and training sessions to ensure your pets feel and look their best. 
+            </div>          
+          </div>
+          <div className="card-body" id='appoint'>
+            <div className='text-center p-2'>
+              <button className='btn btn-primary fw-bold' onClick={navigateTo}>BOOK APPOINTMENT</button>
+            </div>
+          </div>
+        </div>
+          <div className='text-center p-3' id="health">
+          At PawsCare Hub, we prioritize your furry companion's health and happiness.
+          You can effortlessly register your pet, keeping a digital record of health checkups.
+          <div className='pt-4'>
+            <button className='btn btn-success fw-bold' onClick={toHealth}>HEALTH</button>
+          </div>
+            <Outlet/>
+          </div> */}
+            
+            </>
+          }
         
         <h1 className='mt-4 mx-2 text-start fs-4' id='pawscare'>SHOP BY PET :</h1>
 
@@ -108,7 +140,7 @@ function Home() {
       <div class="row">
 
         <div class="col-sm-6 col-md-6 col-lg-3 mb-4">  
-          <div class="card text-dark card-has-bg click-col" style={{backgroundImage:'url(https://res.cloudinary.com/dozacgfl7/image/upload/v1713275350/shop-by-dog_xodkhv.jpg)'}}>
+          <div class="card text-dark card-has-bg click-col" onClick={()=>get_pet_products('DOG')} style={{backgroundImage:'url(https://res.cloudinary.com/dozacgfl7/image/upload/v1713275350/shop-by-dog_xodkhv.jpg)'}}>
             <div class="card-img-overlay d-flex flex-column">
               <div class="card-body">
               </div>
@@ -165,6 +197,9 @@ function Home() {
     </div>
   </section>
 
+  <h1 className='mt-4 mx-2 text-start fs-4' id='pawscare'>SHOP BY CATEGORY :</h1>
+
+
           {
             currentUser.userType==='admin'&&
             <>
@@ -172,38 +207,7 @@ function Home() {
             <h5>TO DASHBOARD</h5>
             </>
           }
-          {
-            currentUser.userType === 'user' &&
-            <>
-              <h4 className='pt-4' id="welcome">Welcome to</h4>
-              <h1 className='pt-2' id='intro'>PAWSCARE🌟</h1>
-              <div className='fs-3 pt-2 pb-5'> Your {loginStatus===true?<span id='intro'>{currentUser.petdetails[0].petname}</span>:<span>Pet</span>}'s Wellbeing Central! 🐾</div>
-            
-              <div className="card m-3 mt-2" id='carouselcard'>
-          <div className="card-header border-0">
-            <div className=' text-center fw-bold'>Explore our premium pet services, including expert health checkups, haircut and training sessions to ensure your pets feel and look their best. 
-            </div>          
-          </div>
-          <div className="card-body" id='appoint'>
-            <div className='text-center p-2'>
-              {/* button is used to help book appointments */}
-              <button className='btn btn-primary fw-bold' onClick={navigateTo}>BOOK APPOINTMENT</button>
-            </div>
-          </div>
-        </div>
-          <div className='text-center p-3' id="health">
-          At PawsCare Hub, we prioritize your furry companion's health and happiness.
-          You can effortlessly register your pet, keeping a digital record of health checkups.
-          <div className='pt-4'>
-            {/* button is added to dynamically rendered according to the userLoginStatus */}
-            <button className='btn btn-success fw-bold' onClick={toHealth}>HEALTH</button>
-          </div>
-            {/* the component is dynamically rendered in the outlet */}
-            <Outlet/>
-          </div>
-            
-            </>
-          }
+          
           {/* checks if user is logged in or not and renders the component accordingly */}
         </div>
 
