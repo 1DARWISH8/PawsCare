@@ -155,7 +155,7 @@ return (
     <div className="row mt-4">
 
         <div className="col-xl-3 col-sm-6 col-12 p-3"> 
-        <div className="card btn l-bg-cherry" onClick={Manage_users}>
+        <div className="card-btn l-bg-cherry" onClick={Manage_users}>
         <OverlayTrigger
                       key={'bottom'}
                       placement={'bottom'}
@@ -195,7 +195,7 @@ return (
             </Tooltip>
           }
         >
-        <div className="card btn l-bg-green-dark" onClick={Manage_appointments}>
+        <div className="card-btn l-bg-green-dark" onClick={Manage_appointments}>
                 <div className="card-body" id='blue'>
                 <div className="row align-items-center">
                     <div className="col-auto">
@@ -212,7 +212,7 @@ return (
     </div>
 
     <div className="col-xl-3 col-sm-6 col-12 p-3"> 
-        <div className="card btn l-bg-green-dark" onClick={Manage_store}>
+        <div className="card-btn l-bg-green-dark" onClick={Manage_store}>
         <OverlayTrigger
                       key={'bottom'}
                       placement={'bottom'}
@@ -240,7 +240,7 @@ return (
 
 
     <div className="col-xl-3 col-sm-6 col-12 p-3">
-        <div className="card btn l-bg-cherry" onClick={Manage_orders}>
+        <div className="card-btn l-bg-cherry" onClick={Manage_orders}>
         <OverlayTrigger
                       key={'bottom'}
                       placement={'bottom'}
@@ -272,7 +272,7 @@ return (
 <div className="row">
 
     <div className="col-xl-3 col-sm-6 col-12 p-3">
-        <div className="card l-bg-green-dark">
+        <div className="cards l-bg-green-dark">
             <div className="card-body">
                 <div className="row align-items-center">
                     <div className="col">
@@ -289,7 +289,7 @@ return (
     </div>
 
     <div className="col-xl-3 col-sm-6 col-12 p-3"> 
-        <div className="card l-bg-cherry">
+        <div className="cards l-bg-cherry">
             <div className="card-body">
                 <div className="row align-items-center">
                     <div className="col-auto">
@@ -306,8 +306,7 @@ return (
     </div>
   
     <div className="col-xl-3 col-sm-6 col-12 p-3">
-        <div className="card l-bg-cherry
-        ">
+        <div className="cards l-bg-cherry">
             <div className="card-body">
                 <div className="row align-items-center">
                     <div className="col">
@@ -324,7 +323,7 @@ return (
     </div>
 
       <div className="col-xl-3 col-sm-6 col-12 p-3">
-        <div className="card l-bg-orange">
+        <div className="cards l-bg-orange">
           <div className="card-content">
             <div className="card-body">
               <div className="media d-flex">
@@ -354,7 +353,7 @@ return (
 
   <div className="row">
     <div className="col-xl-12 col-md-12 p-4">
-      <div className="card overflow-hidden">
+      <div className="cards overflow-hidden">
         <div className="card-content">
           <div className="card-body cleartfix">
             <div className="media align-items-stretch">
