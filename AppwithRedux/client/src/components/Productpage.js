@@ -4,13 +4,15 @@ import {useDispatch,useSelector} from 'react-redux'
 import { productDetailsPromiseStatus } from '../redux/slices/productDetailsSlice' 
 import {Alert} from 'react-bootstrap';
 import { useNavigate,NavLink } from 'react-router-dom'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 import { Carousel } from 'react-bootstrap';
 
 function Productpage() {
 
     let dispatch = useDispatch()
     let {presentItem} = useSelector(state=>state.productdetails)
-    let {currentUser}=useSelector(state=>state.userLogin)
+    let {currentUser,loginStatus}=useSelector(state=>state.userLogin)
     let [alert,setAlert] = useState('')
     let [error,setError] =useState('')
     let navigate = useNavigate()
@@ -343,42 +345,60 @@ return (
                             <div className="row">
                                 <div className="col-md-6">
                                     {
-                                        currentUser.userType === 'user' ?
+                                        loginStatus===true?
                                         <>
-                                            {
-                                                item.stock === 'In Stock'?
-                                                <button className='btn btn-success m-1' onClick={()=>addtocart(item)}>ADD TO CART</button>
-                                                :
-                                                <button className='btn btn-success m-1' disabled={true} onClick={()=>addtocart(item)}>ADD TO CART</button>
-                                            }
-                                            {
-                                                exits?
-                                                <button className='btn' onClick={()=>removefromwishlist(item)} ><span className='text-danger'><i class="bi bi-heart-fill"></i></span></button>    
-                                                :
-                                                <button className='btn' onClick={()=>addtowishlist(item)} ><span className='text-danger'><i class="bi bi-heart"></i></span></button> 
-                                            }
+                                        {
+                                            currentUser.userType === 'user' ?
+                                            <>
+                                                {
+                                                    item.stock === 'In Stock'?
+                                                    <button className='btn btn-success m-1' onClick={()=>addtocart(item)}>ADD TO CART</button>
+                                                    :
+                                                    <button className='btn btn-success m-1' disabled={true} onClick={()=>addtocart(item)}>ADD TO CART</button>
+                                                }
+                                                {
+                                                    exits?
+                                                    <button className='btn' onClick={()=>removefromwishlist(item)} ><span className='text-danger'><i class="bi bi-heart-fill"></i></span></button>    
+                                                    :
+                                                    <button className='btn' onClick={()=>addtowishlist(item)} ><span className='text-danger'><i class="bi bi-heart"></i></span></button> 
+                                                }
+                                            </>
+                                            :
+                                            <>
+                                                <NavLink className='btn btn-success m-3' onClick={()=>edit(item)}>EDIT</NavLink>
+                                                {
+                                                    item.status === 'ACTIVE' ? 
+                                                    <button className='btn btn-danger' onClick={()=>deleteproduct(item)}>DELETE</button> 
+                                                    :
+                                                    <button className='btn btn-danger' onClick={()=>restoreproduct(item)}>RESTORE</button> 
+                                                }
+                                                {
+                                                    item.stock === 'In Stock' ?
+                                                    <p className='fw-bold m-1'> CHANGE STOCK TO:
+                                                    <span>
+                                                        <button className='btn btn-warning m-2' onClick={()=>updatestock(item)}> Out of Stock</button>
+                                                    </span>
+                                                    </p>
+                                                    :
+                                                    <p className='fw-bold m-1'> CHANGE STOCK TO:
+                                                        <button className='btn btn-warning m-2' onClick={()=>updatestock(item)}>In Stock</button>
+                                                    </p>
+                                                }
+                                            </>
+                                        }
                                         </>
                                         :
                                         <>
-                                            <NavLink className='btn btn-success m-3' onClick={()=>edit(item)}>EDIT</NavLink>
-                                            {
-                                                item.status === 'ACTIVE' ? 
-                                                <button className='btn btn-danger' onClick={()=>deleteproduct(item)}>DELETE</button> 
-                                                :
-                                                <button className='btn btn-danger' onClick={()=>restoreproduct(item)}>RESTORE</button> 
-                                            }
-                                            {
-                                                item.stock === 'In Stock' ?
-                                                <p className='fw-bold m-1'> CHANGE STOCK TO:
-                                                <span>
-                                                    <button className='btn btn-warning m-2' onClick={()=>updatestock(item)}> Out of Stock</button>
-                                                </span>
-                                                </p>
-                                                :
-                                                <p className='fw-bold m-1'> CHANGE STOCK TO:
-                                                    <button className='btn btn-warning m-2' onClick={()=>updatestock(item)}>In Stock</button>
-                                                </p>
-                                            }
+                                            <OverlayTrigger overlay={<Tooltip id="tooltip-disabled">Login to "ADD TO CART"</Tooltip>}>
+                                            <span className="d-inline-block">
+                                                <button className='btn btn-success m-1' disabled={true} style={{ pointerEvents: 'none' }} onClick={()=>addtocart(item)}>ADD TO CART</button>
+                                            </span>
+                                            </OverlayTrigger>
+                                            <OverlayTrigger overlay={<Tooltip id="tooltip-disabled">Login to "ADD TO WISHLIST"</Tooltip>}>
+                                            <span className="d-inline-block">
+                                                <button className='btn' disabled={true} onClick={()=>addtowishlist(item)} ><span className='text-danger'><i class="bi bi-heart"></i></span></button> 
+                                            </span>
+                                            </OverlayTrigger>
                                         </>
                                     }
                                 </div>
