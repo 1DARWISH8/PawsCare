@@ -5,7 +5,8 @@ import axios from 'axios'
 import { productDetailsPromiseStatus } from '../redux/slices/productDetailsSlice' 
 import {Alert} from 'react-bootstrap';
 import './Store.css'
-
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 
 function Store() {
   let navigate = useNavigate()
@@ -14,7 +15,7 @@ function Store() {
   let [error,setError] =useState('')
   // const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
-  let {currentUser}=useSelector(state=>state.userLogin)
+  let {currentUser,loginStatus}=useSelector(state=>state.userLogin)
   let [alert,setAlert] = useState('')
   let [wishlist,setWishlist] = useState([])
 
@@ -28,7 +29,6 @@ function Store() {
       {
         setProducts(products.data.payload)
         setSearchResults(products.data.payload)
-        // console.log(products.data.payload)
       }
     }
     catch(err)
@@ -215,12 +215,14 @@ useEffect(()=>getwishlist,[])
                         <NavLink className='btn' onClick={()=>deleteproduct(item)}><i className="fa fa-trash"></i></NavLink>    
                     </li>
                 </ul> */}
-              {
-                item.stock === 'In Stock'?
-                <button className='add-to-cart' onClick={()=>addtocart(item)}>ADD TO CART</button>
-                :
-                <button className='add-to-cart-disabled' disabled={true} onClick={()=>addtocart(item)}>ADD TO CART</button>
-              }
+                {
+                    (item.stock === 'In Stock' && loginStatus === true)?
+                    <button className='add-to-cart' onClick={()=>addtocart(item)}>ADD TO CART</button>
+                    :
+                    <OverlayTrigger overlay={<Tooltip id="tooltip-disabled">Login to "ADD TO CART"</Tooltip>}>
+                        <button className='add-to-cart-disabled' disabled={true} onClick={()=>addtocart(item)}>ADD TO CART</button>
+                    </OverlayTrigger>
+                }
                 {/* <a href="" className="add-to-cart">ADD TO CART</a> */}
             </div>
             <div className="product-content" >
