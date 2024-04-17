@@ -44,7 +44,7 @@ const petProductsSlice = createSlice(
         })
         .addCase(petProductsPromiseStatus.fulfilled,(state,action)=>
         {
-            state.petproducts=action.payload;
+            state.petproducts=action.payload.payload;
             state.productSelected=true;
             state.errorMessage='';
             state.isPending=false;
@@ -53,7 +53,7 @@ const petProductsSlice = createSlice(
         {
             state.petproducts={};
             state.productSelected=false;
-            state.errorMessage=action.message;
+            state.errorMessage=action.payload.message;
             state.isPending=false;
         })
     }
