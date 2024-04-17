@@ -35,6 +35,7 @@ import Wishlist from './components/Wishlist';
 import Manageorders from './components/admin/Manageorders';
 import Myappointments from './components/Myappointments';
 import Dashboard from './components/admin/Dashboard';
+import Shop from './components/Shop';
 
 
 function App() {
@@ -59,6 +60,10 @@ function App() {
         {
           path:'/home',
           element:<Home/>
+        },
+        {
+          path:'/shop',
+          element:<Shop/>
         },
         {
           path:'/dashboard',
