@@ -18,7 +18,8 @@ import './Home.css'
 // react-redux to dispatch actions
 import { useDispatch } from 'react-redux';
 import { petProductsPromiseStatus } from '../redux/slices/petProductsSlice';
-
+import Image from 'react-bootstrap/Image';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 function Home() {
 
@@ -135,17 +136,17 @@ function Home() {
         
         <h1 className='mt-4 mx-2 text-start fs-4' id='pawscare'>SHOP BY PET :</h1>
 
-  <section class="wrapper">
-    <div class="container">
-      <div class="row">
+  <section className="wrapper">
+    <div className="container">
+      <div className="row">
 
-        <div class="col-sm-6 col-md-6 col-lg-3 mb-4">  
-          <div class="card text-dark card-has-bg click-col" onClick={()=>get_pet_products('DOG')} style={{backgroundImage:'url(https://res.cloudinary.com/dozacgfl7/image/upload/v1713275350/shop-by-dog_xodkhv.jpg)'}}>
-            <div class="card-img-overlay d-flex flex-column">
-              <div class="card-body">
+        <div className="col-sm-6 col-md-6 col-lg-2 mb-4">  
+          <div className="card text-dark card-has-bg click-col" onClick={()=>get_pet_products('DOG')} style={{backgroundImage:'url(https://res.cloudinary.com/dozacgfl7/image/upload/v1713275350/shop-by-dog_xodkhv.jpg)'}}>
+            <div className="card-img-overlay d-flex flex-column">
+              <div className="card-body">
               </div>
-              <div class="card-footer">
-                <div class="media">
+              <div className="card-footer">
+                <div className="media">
                   <i className="fas fa-dog fs-1"></i>
                 </div>
               </div>
@@ -153,13 +154,13 @@ function Home() {
           </div>
         </div>
 
-        <div class="col-sm-6 col-md-6 col-lg-3 mb-4">  
-          <div class="card text-dark card-has-bg click-col" style={{backgroundImage:'url(https://res.cloudinary.com/dozacgfl7/image/upload/v1713275349/shop-by-cat_c6yuws.jpg)'}}>
-            <div class="card-img-overlay d-flex flex-column">
-              <div class="card-body">
+        <div className="col-sm-6 col-md-6 col-lg-2 mb-4">  
+          <div className="card text-dark card-has-bg click-col" style={{backgroundImage:'url(https://res.cloudinary.com/dozacgfl7/image/upload/v1713275349/shop-by-cat_c6yuws.jpg)'}}>
+            <div className="card-img-overlay d-flex flex-column">
+              <div className="card-body">
               </div>
-              <div class="card-footer">
-                <div class="media">
+              <div className="card-footer">
+                <div className="media">
                   <i className="fas fa-cat fs-1"></i>
                 </div>
               </div>
@@ -167,13 +168,13 @@ function Home() {
           </div>
         </div>
 
-        <div class="col-sm-6 col-md-6 col-lg-3 mb-4">  
-          <div class="card text-dark card-has-bg click-col" style={{backgroundImage:'url(https://res.cloudinary.com/dozacgfl7/image/upload/v1713275349/shop-by-birds_un6hct.jpg)'}}>
-            <div class="card-img-overlay d-flex flex-column">
-              <div class="card-body">
+        <div className="col-sm-6 col-md-6 col-lg-2 mb-4">  
+          <div className="card text-dark card-has-bg click-col" style={{backgroundImage:'url(https://res.cloudinary.com/dozacgfl7/image/upload/v1713275349/shop-by-birds_un6hct.jpg)'}}>
+            <div className="card-img-overlay d-flex flex-column">
+              <div className="card-body">
               </div>
-              <div class="card-footer">
-                <div class="media">
+              <div className="card-footer">
+                <div className="media">
                   <i className="fas fa-dove fs-1"></i>                
                 </div>
               </div>
@@ -181,24 +182,82 @@ function Home() {
           </div>
         </div>
 
-        <div class="col-sm-6 col-md-6 col-lg-3 mb-4">  
-          <div class="card text-dark card-has-bg click-col" style={{backgroundImage:'url(https://res.cloudinary.com/dozacgfl7/image/upload/v1713275349/shop-by-fish_bszpjt.jpg)'}}>
-            <div class="card-img-overlay d-flex flex-column">
-              <div class="card-body">
+        <div className="col-sm-6 col-md-6 col-lg-2 mb-4">  
+          <div className="card text-dark card-has-bg click-col" style={{backgroundImage:'url(https://res.cloudinary.com/dozacgfl7/image/upload/v1713275349/shop-by-fish_bszpjt.jpg)'}}>
+            <div className="card-img-overlay d-flex flex-column">
+              <div className="card-body">
               </div>
-              <div class="card-footer">
-                <div class="media">
-                  <i className="fas fa-fish fs-1"></i>                </div>
+              <div className="card-footer">
+                <div className="media">
+                  <i className="fas fa-fish fs-1"></i>                
+                </div>
               </div>
             </div>
           </div>
         </div>
+        
+        <div className="col-sm-6 col-md-6 col-lg-2 mb-4">  
+          <div className="card text-dark card-has-bg click-col" style={{backgroundImage:'url(https://res.cloudinary.com/dozacgfl7/image/upload/v1713425726/shop-by-hamster_xdkxbl.jpg)'}}>
+            <div className="card-img-overlay d-flex flex-column">
+              <div className="card-body">
+              </div>
+              <div className="card-footer">
+                <div className="media">
+                  <img className='hamster' src='https://res.cloudinary.com/dozacgfl7/image/upload/v1713431896/hamster_mqkyrp.png'></img>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-sm-6 col-md-6 col-lg-2 mb-4">  
+          <div className="card text-dark card-has-bg click-col" style={{backgroundImage:'url(https://media.istockphoto.com/id/529403903/photo/sea-turtle-isolated.jpg?s=612x612&w=0&k=20&c=fmaEV_RkGjwYH2Pvountl8LSMzopbDltEYX01uKJ6oY=)'}}>
+            <div className="card-img-overlay d-flex flex-column">
+              <div className="card-body">
+              </div>
+              <div className="card-footer">
+                <div className="media">
+                  <img className='turtle' src='https://res.cloudinary.com/dozacgfl7/image/upload/v1713430603/turtle_qtz3r3.png'></img>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>  
     </div>
   </section>
 
   <h1 className='mt-4 mx-2 text-start fs-4' id='pawscare'>SHOP BY CATEGORY :</h1>
 
+  <section>
+      <div className="row">
+        <div className="col-sm-4 col-md-4 col-lg-3 mb-4" id='category-circle'> {/* Adjusted column sizes for responsiveness */}
+          <Image src="https://m.media-amazon.com/images/G/31/img22/Pets/Revamp_mock/D65366806_green_circle_5_400x400._CB618696381_.jpg" style={{ width: '150px', height: '150px' }} roundedCircle />
+          <h4 className='pt-2' id='pawscare'>FOOD</h4>
+        </div>
+        <div className="col-sm-4 col-md-4 col-lg-3 mb-4"> {/* Adjusted column sizes for responsiveness */}
+          <Image src="https://images-eu.ssl-images-amazon.com/images/G/31/img19/Pets/Feb-22/NewPetBrandFarm/Brandfarm-Pets-2.png" style={{ width: '150px', height: '150px' }} roundedCircle />
+          <h4 className='pt-2' id='pawscare'>TREATS</h4>
+        </div>
+        <div className="col-sm-4 col-md-4 col-lg-3 mb-4"> {/* Adjusted column sizes for responsiveness */}
+          <Image src="https://images-eu.ssl-images-amazon.com/images/G/31/img19/Pets/Feb-22/NewPetBrandFarm/Brandfarm-Pets-2.png" style={{ width: '150px', height: '150px' }} roundedCircle />
+          <h4 className='pt-2' id='pawscare'>TOYS</h4>
+        </div>
+        <div className="col-sm-4 col-md-4 col-lg-3 mb-4"> {/* Adjusted column sizes for responsiveness */}
+          <Image src="https://images-eu.ssl-images-amazon.com/images/G/31/img19/Pets/Feb-22/NewPetBrandFarm/Brandfarm-Pets-2.png" style={{ width: '150px', height: '150px' }} roundedCircle />
+          <h4 className='pt-2' id='pawscare'>HEALTH</h4>
+        </div>
+        <div className="col-sm-4 col-md-4 col-lg-3 mb-4"> {/* Adjusted column sizes for responsiveness */}
+          <Image src="https://images-eu.ssl-images-amazon.com/images/G/31/img19/Pets/Feb-22/NewPetBrandFarm/Brandfarm-Pets-2.png" style={{ width: '150px', height: '150px' }} roundedCircle />
+          <h4 className='pt-2' id='pawscare'>CLOTHING</h4>
+        </div>
+        <div className="col-sm-4 col-md-4 col-lg-3 mb-4"> {/* Adjusted column sizes for responsiveness */}
+          <Image src="https://images-eu.ssl-images-amazon.com/images/G/31/img19/Pets/Feb-22/NewPetBrandFarm/Brandfarm-Pets-2.png" style={{ width: '150px', height: '150px' }} roundedCircle />
+          <h4 className='pt-2' id='pawscare'>ACCESSORIES</h4>
+        </div>
+      </div>
+    </section>
 
           {
             currentUser.userType==='admin'&&
