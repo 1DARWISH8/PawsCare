@@ -177,7 +177,7 @@ useEffect(()=>getwishlist,[])
       {error.length!==0&& <p className='fw-bold text-center text-danger border-0'>{error}</p>}
       {alert.length!==0 && <Alert variant={'dark'} onClose={()=>setAlert('')}>{alert}</Alert> }
       
-      
+    <section>
     <div className="row">
     {searchResults.map((item,index)=>
       (
@@ -245,6 +245,7 @@ useEffect(()=>getwishlist,[])
     </div>
   ))}
         </div>
+  </section>
     </div>
   )
   {/* {
