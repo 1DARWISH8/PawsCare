@@ -109,6 +109,8 @@ return (
         <h1 className='text-center'>WISHLIST</h1>
         {error.length!==0&& <p className='fw-bold text-center text-danger border-0'>{error}</p>}
         {alert.length!==0 && <Alert variant={'dark'} onClose={()=>setAlert('')}>{alert}</Alert> }
+        
+    <section>
         <div className='row'>
             {products.length>0&&
             <>
@@ -159,36 +161,11 @@ return (
                 </div>
             </div>
         </div>
-                // <div className='col pt-3 pb-3'  key={index}>
-                //     <div className='card' style={{height:'500px'}}>
-                //     {
-                //         item.stock === 'In Stock' ?
-                //         <img src={item.image[0].ImageURL} className='card-img-top' style={{width:'auto',height:'250px'}} alt={item.name} onClick={()=>openproductpage(item)}/>
-                //         :
-                //         <div className="product-card">
-                //             <img src={item.image[0].ImageURL} className='card-img-top' style={{width:'auto',height:'250px'}} alt={item.name} onClick={()=>openproductpage(item)}/>
-                //             <div className={`text-overlay 'out-of-stock'}`}>
-                //                 <p>{'Out of Stock'}</p>
-                //             </div>
-                //         </div>
-                //         }                        <div className='card-body'>
-                //             <h5 className='card-title' onClick={()=>openproductpage(item)}>{item.productname}</h5>
-                //             <p className='card-text'>Rs.{item.price}</p>
-                //             <span>
-                //             {
-                //                 item.stock === 'In Stock'?
-                //                 <button className='btn btn-success m-1' onClick={()=>addtocart(item)}>ADD TO CART</button>
-                //                 :
-                //                 <button className='btn btn-success m-1' disabled={true} onClick={()=>addtocart(item)}>ADD TO CART</button>
-                //             }                            <button className='btn' onClick={()=>removefromwishlist(item)} ><span className='text-danger'><i class="bi bi-heart-fill"></i></span></button>    
-                //             </span>
-                //         </div>
-                //     </div>
-                // </div>
             ))}
             </>
             }
         </div>
+    </section>
     </div>
 )
 }
