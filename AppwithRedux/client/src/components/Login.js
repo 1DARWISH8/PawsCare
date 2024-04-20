@@ -3,6 +3,7 @@ import {NavLink, useNavigate} from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { userLoginPromiseStatus } from '../redux/slices/userLoginSlice'
 import {useDispatch,useSelector} from 'react-redux'
+import './Login.css'
 
 function Login() {
   let {register,handleSubmit,formState:{errors}}=useForm()
@@ -11,9 +12,16 @@ function Login() {
   let {currentUser,loginStatus,errorMessage} = useSelector(state=>state.userLogin)
   let [userType,setUserType] = useState('user')
 
-  let userTypeChange=(event)=>
+  let userTypeChange=()=>
   {
-    setUserType(event.target.value)
+    if(userType==="user")
+    {
+      setUserType('admin')
+    }
+    else
+    {
+      setUserType('user')
+    }
   }
 
   const formSubmit=(data)=>
@@ -39,32 +47,39 @@ function Login() {
 
   return (
     <div>
-      <form className='col-sm-6 mx-auto m-3 p-3' onSubmit={handleSubmit(formSubmit)}>
-        <h1 className='text-center fs-3 text-decoration-underline'>LOG IN</h1>
-      <label className='form-label fw-bold'>SELECT USER TYPE:</label>
-      <input type='radio' id='user' name='userType' value='user' checked={userType==='user'} onChange={userTypeChange}></input>
-      <label htmlFor='user'>USER</label>
-      <input type='radio' id='admin' name='userType' value='admin' onChange={userTypeChange}></input>
-      <label htmlFor='admin'>ADMIN</label>
-      {/* <input type='radio' id='seller' name='userType' value='seller' onChange={userTypeChange} ></input>
-      <label htmlFor='seller'>SELLER</label> */}
+      <h6 className="mb-0 mt-5 pb-3 text-center"><span>USER</span><span>ADMIN</span></h6>
+			<input className="checkbox" type="checkbox" id="reg-log" onChange={userTypeChange} name="reg-log"/>
+			<label for="reg-log"></label>
+      {errorMessage.length!==0&&<p className='fw-bold text-center text-danger fs-4'>{errorMessage.message}</p>}
+						<div className="d-flex align-items-center justify-content-center pt-3">
+            <form id='login-form' className='col-sm-8 col-md-4' onSubmit={handleSubmit(formSubmit)}>
+              <div className="align-items-center justify-content-center">
+                <h4 className="mb-4 pb-3">
+                  {userType==='user'?<>
+                  User </>
+                  :
+                  <>
+                  Admin </>}
+                  Log In
+                </h4>
+                <div className="form-group">
+                  <input type="text" className="form-style" placeholder="Your Username" autocomplete="off" id='username' {...register('username',{required:true})}/>
+                  <i className="input-icon fas fa-user"></i>
+                </div>
+                {errors.username?.type==='required'&&<p className='text-center pt-2 fw-bold'>USERNAME is REQUIRED</p>}
+                <div className="form-group mt-2">
+                  <input type="password" class="form-style" placeholder="Your Password" autocomplete="off" id='password' {...register('password',{required:true})}/>
+                  <i className="input-icon fas fa-lock"></i>
+                </div>
+                {errors.password?.type==='required'&&<p className='text-center pt-2 fw-bold'>PASSWORD is REQUIRED</p>}
+                <div className='text-center m-3'>
+                  <button type='submit' id='login-btn' className='btn fw-bold'>LOG IN</button>
+                </div>
+              </div>
+              <p className='text-center fw-bold pt-1'>Not a USER?<NavLink className="text-light text-decoration-underline" to='/getstarted/register'>REGISTER</NavLink></p>
+          </form>
+			  </div>
 
-        <p className='text-center fw-bold pt-1'>Not a USER?<NavLink to='/getstarted/register'>REGISTER</NavLink></p>
-        {errorMessage.length!==0&&<p className='fw-bold text-center text-danger'>{errorMessage.message}</p>}
-      <div className='sm-3 m-3 pt-3'>
-        <label className='form-label fw-bold' htmlFor='username'>USERNAME</label>
-        <input className='form-control border-black' type='text' id='username' {...register('username',{required:true})}></input>
-        {errors.username?.type==='required'&&<p className='text-center text-danger fw-bold'>USERNAME is REQUIRED</p>}
-      </div>
-      <div className='sm-3 m-3 pt-3'>
-        <label className='form-label fw-bold' htmlFor='password'>PASSWORD</label>
-        <input className='form-control border-black' type='password' id='password' {...register('password',{required:true})}></input>
-        {errors.password?.type==='required'&&<p className='text-center text-danger fw-bold'>PASSWORD is REQUIRED</p>}
-      </div>
-      <div className='text-center'>
-        <button type='submit' className='btn btn-success border-black fw-bold'>LOG IN</button>
-      </div>
-      </form>
     </div>
   )
 }
