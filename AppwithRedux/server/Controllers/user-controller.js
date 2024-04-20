@@ -419,12 +419,21 @@ const getallslots = async(req,res)=>
 }
 
 // HOME
-const petProducts = async(req,res)=>
+const getProducts = async(req,res)=>
 {
     try
     {
-        let data = req.params.pet
-        let pet_products = await Product.find({status:"ACTIVE",animal:data})
+        let product_data = req.params
+        let pet_products = await Product.find
+        ({
+            status:"ACTIVE",
+            $or: 
+            [
+                { animal: product_data.data },
+                { brand: product_data.data },
+                { category: product_data.data }
+            ]
+        });
         if (pet_products)
         {
             res.status(200).send({message:"RETRIEVED PET PRODUCTS",payload:pet_products})
@@ -441,7 +450,7 @@ const petProducts = async(req,res)=>
 }
 
 //STORE
-const getproducts = async(req,res)=>
+const getallproducts = async(req,res)=>
 {
     try
     {
@@ -792,4 +801,4 @@ const inwishlist = async(req,res)=>
 }
 
 
-module.exports={getuser,getusers,registerUser,userLogin,bookAppointment,appointments,cancelappointment,rescheduleappointment,getallslots,petProducts,getproducts,cart,addcartproduct,removecartproduct,editquantity,order,getorders,cancelorder,getwishlist,addtowishlist,removefromwishlist,inwishlist}
+module.exports={getuser,getusers,registerUser,userLogin,bookAppointment,appointments,cancelappointment,rescheduleappointment,getallslots,getProducts,getallproducts,cart,addcartproduct,removecartproduct,editquantity,order,getorders,cancelorder,getwishlist,addtowishlist,removefromwishlist,inwishlist}
