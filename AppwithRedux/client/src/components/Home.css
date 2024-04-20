@@ -142,8 +142,6 @@ h1
    letter-spacing:2px;}
  .card-body{ 
    transition: all 500ms cubic-bezier(0.19, 1, 0.22, 1);
- 
-
   }
  &:hover {
    .card-body{
@@ -163,11 +161,29 @@ background: linear-gradient(0deg, rgba(114, 105, 86, 0.379) 0%, rgba(172, 172, 1
   
 }
 
-/* #category-circle
+#category-circle
 {
-    width: 50vh;
-    height: 50vh;
-} */
+    width: 20vh;
+    height: 20vh;
+}
+#category-circle:hover
+{
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    transform: scale(1.15);
+    #category-title
+    {
+        margin: 5px;
+    }
+}
+#category-title
+{
+    color: #b40404;
+    font-family: "Orbitron", sans-serif;
+    font-weight: 800;
+    top: 3px;
+    font-size: larger;
+}
 section
 {
     overflow-x: hidden;
