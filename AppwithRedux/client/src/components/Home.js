@@ -232,29 +232,68 @@ function Home() {
 
   <section>
       <div className="row">
-        <div className="col-sm-4 col-md-4 col-lg-3 mb-4" id='category-circle'> {/* Adjusted column sizes for responsiveness */}
-          <Image src="https://m.media-amazon.com/images/G/31/img22/Pets/Revamp_mock/D65366806_green_circle_5_400x400._CB618696381_.jpg" style={{ width: '150px', height: '150px' }} roundedCircle />
-          <h4 className='pt-2' id='pawscare'>FOOD</h4>
+        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4" > {/* Adjusted column sizes for responsiveness */}
+          <Image src="https://res.cloudinary.com/dozacgfl7/image/upload/v1713610954/food_w1crqv.jpg" id='category-circle'  roundedCircle />
+          <h4 className='pt-2' id='category-title'>FOOD</h4>
         </div>
-        <div className="col-sm-4 col-md-4 col-lg-3 mb-4"> {/* Adjusted column sizes for responsiveness */}
-          <Image src="https://images-eu.ssl-images-amazon.com/images/G/31/img19/Pets/Feb-22/NewPetBrandFarm/Brandfarm-Pets-2.png" style={{ width: '150px', height: '150px' }} roundedCircle />
-          <h4 className='pt-2' id='pawscare'>TREATS</h4>
+        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4"> {/* Adjusted column sizes for responsiveness */}
+          <Image src="https://res.cloudinary.com/dozacgfl7/image/upload/v1713610954/treats_yr70tn.jpg" id='category-circle' roundedCircle />
+          <h4 className='pt-2' id='category-title'>TREATS</h4>
         </div>
-        <div className="col-sm-4 col-md-4 col-lg-3 mb-4"> {/* Adjusted column sizes for responsiveness */}
-          <Image src="https://images-eu.ssl-images-amazon.com/images/G/31/img19/Pets/Feb-22/NewPetBrandFarm/Brandfarm-Pets-2.png" style={{ width: '150px', height: '150px' }} roundedCircle />
-          <h4 className='pt-2' id='pawscare'>TOYS</h4>
+        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4"> {/* Adjusted column sizes for responsiveness */}
+          <Image src="https://res.cloudinary.com/dozacgfl7/image/upload/v1713610658/toys_coesna.jpg" id='category-circle' roundedCircle />
+          <h4 className='pt-2' id='category-title'>TOYS</h4>
         </div>
-        <div className="col-sm-4 col-md-4 col-lg-3 mb-4"> {/* Adjusted column sizes for responsiveness */}
-          <Image src="https://images-eu.ssl-images-amazon.com/images/G/31/img19/Pets/Feb-22/NewPetBrandFarm/Brandfarm-Pets-2.png" style={{ width: '150px', height: '150px' }} roundedCircle />
-          <h4 className='pt-2' id='pawscare'>HEALTH</h4>
+        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4"> {/* Adjusted column sizes for responsiveness */}
+          <Image src="https://res.cloudinary.com/dozacgfl7/image/upload/v1713610779/health_knq591.jpg" id='category-circle' roundedCircle />
+          <h4 className='pt-2' id='category-title'>HEALTH</h4>
         </div>
-        <div className="col-sm-4 col-md-4 col-lg-3 mb-4"> {/* Adjusted column sizes for responsiveness */}
-          <Image src="https://images-eu.ssl-images-amazon.com/images/G/31/img19/Pets/Feb-22/NewPetBrandFarm/Brandfarm-Pets-2.png" style={{ width: '150px', height: '150px' }} roundedCircle />
-          <h4 className='pt-2' id='pawscare'>CLOTHING</h4>
+        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4"> {/* Adjusted column sizes for responsiveness */}
+          <Image src="https://res.cloudinary.com/dozacgfl7/image/upload/v1713607074/apparel_xr7sex.jpg" id='category-circle' roundedCircle />
+          <h4 className='pt-2' id='category-title'>CLOTHING</h4>
         </div>
-        <div className="col-sm-4 col-md-4 col-lg-3 mb-4"> {/* Adjusted column sizes for responsiveness */}
-          <Image src="https://images-eu.ssl-images-amazon.com/images/G/31/img19/Pets/Feb-22/NewPetBrandFarm/Brandfarm-Pets-2.png" style={{ width: '150px', height: '150px' }} roundedCircle />
-          <h4 className='pt-2' id='pawscare'>ACCESSORIES</h4>
+        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4"> {/* Adjusted column sizes for responsiveness */}
+          <Image src="https://res.cloudinary.com/dozacgfl7/image/upload/v1713607075/grooming_no1xef.png" id='category-circle' roundedCircle />
+          <h4 className='pt-2' id='category-title'>GROOMING</h4>
+        </div>
+        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4"> {/* Adjusted column sizes for responsiveness */}
+          <Image src="https://res.cloudinary.com/dozacgfl7/image/upload/v1713607075/essentials_nnudx8.jpg" id='category-circle' roundedCircle />
+          <h4 className='pt-2' id='category-title'>ESSENTIALS</h4>
+        </div>
+        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4"> {/* Adjusted column sizes for responsiveness */}
+          <Image src="https://res.cloudinary.com/dozacgfl7/image/upload/v1713610953/accessories_awzpmr.jpg" id='category-circle' roundedCircle />
+          <h4 className='pt-2' id='category-title'>ACCESSORIES</h4>
+        </div>
+      </div>
+    </section>
+
+    <h1 className='mt-4 mx-2 text-start fs-4' id='pawscare'>SHOP BY BRAND :</h1>
+
+    <section>
+      <div className='row'>
+        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4"> {/* Adjusted column sizes for responsiveness */}
+          <Image src="https://images-eu.ssl-images-amazon.com/images/G/31/img22/Pets/kmargso/Brandfarm-Pets-1_Pedigree.png" id='category-circle' roundedCircle />
+        </div>
+        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4"> {/* Adjusted column sizes for responsiveness */}
+          <Image src="https://images-eu.ssl-images-amazon.com/images/G/31/img19/Pets/Feb-22/NewPetBrandFarm/Brandfarm-Pets-2.png" id='category-circle' roundedCircle />
+        </div>
+        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4"> {/* Adjusted column sizes for responsiveness */}
+          <Image src="https://images-eu.ssl-images-amazon.com/images/G/31/img22/Pets/kmargso/Brands/Drools_Updated.jpg" id='category-circle' roundedCircle />
+        </div>
+        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4"> {/* Adjusted column sizes for responsiveness */}
+          <Image src="https://images-eu.ssl-images-amazon.com/images/G/31/img19/Pets/Feb-22/NewPetBrandFarm/Brandfarm-Pets-18.png" id='category-circle' roundedCircle />
+        </div>
+        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4"> {/* Adjusted column sizes for responsiveness */}
+          <Image src="https://images-eu.ssl-images-amazon.com/images/G/31/img19/Pets/Feb-22/NewPetBrandFarm/Brandfarm-Pets-16.png" id='category-circle' roundedCircle />
+        </div>
+        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4"> {/* Adjusted column sizes for responsiveness */}
+          <Image src="https://images-eu.ssl-images-amazon.com/images/G/31/img19/Pets/Feb-22/NewPetBrandFarm/Brandfarm-Pets-17.png" id='category-circle' roundedCircle />
+        </div>
+        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4"> {/* Adjusted column sizes for responsiveness */}
+          <Image src="https://images-eu.ssl-images-amazon.com/images/G/31/img19/Pets/Feb-22/NewPetBrandFarm/Brandfarm-Pets-4.png" id='category-circle' roundedCircle />
+        </div>
+        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4"> {/* Adjusted column sizes for responsiveness */}
+          <Image src="https://images-eu.ssl-images-amazon.com/images/G/31/img19/Pets/Feb-22/NewPetBrandFarm/Brandfarm-Pets-4.png" id='category-circle' roundedCircle />
         </div>
       </div>
     </section>
@@ -269,7 +308,6 @@ function Home() {
           
           {/* checks if user is logged in or not and renders the component accordingly */}
         </div>
-
     </div>
   )
 }
