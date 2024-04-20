@@ -95,9 +95,11 @@ return (
             <option value="">SELECT</option>
             <option value="Food">Food</option>
             <option value="Treats">Treats</option>
-            <option value="Toy"> Toy</option>
+            <option value="Toys"> Toys</option>
             <option value="Health">Health</option>
-            <option value="Apparel">Apparel</option>
+            <option value="Clothing">Clothing</option>
+            <option value="Grooming">Grooming</option>
+            <option value="Essentials">Essentials</option>
             <option value="Accessories">Accessories</option>
             </select>
         </div>
