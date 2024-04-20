@@ -5,11 +5,11 @@ import axios from 'axios'
 
 export const petProductsPromiseStatus = createAsyncThunk(
     'pet-products',
-    async(pet,thunkAPI)=>
+    async(data,thunkAPI)=>
     {
         try
         {
-            let products = await axios.get(`http://localhost:5000/user-api/getpetproducts/${pet}`)
+            let products = await axios.get(`http://localhost:5000/user-api/getpetproducts/${data}`)
             if (products.data.message==="RETRIEVED PET PRODUCTS")
             {
                 return products.data
