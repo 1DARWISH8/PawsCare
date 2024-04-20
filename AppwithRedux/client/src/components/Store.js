@@ -24,7 +24,7 @@ function Store() {
   {
     try
     {
-      let products = await axios.get('http://localhost:5000/user-api/getproducts')
+      let products = await axios.get('http://localhost:5000/user-api/getallproducts')
       if (products)
       {
         setProducts(products.data.payload)
