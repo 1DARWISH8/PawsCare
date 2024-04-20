@@ -68,11 +68,11 @@ function Home() {
     }
   }
 
-  async function get_pet_products(pet)
+  async function get_products(data)
   {
     try
     {
-      await dispatch(petProductsPromiseStatus(pet))
+      await dispatch(petProductsPromiseStatus(data))
       navigate('/shop')
     }
     catch(err)
@@ -141,7 +141,7 @@ function Home() {
       <div className="row">
 
         <div className="col-sm-6 col-md-6 col-lg-2 mb-4">  
-          <div className="card text-dark card-has-bg click-col" onClick={()=>get_pet_products('DOG')} style={{backgroundImage:'url(https://res.cloudinary.com/dozacgfl7/image/upload/v1713275350/shop-by-dog_xodkhv.jpg)'}}>
+          <div className="card text-dark card-has-bg click-col" onClick={()=>get_products('DOG')} style={{backgroundImage:'url(https://res.cloudinary.com/dozacgfl7/image/upload/v1713275350/shop-by-dog_xodkhv.jpg)'}}>
             <div className="card-img-overlay d-flex flex-column">
               <div className="card-body">
               </div>
@@ -155,7 +155,7 @@ function Home() {
         </div>
 
         <div className="col-sm-6 col-md-6 col-lg-2 mb-4">  
-          <div className="card text-dark card-has-bg click-col" style={{backgroundImage:'url(https://res.cloudinary.com/dozacgfl7/image/upload/v1713275349/shop-by-cat_c6yuws.jpg)'}}>
+          <div className="card text-dark card-has-bg click-col" onClick={()=>get_products('CAT')} style={{backgroundImage:'url(https://res.cloudinary.com/dozacgfl7/image/upload/v1713275349/shop-by-cat_c6yuws.jpg)'}}>
             <div className="card-img-overlay d-flex flex-column">
               <div className="card-body">
               </div>
@@ -169,7 +169,7 @@ function Home() {
         </div>
 
         <div className="col-sm-6 col-md-6 col-lg-2 mb-4">  
-          <div className="card text-dark card-has-bg click-col" style={{backgroundImage:'url(https://res.cloudinary.com/dozacgfl7/image/upload/v1713275349/shop-by-birds_un6hct.jpg)'}}>
+          <div className="card text-dark card-has-bg click-col" onClick={()=>get_products('BIRD')} style={{backgroundImage:'url(https://res.cloudinary.com/dozacgfl7/image/upload/v1713275349/shop-by-birds_un6hct.jpg)'}}>
             <div className="card-img-overlay d-flex flex-column">
               <div className="card-body">
               </div>
@@ -183,7 +183,7 @@ function Home() {
         </div>
 
         <div className="col-sm-6 col-md-6 col-lg-2 mb-4">  
-          <div className="card text-dark card-has-bg click-col" style={{backgroundImage:'url(https://res.cloudinary.com/dozacgfl7/image/upload/v1713275349/shop-by-fish_bszpjt.jpg)'}}>
+          <div className="card text-dark card-has-bg click-col" onClick={()=>get_products('FISH')} style={{backgroundImage:'url(https://res.cloudinary.com/dozacgfl7/image/upload/v1713275349/shop-by-fish_bszpjt.jpg)'}}>
             <div className="card-img-overlay d-flex flex-column">
               <div className="card-body">
               </div>
@@ -197,7 +197,7 @@ function Home() {
         </div>
         
         <div className="col-sm-6 col-md-6 col-lg-2 mb-4">  
-          <div className="card text-dark card-has-bg click-col" style={{backgroundImage:'url(https://res.cloudinary.com/dozacgfl7/image/upload/v1713425726/shop-by-hamster_xdkxbl.jpg)'}}>
+          <div className="card text-dark card-has-bg click-col" onClick={()=>get_products('HAMSTER')} style={{backgroundImage:'url(https://res.cloudinary.com/dozacgfl7/image/upload/v1713425726/shop-by-hamster_xdkxbl.jpg)'}}>
             <div className="card-img-overlay d-flex flex-column">
               <div className="card-body">
               </div>
@@ -211,7 +211,7 @@ function Home() {
         </div>
 
         <div className="col-sm-6 col-md-6 col-lg-2 mb-4">  
-          <div className="card text-dark card-has-bg click-col" style={{backgroundImage:'url(https://media.istockphoto.com/id/529403903/photo/sea-turtle-isolated.jpg?s=612x612&w=0&k=20&c=fmaEV_RkGjwYH2Pvountl8LSMzopbDltEYX01uKJ6oY=)'}}>
+          <div className="card text-dark card-has-bg click-col" onClick={()=>get_products('TURTLE')} style={{backgroundImage:'url(https://media.istockphoto.com/id/529403903/photo/sea-turtle-isolated.jpg?s=612x612&w=0&k=20&c=fmaEV_RkGjwYH2Pvountl8LSMzopbDltEYX01uKJ6oY=)'}}>
             <div className="card-img-overlay d-flex flex-column">
               <div className="card-body">
               </div>
@@ -232,35 +232,35 @@ function Home() {
 
   <section>
       <div className="row">
-        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4" > {/* Adjusted column sizes for responsiveness */}
+        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4" onClick={()=>get_products('Food')} > {/* Adjusted column sizes for responsiveness */}
           <Image src="https://res.cloudinary.com/dozacgfl7/image/upload/v1713610954/food_w1crqv.jpg" id='category-circle'  roundedCircle />
           <h4 className='pt-2' id='category-title'>FOOD</h4>
         </div>
-        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4"> {/* Adjusted column sizes for responsiveness */}
+        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4" onClick={()=>get_products('Treats')}> {/* Adjusted column sizes for responsiveness */}
           <Image src="https://res.cloudinary.com/dozacgfl7/image/upload/v1713610954/treats_yr70tn.jpg" id='category-circle' roundedCircle />
           <h4 className='pt-2' id='category-title'>TREATS</h4>
         </div>
-        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4"> {/* Adjusted column sizes for responsiveness */}
+        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4" onClick={()=>get_products('Toys')}> {/* Adjusted column sizes for responsiveness */}
           <Image src="https://res.cloudinary.com/dozacgfl7/image/upload/v1713610658/toys_coesna.jpg" id='category-circle' roundedCircle />
           <h4 className='pt-2' id='category-title'>TOYS</h4>
         </div>
-        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4"> {/* Adjusted column sizes for responsiveness */}
-          <Image src="https://res.cloudinary.com/dozacgfl7/image/upload/v1713610779/health_knq591.jpg" id='category-circle' roundedCircle />
+        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4" onClick={()=>get_products('Health')}> {/* Adjusted column sizes for responsiveness */}
+          <Image src="https://res.cloudinary.com/dozacgfl7/image/upload/v1713634758/health_elgtt4.png" id='category-circle' roundedCircle />
           <h4 className='pt-2' id='category-title'>HEALTH</h4>
         </div>
-        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4"> {/* Adjusted column sizes for responsiveness */}
+        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4" onClick={()=>get_products('Clothing')}> {/* Adjusted column sizes for responsiveness */}
           <Image src="https://res.cloudinary.com/dozacgfl7/image/upload/v1713607074/apparel_xr7sex.jpg" id='category-circle' roundedCircle />
           <h4 className='pt-2' id='category-title'>CLOTHING</h4>
         </div>
-        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4"> {/* Adjusted column sizes for responsiveness */}
+        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4" onClick={()=>get_products('Grooming')}> {/* Adjusted column sizes for responsiveness */}
           <Image src="https://res.cloudinary.com/dozacgfl7/image/upload/v1713607075/grooming_no1xef.png" id='category-circle' roundedCircle />
           <h4 className='pt-2' id='category-title'>GROOMING</h4>
         </div>
-        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4"> {/* Adjusted column sizes for responsiveness */}
+        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4" onClick={()=>get_products('Essentials')}> {/* Adjusted column sizes for responsiveness */}
           <Image src="https://res.cloudinary.com/dozacgfl7/image/upload/v1713607075/essentials_nnudx8.jpg" id='category-circle' roundedCircle />
           <h4 className='pt-2' id='category-title'>ESSENTIALS</h4>
         </div>
-        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4"> {/* Adjusted column sizes for responsiveness */}
+        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4" onClick={()=>get_products('Accessories')}> {/* Adjusted column sizes for responsiveness */}
           <Image src="https://res.cloudinary.com/dozacgfl7/image/upload/v1713610953/accessories_awzpmr.jpg" id='category-circle' roundedCircle />
           <h4 className='pt-2' id='category-title'>ACCESSORIES</h4>
         </div>
@@ -271,29 +271,29 @@ function Home() {
 
     <section>
       <div className='row'>
-        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4"> {/* Adjusted column sizes for responsiveness */}
+        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4" onClick={()=>get_products('Pedigree')}> {/* Adjusted column sizes for responsiveness */}
           <Image src="https://images-eu.ssl-images-amazon.com/images/G/31/img22/Pets/kmargso/Brandfarm-Pets-1_Pedigree.png" id='category-circle' roundedCircle />
         </div>
-        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4"> {/* Adjusted column sizes for responsiveness */}
+        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4" onClick={()=>get_products('Whiskas')}> {/* Adjusted column sizes for responsiveness */}
           <Image src="https://images-eu.ssl-images-amazon.com/images/G/31/img19/Pets/Feb-22/NewPetBrandFarm/Brandfarm-Pets-2.png" id='category-circle' roundedCircle />
         </div>
-        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4"> {/* Adjusted column sizes for responsiveness */}
+        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4" onClick={()=>get_products('Drools')}> {/* Adjusted column sizes for responsiveness */}
           <Image src="https://images-eu.ssl-images-amazon.com/images/G/31/img22/Pets/kmargso/Brands/Drools_Updated.jpg" id='category-circle' roundedCircle />
         </div>
-        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4"> {/* Adjusted column sizes for responsiveness */}
+        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4" onClick={()=>get_products('Royal Canin')}> {/* Adjusted column sizes for responsiveness */}
           <Image src="https://images-eu.ssl-images-amazon.com/images/G/31/img19/Pets/Feb-22/NewPetBrandFarm/Brandfarm-Pets-18.png" id='category-circle' roundedCircle />
         </div>
-        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4"> {/* Adjusted column sizes for responsiveness */}
+        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4" onClick={()=>get_products('Meat Up')}> {/* Adjusted column sizes for responsiveness */}
           <Image src="https://images-eu.ssl-images-amazon.com/images/G/31/img19/Pets/Feb-22/NewPetBrandFarm/Brandfarm-Pets-16.png" id='category-circle' roundedCircle />
         </div>
-        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4"> {/* Adjusted column sizes for responsiveness */}
+        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4" onClick={()=>get_products('Purepet')}> {/* Adjusted column sizes for responsiveness */}
           <Image src="https://images-eu.ssl-images-amazon.com/images/G/31/img19/Pets/Feb-22/NewPetBrandFarm/Brandfarm-Pets-17.png" id='category-circle' roundedCircle />
         </div>
-        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4"> {/* Adjusted column sizes for responsiveness */}
-          <Image src="https://images-eu.ssl-images-amazon.com/images/G/31/img19/Pets/Feb-22/NewPetBrandFarm/Brandfarm-Pets-4.png" id='category-circle' roundedCircle />
+        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4" onClick={()=>get_products('Sheba')}> {/* Adjusted column sizes for responsiveness */}
+          <Image src="https://images-eu.ssl-images-amazon.com/images/G/31/img22/Pets/kmargso/Sheba_Brandsfarm_logo.png" id='category-circle' roundedCircle />
         </div>
-        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4"> {/* Adjusted column sizes for responsiveness */}
-          <Image src="https://images-eu.ssl-images-amazon.com/images/G/31/img19/Pets/Feb-22/NewPetBrandFarm/Brandfarm-Pets-4.png" id='category-circle' roundedCircle />
+        <div className="col-sm-6 col-md-4 col-lg-3 col-xl-3  p-4" onClick={()=>get_products('Henlo')}> {/* Adjusted column sizes for responsiveness */}
+          <Image src="https://supertails.com/cdn/shop/files/categories-7_1a2c42f0-c38c-4f39-82b6-71a672344875_800x.png?v=1712730222" id='category-circle' roundedCircle />
         </div>
       </div>
     </section>
