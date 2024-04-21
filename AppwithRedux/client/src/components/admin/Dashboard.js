@@ -72,7 +72,7 @@ function Dashboard() {
   {
     try
     {
-      let products = await axios.get('http://localhost:5000/user-api/getproducts')
+      let products = await axios.get('http://localhost:5000/user-api/getallproducts')
       if (products)
       {
         setProducts(products.data.payload)
@@ -155,7 +155,6 @@ return (
     <div className="row mt-4">
 
         <div className="col-xl-3 col-sm-6 col-12 p-3"> 
-        <div className="card-btn l-bg-cherry" onClick={Manage_users}>
         <OverlayTrigger
                       key={'bottom'}
                       placement={'bottom'}
@@ -165,23 +164,22 @@ return (
                         </Tooltip>
                       }
                       >
-            <div className="card-body fw-bold">
+                          <div className="card-btn l-bg-cherry" onClick={Manage_users}>
+            <div className="card-body fw-bold" id='cardtitle'>
                 <div className="row align-items-center">
                 <div className="col-auto">
                   <i className="bi bi-person fs-1" id='person'></i>
                 </div>
-                <div className='col'>
-                    <div className="text-end">
+                <div className='col text-end'>
                     <h3>{users.length}</h3>
                       <span>
                         USERS
                       </span>
                 </div>
-                </div>
             </div>
             </div>
-        </OverlayTrigger>
         </div>
+        </OverlayTrigger>
     </div>
 
     <div className="col-xl-3 col-sm-6 col-12 p-3">
@@ -196,7 +194,7 @@ return (
           }
         >
         <div className="card-btn l-bg-green-dark" onClick={Manage_appointments}>
-                <div className="card-body" id='blue'>
+                <div className="card-body" id='cardtitle'>
                 <div className="row align-items-center">
                     <div className="col-auto">
                         <BiCalendar className="fs-1" id='appointment-calendar'/>
@@ -222,7 +220,7 @@ return (
                         </Tooltip>
                       }
                       >
-            <div className="card-body">
+            <div className="card-body" id='cardtitle'>
                 <div className="row align-items-center">
                     <div className="col-auto">
                         <i className="bi bi-box fs-1" id='product-box'></i>                    </div>
@@ -250,7 +248,7 @@ return (
                         </Tooltip>
                       }
                       >
-            <div className="card-body">
+            <div className="card-body" id='cardtitle'>
                 <div className="row align-items-center">
                     <div className="col-auto">
                         <i className="bi bi-cart fs-1" id='cart'></i>                    
