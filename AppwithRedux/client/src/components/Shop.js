@@ -16,7 +16,6 @@ function Shop() {
     let {petproducts}=useSelector(state=>state.petProducts)
     let {currentUser,loginStatus}=useSelector(state=>state.userLogin)
 
-    console.log(petproducts)
 
 async function addtocart(item)
 {
@@ -57,6 +56,7 @@ return (
         {error.length!==0&& <p className='fw-bold text-center text-danger border-0'>{error}</p>}
         {alert.length!==0 && <Alert variant={'dark'} onClose={()=>setAlert('')}>{alert}</Alert> }
 
+    <section>
     <div className="row">
     {petproducts.map((item,index)=>
     (
@@ -124,6 +124,7 @@ return (
     </div>
   ))}
         </div>
+        </section>
     </div>
   )
 }
