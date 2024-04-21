@@ -7,6 +7,7 @@ import {Alert} from 'react-bootstrap';
 import './Store.css'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import { userCartPromiseStatus } from '../redux/userCartSlice'
 
 function Shop() {
     let navigate = useNavigate()
@@ -28,6 +29,7 @@ async function addtocart(item)
         if (added.data.message === "PRODUCT ADDED TO CART")
         {
             setAlert('PRODUCT ADDED')
+            await dispatch(userCartPromiseStatus(username))
         }
         else if (added.data.message === "ITEM ALREADY IN CART")
         {
