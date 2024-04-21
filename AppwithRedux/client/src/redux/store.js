@@ -4,6 +4,7 @@ import productDetailsSlice from './slices/productDetailsSlice'
 import userDetailsSlice from './slices/userDetailsSlice'
 import userselectedDetailsSlice from './slices/userselectedDetailsSlice'
 import petProductsSlice from './slices/petProductsSlice'
+import userCartSlice from './userCartSlice'
 
 export const store=configureStore(
     {
@@ -13,7 +14,8 @@ export const store=configureStore(
             userLogin:userLoginSlice,
             userdetails:userDetailsSlice,
             userselected:userselectedDetailsSlice,
-            productdetails:productDetailsSlice
+            productdetails:productDetailsSlice,
+            usercart:userCartSlice
         }
     }
 )
