@@ -479,7 +479,7 @@ const cart = async(req,res)=>
     let cartproducts = await User.findOne({username:username})
     if (cartproducts!==null)
     {
-        res.status(200).send(cartproducts.cart)
+        res.status(200).send({message:"RETRIEVED USER-CART",payload:cartproducts.cart})
     }
     else
     {
