@@ -5,6 +5,7 @@ import axios from 'axios'
 import { productDetailsPromiseStatus } from '../redux/slices/productDetailsSlice' 
 import {Alert} from 'react-bootstrap';
 import { NavLink } from 'react-router-dom'
+import { userCartPromiseStatus } from '../redux/userCartSlice'
 
 function Wishlist() {
 
@@ -58,6 +59,7 @@ async function addtocart(item)
         if (added.data.message === "PRODUCT ADDED TO CART")
         {
             setAlert('PRODUCT ADDED')
+            await dispatch(userCartPromiseStatus(username))
         }
         else if (added.data.message === "ITEM ALREADY IN CART")
         {
