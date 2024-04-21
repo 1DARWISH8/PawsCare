@@ -5,6 +5,7 @@ import {NavLink, useNavigate} from 'react-router-dom'
 import {useDispatch,useSelector} from 'react-redux'
 import { productDetailsPromiseStatus } from '../redux/slices/productDetailsSlice' 
 import {Alert} from 'react-bootstrap';
+import { userCartPromiseStatus } from '../redux/userCartSlice'
 
 
 function Cart() {
@@ -20,7 +21,14 @@ function Cart() {
     const getcart = async()=>
     {
         let cartproducts = await axios.get(`http://localhost:5000/user-api/cart/${currentUser.username}`)
-        setCart(cartproducts.data)
+        if (cartproducts.data.message==="RETRIEVED USER-CART")
+        {
+            setCart(cartproducts.data.payload)
+        }
+        else
+        {
+            setError(cartproducts.data.message)
+        }
     }
     useEffect(()=>getcart,[])
 
@@ -100,6 +108,7 @@ async function openproductpage(item)
             if (productdeleted.data.message === "PRODUCT IS DELETED FROM CART")
             {
                 getcart()
+                await dispatch(userCartPromiseStatus(username))
             }
             else
             {
@@ -164,7 +173,7 @@ return (
 
         {
             cart.length>0?
-            <section className="m-3">
+            <section className=" m-3">
                     <div className="row w-100">
                         <div className="col-lg-12 col-md-12 col-12">
                             <h3 className="display-5 mb-2 text-center">Cart</h3>
