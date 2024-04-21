@@ -11,6 +11,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import { userCartPromiseStatus } from '../redux/userCartSlice';
 // import Offcanvas from 'react-bootstrap/Offcanvas';
 
 function Header() {
@@ -19,10 +20,11 @@ function Header() {
   let navigate=useNavigate()
 	let dispatch = useDispatch()
   let logo = 'https://res.cloudinary.com/dozacgfl7/image/upload/v1711878050/logo_hjylkr.png'
+  let {userCart} = useSelector(state=>state.usercart)
 
-      function logout()
+  async function logout()
     {
-        dispatch(logOut())
+        await dispatch(logOut())
 		    sessionStorage.removeItem('token')        
         navigate('/getstarted')
     }
@@ -98,7 +100,7 @@ function Header() {
               </NavDropdown>
               <NavLink className='nav-link mx-2' id='icon' to='/home/appointment'><i className="bi bi-calendar"></i>BOOK APPOINTMENT</NavLink>
               <NavLink className='nav-link mx-2' id='icon' to='/store'><i className="bi bi-calendar"></i>STORE</NavLink>
-            <NavLink className='nav-link mx-2' id='icon' to='/cart'><i className="bi bi-cart4"></i>CART</NavLink>
+            <NavLink className='nav-link mx-2' id='icon' to='/cart'><i className="bi bi-cart4"></i><span>{userCart.length}</span></NavLink>
           </Nav>
         </Navbar.Collapse>
         </Navbar>
