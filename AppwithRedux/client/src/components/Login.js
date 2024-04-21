@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import { userLoginPromiseStatus } from '../redux/slices/userLoginSlice'
 import {useDispatch,useSelector} from 'react-redux'
 import './Login.css'
+import { userCartPromiseStatus } from '../redux/userCartSlice'
 
 function Login() {
   let {register,handleSubmit,formState:{errors}}=useForm()
@@ -28,6 +29,7 @@ function Login() {
   {
     data={userType,...data}
     dispatch(userLoginPromiseStatus(data))
+    dispatch(userCartPromiseStatus(data.username))
   }
 
   useEffect(()=>
