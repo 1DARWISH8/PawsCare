@@ -7,6 +7,7 @@ import {Alert} from 'react-bootstrap';
 import './Store.css'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import { userCartPromiseStatus } from '../redux/userCartSlice'
 
 function Store() {
   let navigate = useNavigate()
@@ -103,10 +104,10 @@ useEffect(()=>getwishlist,[])
         let username=currentUser.username;
         item = {...item,username}
         let added = await axios.post('http://localhost:5000/user-api/addcartproduct',item)
-        // console.log(added)
         if (added.data.message === "PRODUCT ADDED TO CART")
         {
           setAlert('PRODUCT ADDED')
+          await dispatch(userCartPromiseStatus(username))
         }
         else if (added.data.message === "ITEM ALREADY IN CART")
         {
