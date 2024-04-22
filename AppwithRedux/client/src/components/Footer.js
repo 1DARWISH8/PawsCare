@@ -43,14 +43,14 @@ function Footer() {
   }
 
   return (
-        <div className="mt-5">
+        <div className="mt-2">
             {/* Footer */}
             {
               loginStatus?
               <>
                 {
               currentUser.userType==="user"?
-                <footer className="text-center text-lg-start text-dark" style={{ backgroundColor: "#11c739" }}>
+                <footer className="text-center text-lg-start text-dark" style={{ backgroundColor: "#5cb404" }}>
                   <div className=" p-4 pb-0">
                       <section className="">
                           <div className="row">
