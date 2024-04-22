@@ -1,5 +1,5 @@
 // useContext hook is imported to read and access data from context
-import React, { useState, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 // To navigate from one components to other according to user interaction useNavigate hook is imported from React Router library
 import {NavLink, useNavigate} from 'react-router-dom'
 import {useSelector} from 'react-redux'
@@ -86,53 +86,56 @@ function Home() {
     navigate('/store')
   }
 
+  const videoRefs = [useRef(null), useRef(null), useRef(null),useRef(null)];
+
+  const handleVideoEnded = (index) => {
+    const video = videoRefs[index].current;
+    video.currentTime = 0; // Reset video to start
+    video.play(); // Start playing again
+  };
+
   return (
-    <div>
+    <section>
         <div className='text-center' id='header'>
 
-        {/* <img src='https://res.cloudinary.com/dozacgfl7/image/upload/v1712338808/videoframe_2487_czzbmy.png' id='shop-now' onClick={openstore} width="100%"></img> */}
-        <Carousel >
-      <Carousel.Item>
-        <NavLink to="/store">
-          <img src='https://res.cloudinary.com/dozacgfl7/image/upload/v1712338808/videoframe_2487_czzbmy.png' width="100%"></img>
-        </NavLink>
-      </Carousel.Item>
-      {/* <Carousel.Item>
-        <NavLink to="/home/bookappointment">
-            <img src='https://assets.petco.com/petco/image/upload/f_auto,q_auto:best/vet-services-vtc-pets-img-d-600x417.png' width="100%" />
-        </NavLink>
-      </Carousel.Item> */}
-    </Carousel>
+          <NavLink to='/store'>
+            <img src='https://res.cloudinary.com/dozacgfl7/image/upload/v1712338808/videoframe_2487_czzbmy.png' id='home-banner' width="100%"  ></img>
+          </NavLink>
 
-    {
-            currentUser.userType === 'user' &&
-            <>
-              <h4 className='pt-4' id="welcome">Welcome to</h4>
-              <h1 className='pt-2' id='intro'>PAWSCARE🌟</h1>
-              <div className='fs-3 pt-2 pb-5'> Your {loginStatus===true?<span id='intro'>{currentUser.petdetails[0].petname}</span>:<span>Pet</span>}'s Wellbeing Central! 🐾</div>
-            
-              {/* <div className="card m-3 mt-2" id='carouselcard'>
-          <div className="card-header border-0">
-            <div className=' text-center fw-bold'>Explore our premium pet services, including expert health checkups, haircut and training sessions to ensure your pets feel and look their best. 
-            </div>          
-          </div>
-          <div className="card-body" id='appoint'>
-            <div className='text-center p-2'>
-              <button className='btn btn-primary fw-bold' onClick={navigateTo}>BOOK APPOINTMENT</button>
-            </div>
-          </div>
+      <div className='row p-2'>
+        <div className='col-sm-6'>
+            <img src='https://res.cloudinary.com/dozacgfl7/image/upload/v1713770760/Welcome_nkfygs.gif' width='100%'/>
         </div>
-          <div className='text-center p-3' id="health">
-          At PawsCare Hub, we prioritize your furry companion's health and happiness.
-          You can effortlessly register your pet, keeping a digital record of health checkups.
-          <div className='pt-4'>
-            <button className='btn btn-success fw-bold' onClick={toHealth}>HEALTH</button>
-          </div>
-            <Outlet/>
-          </div> */}
-            
-            </>
-          }
+        <div className="col-sm-6">
+          <Carousel variant='dark' id='carousel-banner'>
+          <Carousel.Item>
+              <NavLink to='/home/appointment'>
+                <img src='https://res.cloudinary.com/dozacgfl7/image/upload/v1713759781/Screenshot_2024-04-22_085431_vc8kge.png' width="100%"/>
+              </NavLink>
+          </Carousel.Item>
+          <Carousel.Item>
+            <NavLink to='/home/appointment'>
+                <img src='https://res.cloudinary.com/dozacgfl7/image/upload/v1713758973/Insta_Consultation_Web__pvzjx9.jpg' width="100%" />
+            </NavLink>
+          </Carousel.Item>
+          </Carousel>
+        </div>
+      </div>
+
+
+        <div className="carousel-container p-3 pt-0">
+        <Carousel  className='p-5' variant='dark'>
+        <Carousel.Item onClick={()=>get_products('Pedigree')}>
+              <img src='https://res.cloudinary.com/dozacgfl7/image/upload/v1713721800/pedigree_nwyrco.webp' width="100%" />
+        </Carousel.Item>
+        <Carousel.Item onClick={()=>get_products('Henlo')}>
+              <img src='https://res.cloudinary.com/dozacgfl7/image/upload/v1713721927/henlo-products_ao6ufo.webp' width="100%" />
+        </Carousel.Item>
+        <Carousel.Item onClick={()=>get_products('Health')}>
+              <img src='https://res.cloudinary.com/dozacgfl7/image/upload/v1713721927/Suppliements-Banner_d6v6hw.webp' width="100%" />
+        </Carousel.Item>
+        </Carousel>
+      </div>
         
         <h1 className='mt-4 mx-2 text-start fs-4' id='pawscare'>SHOP BY PET :</h1>
 
@@ -228,6 +231,25 @@ function Home() {
     </div>
   </section>
 
+
+  <Carousel  className='p-5' variant='dark'>
+    <Carousel.Item onClick={()=>get_products('Treats')}>
+      <video ref={videoRefs[0]} width="100%" className='p-2' autoPlay muted onEnded={() => handleVideoEnded(0)}>
+        <source src="https://res.cloudinary.com/dozacgfl7/video/upload/v1713721110/2023-09-10-drool-worthy-treats-desktop_zsgb42.mp4" type="video/mp4" />        Your browser does not support the video tag.
+      </video>        
+    </Carousel.Item>
+    <Carousel.Item onClick={()=>get_products('Toys')}>
+      <video ref={videoRefs[1]} width="100%" className='p-2' autoPlay muted onEnded={() => handleVideoEnded(1)}>
+        <source src="https://res.cloudinary.com/dozacgfl7/video/upload/v1713721109/playful-temptations-desktop_gl4cy5.mp4" type="video/mp4" />        Your browser does not support the video tag.
+      </video>        
+    </Carousel.Item>
+    <Carousel.Item onClick={()=>get_products('CAT')}>
+      <video ref={videoRefs[2]} width="100%" className='p-2' autoPlay muted onEnded={() => handleVideoEnded(2)}>
+        <source src="https://res.cloudinary.com/dozacgfl7/video/upload/v1713721109/2023-09-10-kitty-pawrty-supplies-desktop_s2tisk.mp4" type="video/mp4" />        Your browser does not support the video tag.
+      </video>        
+    </Carousel.Item>
+  </Carousel>  
+
   <h1 className='mt-4 mx-2 text-start fs-4' id='pawscare'>SHOP BY CATEGORY :</h1>
 
   <section>
@@ -267,7 +289,9 @@ function Home() {
       </div>
     </section>
 
+    <img className='p-3' src='https://images-eu.ssl-images-amazon.com/images/G/31/img22/Baby/cnnjpp1/Baby/Fullr_Amazon_Ads__1500_x_300.jpg' width="100%"/>
     <h1 className='mt-4 mx-2 text-start fs-4' id='pawscare'>SHOP BY BRAND :</h1>
+
 
     <section>
       <div className='row'>
@@ -296,19 +320,11 @@ function Home() {
           <Image src="https://supertails.com/cdn/shop/files/categories-7_1a2c42f0-c38c-4f39-82b6-71a672344875_800x.png?v=1712730222" id='category-circle' roundedCircle />
         </div>
       </div>
-    </section>
-
-          {
-            currentUser.userType==='admin'&&
-            <>
-            <h3>WELCOME, {currentUser.username}</h3>
-            <h5>TO DASHBOARD</h5>
-            </>
-          }
-          
+      <img src='https://www.zigly.com/media/wysiwyg/1920x174.jpg' width="100%"></img>
+    </section>          
           {/* checks if user is logged in or not and renders the component accordingly */}
         </div>
-    </div>
+    </section>
   )
 }
 
