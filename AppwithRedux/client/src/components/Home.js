@@ -81,10 +81,6 @@ function Home() {
     }
   }
 
-  async function openstore()
-  {
-    navigate('/store')
-  }
 
   const videoRefs = [useRef(null), useRef(null), useRef(null),useRef(null)];
 
