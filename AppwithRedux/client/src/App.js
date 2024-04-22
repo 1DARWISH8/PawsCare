@@ -36,6 +36,7 @@ import Manageorders from './components/admin/Manageorders';
 import Myappointments from './components/Myappointments';
 import Dashboard from './components/admin/Dashboard';
 import Shop from './components/Shop';
+import Searchresults from './components/Searchresults';
 
 
 function App() {
@@ -60,6 +61,10 @@ function App() {
         {
           path:'/home',
           element:<Home/>
+        },
+        {
+          path:'/searchshop',
+          element:<Searchresults/>
         },
         {
           path:'/shop',
