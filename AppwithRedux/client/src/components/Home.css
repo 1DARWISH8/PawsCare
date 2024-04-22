@@ -188,3 +188,20 @@ section
 {
     overflow-x: hidden;
 }
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    width: 40px;
+    cursor: pointer;
+}
+
+#home-banner:hover,
+#carousel-banner:hover
+{
+    cursor: pointer;
+}
