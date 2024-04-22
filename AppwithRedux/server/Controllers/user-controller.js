@@ -179,6 +179,36 @@ const userLogin = async(req,res)=>
     // }
 }
 
+// SEARCH-BAR RESULTS
+const searchResults = async(req,res)=>
+{
+    let search_word = req.params.search_word
+    try
+    {
+        let search_results = await Product.find(
+            {
+                status:"ACTIVE",
+                productname:
+                {
+                    $regex:search_word,//regular expression 
+                    $options:'i'// Case-insensitive search on the 'productname' field
+                }
+            })
+            if (search_results)
+            {
+                res.status(200).send({message:"RETRIEVED SEARCH RESULTS",payload:search_results})
+            }
+            else
+            {
+                res.status(200).send({message:"FAILED TO RETRIEVE DATA"})
+            }
+    }
+    catch(err)
+    {
+        res.status(200).send({message:"INTERNAL SERVER ERROR"})
+    }
+}
+
 // SEE ALL APPOINTMENTS
 const appointments = async(req,res)=>
 {
@@ -801,4 +831,4 @@ const inwishlist = async(req,res)=>
 }
 
 
-module.exports={getuser,getusers,registerUser,userLogin,bookAppointment,appointments,cancelappointment,rescheduleappointment,getallslots,getProducts,getallproducts,cart,addcartproduct,removecartproduct,editquantity,order,getorders,cancelorder,getwishlist,addtowishlist,removefromwishlist,inwishlist}
+module.exports={getuser,getusers,registerUser,userLogin,searchResults,bookAppointment,appointments,cancelappointment,rescheduleappointment,getallslots,getProducts,getallproducts,cart,addcartproduct,removecartproduct,editquantity,order,getorders,cancelorder,getwishlist,addtowishlist,removefromwishlist,inwishlist}
