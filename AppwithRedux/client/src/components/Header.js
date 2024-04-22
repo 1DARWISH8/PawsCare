@@ -12,6 +12,7 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { userCartPromiseStatus } from '../redux/userCartSlice';
+import { searchResultsPromiseStatus } from '../redux/slices/searchResultsSlice';
 // import Offcanvas from 'react-bootstrap/Offcanvas';
 
 function Header() {
@@ -22,11 +23,19 @@ function Header() {
   let logo = 'https://res.cloudinary.com/dozacgfl7/image/upload/v1711878050/logo_hjylkr.png'
   let {userCart} = useSelector(state=>state.usercart)
 
+  const [search_word, setSearch_word] = useState('');
   async function logout()
     {
         await dispatch(logOut())
 		    sessionStorage.removeItem('token')        
         navigate('/getstarted')
+    }
+
+    async function handleSearch(e)
+    {
+      e.preventDefault();
+      await dispatch(searchResultsPromiseStatus(search_word))
+      navigate('/searchshop')
     }
 
   return (
@@ -41,14 +50,18 @@ function Header() {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
-          <Form className="d-flex m-2 border ">
-              <Form.Control
-                type="search"
-                className="me-2 border border-black"
-                aria-label="Search"
-              />
-              <Button className='fw-bold text-dark border border-none' style={{ backgroundColor: "#11c739" }}><i class="fas fa-search"></i></Button>
-            </Form>
+            <form  onSubmit={handleSearch} >
+              <div className="d-flex m-2 border">
+              <input
+                  type="text"
+                  value={search_word}
+                  onChange={(e) => setSearch_word(e.target.value)}
+                  placeholder="Search..."
+                  style={{width:"100%"}}
+                />
+                <Button type='submit' className='fw-bold text-dark border border-none' style={{ backgroundColor: "#11c739" }}><i class="fas fa-search"></i></Button>
+              </div>
+            </form>
           </Nav>
           <Nav>
             <NavLink className='nav-link' id='icon' to='/home/appointment'><i className="bi bi-calendar"></i>APPOINTMENTS</NavLink>
