@@ -31,12 +31,18 @@ function Header() {
         navigate('/getstarted')
     }
 
-    async function handleSearch(e)
-    {
+    async function handleSearch(e) {
       e.preventDefault();
-      await dispatch(searchResultsPromiseStatus(search_word))
-      navigate('/searchshop')
+    
+      if (search_word.trim() !== '') {
+        await dispatch(searchResultsPromiseStatus(search_word));
+        navigate('/searchshop');
+      } else {
+        console.log('Search word is empty');
+        // ADD ERROR ALERT
+      }
     }
+    
 
   return (
     <>
