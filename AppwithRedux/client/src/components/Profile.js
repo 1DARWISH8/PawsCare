@@ -3,6 +3,7 @@ import {useNavigate} from 'react-router-dom'
 import {useSelector,useDispatch} from 'react-redux'
 import { logOut } from '../redux/slices/userLoginSlice'
 import Alert from 'react-bootstrap/Alert';
+import './Profile.css'
 
 function Profile() {
 
@@ -20,16 +21,17 @@ function Profile() {
     }
 
 return (
-    <div>
+    <section>
 		{
 			userType==='user'?
 			<>
 			
-        <div className="pt-3">
-		<div className="main-body">
+        <div >
+		<div >
+			<h3 className='fs-1 p-3 text-center pb-0' id='health'>USER PROFILE</h3>
 			<div className="row">
 				<div className="col-lg-4">
-					<div className="car m-3">
+					<div className="cards m-5 mb-0">
 						<div className="card-body">
 							<div className="d-flex flex-column align-items-center text-center">
 								{
@@ -42,13 +44,14 @@ return (
 									</div>
 								</div>
                                 <button className='btn btn-danger p-2 mt-3 fw-bold' onClick={logout}>LOG OUT</button>
+                                {/* <button className='btn btn-primary p-2 mt-3 fw-bold' >EDIT PROFILE</button> */}
 							</div>
 						</div>
 					</div>
 				</div>
-				<div className="col-lg-8 pt-2">
-					<div className="car m-3">
-						<div className="card-body">
+				<div className="col-lg-8 ">
+					<div className="cards m-5 mb-0">
+						<div className="card-body m-2">
                             <h4 className='text-center fs-5' id="pawscare">USER DETAILS</h4>
 							<div className="row mb-3 mt-4">
 								<div className="col-sm-3">
@@ -84,10 +87,11 @@ return (
 							</div>
 						</div>
 					</div>
-				</div>
-                <div className="pt-2">
-					<div className=" m-3 ">
-                            <h4 className='text-center fs-5 mt-5' id="pawscare">PET DETAILS</h4>
+
+					<div className="cards m-5">
+						<div className='card-body'>
+
+                            <h4 className='text-center fs-5' id="pawscare">PET DETAILS</h4>
 							<div className="row mb-3 mt-4">
 								<div className="col-sm-3">
 									<h6 className="mb-0" id="pawscare">Pet Name:</h6>
@@ -120,6 +124,7 @@ return (
                                     <p className='user-data'>{currentUser.petdetails[0].last_checkup_date}</p>
 								</div>
 							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -135,7 +140,7 @@ return (
 			</>
 		}
         
-    </div>
+    </section>
 )
 }
 
