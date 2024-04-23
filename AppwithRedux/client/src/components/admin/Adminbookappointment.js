@@ -9,6 +9,8 @@ import Accordion from 'react-bootstrap/Accordion';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import {Alert} from 'react-bootstrap';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 
 function Adminbookappointment() {
 
@@ -93,93 +95,105 @@ function Adminbookappointment() {
       <h1 className='text-center fs-3 text-decoration-underline'>BOOK APPOINTMENT</h1>
         {error.length!==0&& <p className='fw-bold text-center text-danger border-0'>{error}</p>}
         {alert.length!==0 && <Alert variant={'dark'} onClose={()=>setAlert('')}>{alert}</Alert> }
-        <form className='col-sm-6 mx-auto m-3 p-3 ' onSubmit={handleSubmit(formSubmit)}>
-            <div className='sm-3 pt-4'>
-            <label className='text-center fw-bold form-label'>PETNAME:<span className='text-secondary fs-6 border border-secondary rounded m-2 p-1'>{selectedUser.petdetails[0].petname}</span></label>
-            </div>
-            <div className='sm-3 '>
-            <label className='text-center fw-bold form-label' htmlFor='service'>SELECT SERVICE TYPE:</label>
-            <select {...register('appointment_service',{required:true})} className='m-1 text-secondary fw-bold form-control border border-secondary' value={selectedService} onChange={(e) => setService(e.target.value)} id='service' >
-                <option value=''>--SELECT--</option>
-                <option value='HEALTH CHECK UP'>HEALTH CHECK UP</option>
-                <option value='GROOMING'>GROOMING</option>
-                <option value='TRAINING'>TRAINING</option>
-            </select>
-            {errors.service?.type==='required'&&<p className='text-danger fw-bold text-center'>*SERVICE needs to be SELECTED*</p>}
-            </div>
-            <div className='sm-3'>
-            <label className='text-center fw-bold form-label' htmlFor='location'>SELECT LOCATION:</label>
-            <select {...register('appointment_location',{required:true})} className='m-1 text-secondary fw-bold form-control border border-secondary' value={selectedLocation} onChange={(e) => setLocation(e.target.value)} id='location' >
-                <option value=''>--SELECT--</option>
-                <option value='BANGALORE'>BANGALORE</option>
-                <option value='CHENNAI'>CHENNAI</option>
-                <option value='HYDERABAD'>HYDERABAD</option>
-                <option value='VISAKHAPATNAM'>VISAKHAPATNAM</option>
-            </select>
-            {errors.location?.type==='required'&&<p className='text-danger fw-bold text-center'>*LOCATION needs to be SELECTED*</p>}
-            </div>
-            <label className='text-center fw-bold form-label' htmlFor='date'>SELECT DATE:</label>
-            <div className='sm-3 text-center' >
-                <input type="hidden"  {...register('appointment_date')} value={selectedDate} />
-                <DatePicker
-                    className='m-1 text-secondary fw-bold form-control border border-secondary'
-                    selected={selectedDate}
-                    onChange={(date) => setSelectedDate(date)}
-                    minDate={today}
-                    inline // Display the calendar inline
+        <form className='p-3 ' onSubmit={handleSubmit(formSubmit)}>
+            <div className='row'>
+
+                <div className='col-sm-6 col-md-4 col-xl-4'>
+                    <div>
+                        <label className='fw-bold form-label' htmlFor='date'>SELECT DATE <span className='text-danger fs-3'>*</span>:</label>
+                    </div>
+                    <div className='date-picker-container text-center'>
+                        <input type="hidden"  {...register('appointment_date')} value={selectedDate} />
+                        <DatePicker
+                            className='m-1 text-secondary fw-bold form-control border border-secondary'
+                            selected={selectedDate}
+                            onChange={(date) => setSelectedDate(date)}
+                            minDate={today}
+                            inline // Display the calendar inline
+                            style={{  width: '2000px', height: '400px' }}
+                        />
+                    </div>
+                    {errors.date?.type==='required'&&<p className='text-danger fw-bold text-center'>*DATE needs to be SELECTED*</p>}
+                </div>
+
+                <div className='col-sm-6 col-md-4 col-xl-4 text-start'>
+                    <div className='pt-4'>
+                        <label className='fw-bold form-label'>PETNAME:<span className='text-secondary fs-6 border border-secondary rounded m-2 p-1'>{selectedUser.petdetails[0].petname}</span></label>
+                    </div>
+                        <div>
+                        <label className='fw-bold form-label' htmlFor='service'>SELECT SERVICE TYPE <span className='text-danger fs-3'>*</span>:</label>
+                        <select {...register('appointment_service',{required:true})} className='m-1 text-secondary fw-bold form-control border border-secondary' value={selectedService} onChange={(e) => setService(e.target.value)} id='service' >
+                            <option value=''>--SELECT--</option>
+                            <option value='HEALTH CHECK UP'>HEALTH CHECK UP</option>
+                            <option value='GROOMING'>GROOMING</option>
+                            <option value='TRAINING'>TRAINING</option>
+                        </select>
+                        {errors.service?.type==='required'&&<p className='text-danger fw-bold text-center'>*SERVICE needs to be SELECTED*</p>}
+                        </div>
+                        <div >
+                        <label className='fw-bold form-label' htmlFor='location'>SELECT LOCATION <span className='text-danger fs-3'>*</span>:</label>
+                        <select {...register('appointment_location',{required:true})} className='m-1 text-secondary fw-bold form-control border border-secondary' value={selectedLocation} onChange={(e) => setLocation(e.target.value)} id='location' >
+                            <option value=''>--SELECT--</option>
+                            <option value='BANGALORE'>BANGALORE</option>
+                            <option value='CHENNAI'>CHENNAI</option>
+                            <option value='HYDERABAD'>HYDERABAD</option>
+                            <option value='VISAKHAPATNAM'>VISAKHAPATNAM</option>
+                        </select>
+                        {errors.location?.type==='required'&&<p className='text-danger fw-bold text-center'>*LOCATION needs to be SELECTED*</p>}
+                        </div>
+                            </div>
+
+
+<div className='col-sm-12 col-md-4 col-xl-4 p-3 '>
+  {timeslots.length !== 0 && (
+    <div className=''>
+      <label className='fw-bold form-label' htmlFor='time'>SELECT TIME SLOT <span className='text-danger fs-3'>*</span>:</label>
+      <div className='row row-cols-4 row-cols-md-4 row-cols-lg-4'>
+        {timeslots.map((slot, index) => (
+          <div className='col' key={index}>
+            {slot.appointment_status === 'available' ? (
+              <div className='text-center p-2'>
+                <input
+                  type='checkbox'
+                  value={slot.appointment_time}
+                  checked={selectedOption === slot.appointment_time}
+                  onChange={(e) => setSelectedOption(e.target.value)}
                 />
+                <label>{slot.appointment_time}</label>
+              </div>
+            ) : (
+              <div className='text-center p-2'>
+                <OverlayTrigger overlay={<Tooltip id="tooltip-disabled">SLOT UNAVAILABLE</Tooltip>}>
+                    <input type='checkbox' disabled />
+                </OverlayTrigger>
+                <label >{slot.appointment_time}</label>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  )}
+</div>
+
+
             </div>
-            {errors.date?.type==='required'&&<p className='text-danger fw-bold text-center'>*DATE needs to be SELECTED*</p>}
-            {
-                timeslots.length!==0 &&
-                <div className='sm-3' >
-                <label className='text-center fw-bold form-label' htmlFor='time'>SELECT TIME:</label>
-                <Accordion>
-                    <Accordion.Item eventKey="0">
-                        <Accordion.Header className='fw-bold'>SELECT TIME SLOT</Accordion.Header>
-                        <Accordion.Body>
-                        {
-                            timeslots.map((slot,index)=>
-                            (
-                                <>
-                                {slot.appointment_status==='available'?
-                                <div className='text-center' key={index}>
-                                {/* <button type='button' className={`btn btn-light m-2 ${clickedButton === slot.appointment_time ? 'btn-primary':''}`} 
-                                onClick={() => handleOptionClick(slot.appointment_time)}>
-                                    {slot.appointment_time}
-                                </button> */}
-                                <label>
-                                    <input 
-                                    type='checkbox' 
-                                    value={slot.appointment_time}
-                                    checked={selectedOption === slot.appointment_time}
-                                    onChange={(e)=>setSelectedOption(e.target.value)}/>
-                                    {slot.appointment_time}
-                                </label>
-                                </div>
-                                :
-                                <div className='text-center' key={index}>
-                                {/* <button className='btn btn-light m-2' disabled>
-                                    {slot.appointment_time}
-                                </button> */}
-                                <label>
-                                    <input type="checkbox" disabled/>
-                                    {slot.appointment_time}
-                                </label>
-                                </div>
-                                }
-                                </>
-                            ))
-                        }
-                        </Accordion.Body>
-                    </Accordion.Item>
-                </Accordion>
-            </div>
-            }
+            
+            
             {errors.time&&<p className='text-danger fw-bold text-center'>*TIME needs to be SELECTED*</p>}
-            <div className='text-center pt-3'>
-            <button className='btn btn-success' type='submit' disabled={!selectedOption}>BOOK</button>
+    {!selectedOption?
+            <div className='text-center'>
+                <Button className='btn btn-success' disabled={true}>BOOK</Button>
+                <p className='text-danger'>SELECT ALL <span className='text-danger fs-3'>*</span> FIELDS</p>
             </div>
+            :
+            <div className='text-center'>
+                <button className='btn btn-success' type='submit' disabled={!selectedOption}>BOOK</button>
+            </div>
+    }
+
+            
+            
         </form>
             <Modal
             show={show}
