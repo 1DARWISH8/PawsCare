@@ -193,7 +193,7 @@ return (
                             <div class="postcard__subtitle small">
                                 {/* <time datetime="2020-05-25 12:00:00"> */}
                                     <div className='text-start'>
-                                        <i class="fas fa-calendar-alt"></i><span className='fw-bold m-2'>APPOINTMENT DATE:</span>{appointment.appointment_date}
+                                        <i class="fas fa-calendar-alt"></i><span className='fw-bold m-2'>APPOINTMENT DATE:</span>{appointment.booked_appointment_date}
                                     </div>
                                     <div className='text-start'>
                                         <i class="fas fa-clock "></i><span className='fw-bold m-2'>APPOINTMENT TIME:</span>{appointment.appointment_time}
