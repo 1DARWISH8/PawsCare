@@ -71,7 +71,6 @@ const userSchema = new mongoose.Schema(
         },
         petdetails:
         [{
-
             petname:
             {
                 type:String,
@@ -279,6 +278,7 @@ const appointmentSchema = new mongoose.Schema(
             type:String,
             required:[true,"APPOINTMENT DATE IS REQUIRED"]
         },
+        booked_appointment_date:String,
         appointment_time:
         {
             type:String,
@@ -289,6 +289,7 @@ const appointmentSchema = new mongoose.Schema(
             type:Date,
             default: Date.now
         },
+        appointment_booking_date:String,
         appointment_status:
         {
             type:String,
@@ -416,6 +417,7 @@ const productSchema = new mongoose.Schema(
             default:"In Stock",
             enum:['In Stock','Out of Stock']
         },
+        added_on_date:String,
         image:
         [
             {
@@ -454,35 +456,36 @@ const orderSchema = new mongoose.Schema(
         // {
         //     type:String
         // },
-        orderdate:
+        order_date:
         {
             type:Date,
             default: Date.now
         },
-        orderstatus:
+        ordered_on_date:String,
+        order_status:
         {
             type:String,
             enum:['PENDING','CANCELLED','ACCEPTED',"IN TRANSIT","OUT FOR DELIVERY","DELIVERED"],
             default:'PENDING'
         },
-        totalprice:
+        total_price:
         {
             type:Number,
             required:true
         },
-        paymentstatus:
+        payment_status:
         {
             type:String,
             enum:['PENDING','COMPLETED'],
             default:"PENDING"
         },
-        paymentmethod:
+        payment_method:
         {
             type:String,
             enum:['UPI PAYMENT',"NETBANKING","CASH ON DELIVERY(COD)"],
             default:'CASH ON DELIVERY(COD)'
         },
-        orderitems:
+        order_items:
         [
             {
                 productname:String,
