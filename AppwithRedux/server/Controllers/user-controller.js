@@ -295,7 +295,7 @@ const cancelappointment = async(req,res)=>
                         $set:
                         {
                             "appointment_status":"CANCELLED",
-                            'cancelled_by':'admin'
+                            'cancelled_by':'user'
                         }
                     },
                     {
