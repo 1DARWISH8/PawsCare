@@ -119,7 +119,7 @@ function Home() {
       </div>
 
 
-        <div className="carousel-container p-3 pt-0">
+        <div className="carousel-container pt-0">
         <Carousel  className='p-5' variant='dark'>
         <Carousel.Item onClick={()=>get_products('Pedigree')}>
               <img src='https://res.cloudinary.com/dozacgfl7/image/upload/v1713721800/pedigree_nwyrco.webp' width="100%" />
@@ -129,6 +129,12 @@ function Home() {
         </Carousel.Item>
         <Carousel.Item onClick={()=>get_products('Health')}>
               <img src='https://res.cloudinary.com/dozacgfl7/image/upload/v1713721927/Suppliements-Banner_d6v6hw.webp' width="100%" />
+        </Carousel.Item>
+        <Carousel.Item  onClick={()=>get_products('Purepet')}>
+              <img className='p-2' src='https://res.cloudinary.com/dozacgfl7/image/upload/v1713808035/purepet_xom62m.webp' width="100%" />
+        </Carousel.Item>
+        <Carousel.Item  onClick={()=>get_products('Royal Canin')}>
+              <img className='p-2' src='https://res.cloudinary.com/dozacgfl7/image/upload/v1713808179/royalcanin_n1loir.webp' width="100%" />
         </Carousel.Item>
         </Carousel>
       </div>
