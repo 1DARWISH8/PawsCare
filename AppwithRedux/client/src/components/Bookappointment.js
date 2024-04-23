@@ -74,6 +74,12 @@ function Bookappointment() {
         }
     }
 
+    // Function to get the name of the month from its index
+function getMonthName(monthIndex) {
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    return months[monthIndex];
+}
+
 
     async function formSubmit(data)
     {
@@ -84,7 +90,8 @@ function Bookappointment() {
             data.appointment_date = selectedDate
             let petname = currentUser.petdetails[0].petname
             let appointment_time = selectedOption
-            data = {username,petname,...data,appointment_time}
+            let booked_appointment_date = `${selectedDate.getDate()} ${getMonthName(selectedDate.getMonth())} ${selectedDate.getFullYear()}`
+            data = {username,petname,...data,appointment_time,booked_appointment_date}
             let booked = await axios.post(`http://localhost:5000/user-api/bookappointment`,data)
             if(booked.data.message==="APPOINTMENT HAS BEEN BOOKED")
             {
@@ -221,7 +228,8 @@ return (
             <div className='text-center'>
                 <Button className='btn btn-success' disabled={true}>BOOK</Button>
                 <p className='text-danger'>SELECT ALL <span className='text-danger fs-3'>*</span> FIELDS</p>
-            </div>:
+            </div>
+            :
             <div className='text-center'>
                 <button className='btn btn-success' type='submit' disabled={!selectedOption}>BOOK</button>
             </div>
