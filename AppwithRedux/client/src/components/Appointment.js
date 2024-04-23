@@ -6,7 +6,7 @@ import { Carousel } from 'react-bootstrap';
 function Appointment() {
 
 return (
-    <div >
+    <section >
         <div className='text-center'>
             {/* <img src='https://res.cloudinary.com/dozacgfl7/image/upload/v1712394046/Health_checkup_hukjap.png' width="75%"/> */}
             {/* <NavLink className="btn btn-dark fw-bold" to="/home/bookappointment">BOOK APPOINTMENT</NavLink> */}
@@ -16,7 +16,7 @@ return (
       <div className="row">
 
       <div className="col-md-5 mt-2">
-          <Carousel id="CarouselTest">
+          <Carousel id="CarouselTest" variant='dark'>
             <Carousel.Item>
               <img className="d-block w-100" src="https://res.cloudinary.com/dozacgfl7/image/upload/v1712394046/Health_checkup_hukjap.png" alt="" />
             </Carousel.Item>
@@ -64,6 +64,69 @@ return (
         <img src='https://res.cloudinary.com/dozacgfl7/image/upload/v1712381158/appointment_features_gplzwu.png' width="100%"/>
     </div>
 
+<h3 className='text-center fs-3 mt-3' id='pawscare'>PRICING</h3>
+
+<div class="container-fluid d-flex justify-content-center px-5">
+  <div class="row ">
+    
+    <div class="col-sm-4">
+      <div class="card">
+        <img src="https://res.cloudinary.com/dozacgfl7/image/upload/v1713795516/pricing-vet_u6z1sl.jpg" class="card-img-top" width="100%"/>
+        <div className='row p-2'>
+          <div className='col-sm-12 col-md-6'>
+            <h1 id='health'>VET</h1>
+            <h1 id='health'>CONSULTATION</h1>
+          </div>
+          <div className='col-sm-12 col-md-6 text-end'>
+            <div class="card-body pt-0 px-0 fs-1" id='health'>
+              ₹ 350
+            </div>
+          </div>
+          <p className='pt-4'>*TOTAL COST VARIES*</p>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="col-sm-4">
+      <div class="card">
+        <img src="https://res.cloudinary.com/dozacgfl7/image/upload/v1713795516/pricing-grooming_x97phz.jpg" class="card-img-top" width="100%"/>
+        <div className='row p-2'>
+          <div className='col-sm-12 col-md-6'>
+            <h1 id='health'>PET</h1>
+            <h1 id='health'>GROOMING</h1>
+          </div>
+          <div className='col-sm-12 col-md-6 text-end'>
+            <div class="card-body pt-0 px-0 fs-1" id='health'>
+              ₹ 400
+            </div>
+          </div>
+          <p className='pt-4'>*TOTAL COST VARIES*</p>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="col-sm-4">
+      <div class="card">
+        <img src="https://res.cloudinary.com/dozacgfl7/image/upload/v1713795517/pricing-training_gboho2.jpg" class="card-img-top" width="100%"/>
+        <div className='row p-2'>
+          <div className='col-sm-12 col-md-6'>
+            <h1 id='health'>PET</h1>
+            <h1 id='health'>TRAINING</h1>
+          </div>
+          <div className='col-sm-12 col-md-6 text-end'>
+            <div class="card-body pt-0 px-0 fs-1" id='health'>
+              ₹ 200
+            </div>
+          </div>
+          <p className='pt-4'>*TOTAL COST VARIES*</p>
+        </div>
+      </div>
+    </div>
+  
+  </div>
+</div>
 
         <h4 className='mt-5 mx-2'>Frequently asked questions</h4>
         <Accordion>
@@ -98,7 +161,10 @@ return (
                 </Accordion.Body>
             </Accordion.Item>
         </Accordion>
-    </div>
+
+
+
+    </section>
 )
 }
 
