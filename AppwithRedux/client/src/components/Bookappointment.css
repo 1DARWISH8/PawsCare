@@ -1,0 +1,91 @@
+/* Custom styles for react-datepicker */
+
+/* Change the background color of the date picker */
+.react-datepicker {
+    background-color: #ff7373;
+  }
+  
+  /* Change the text color of the selected date */
+  .react-datepicker__day--selected {
+    background-color: #26c711; /* Selected date background color */
+    color: #fff;
+     /* Selected date text color */
+  }
+  
+  /* Change the border color of the date picker */
+  /* .react-datepicker__input-container input {
+    border: 1px solid #ccc; 
+} */
+/* Date picker input border color */
+  
+  /* Change the size of the date picker */
+  /* .react-datepicker {
+    width: 300px; 
+} */
+/* Set a custom width */
+  
+  /* Change the size of the date picker calendar */
+  .react-datepicker__calendar {
+    font-size: 0px;
+    /* Set a custom font size */
+  }
+
+
+  /* Custom styles for react-datepicker */
+
+/* Change the border radius of the date picker */
+.react-datepicker {
+    border-radius: 6px;
+    border: 1px solid #000000; 
+    /* Set a custom border radius */
+  }
+  
+  /* Change the font size and color of the month and year header */
+  .react-datepicker__current-month,
+  .react-datepicker-year-header {
+    font-size: 18px;
+    color: #d7cccc; 
+}
+/* Set a custom font size */
+/* Set the color of the month and year header */
+  
+  /* Change the background color and border of the month and year dropdown */
+  .react-datepicker__header {
+    background-color: #000000; /* Set a custom background color */
+    border-bottom: none;
+     /* Remove the bottom border */
+  }
+  
+  /* Change the color of the day names (e.g., Sun, Mon, Tue) */
+  .react-datepicker__day-name {
+    color: #e6e6e6;
+     /* Set the color of the day names */
+  }
+  
+  /* Change the background color of the selected date when hovered */
+  .react-datepicker__day:hover {
+    background-color: #e6e6e6; /* Set a custom background color */
+  }
+  
+  /* Change the background color of the selected date when focused */
+  .react-datepicker__day--selected:focus {
+    background-color: #11c739; /* Set a custom background color */
+  }
+  
+  /* Change the font size and color of the date numbers */
+  .react-datepicker__day {
+    font-size: 18px; /* Set a custom font size */
+    /* color: #333; */
+     /* Set the color of the date numbers */
+  }
+  
+  /* Change the background color of the selected date */
+  .react-datepicker__day--selected {
+    background-color: #11c739; /* Set a custom background color */
+    color: #fff; /* Set the color of the selected date */
+  }
+  
+  /* Change the color of the navigation arrows */
+  .react-datepicker__navigation {
+    color: #e3e3e3; /* Set the color of the navigation arrows */
+  }
