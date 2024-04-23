@@ -10,8 +10,8 @@ h6 span{
   color: #11c738;
 }
 
-[type="checkbox"]:checked,
-[type="checkbox"]:not(:checked){
+#reg-log:checked,
+#reg-log:not(:checked){
   position: absolute;
   left: -9999px;
 }
