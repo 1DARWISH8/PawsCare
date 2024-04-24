@@ -248,7 +248,6 @@ const bookAppointment = async(req,res)=>
             new:true
         }
         )
-    // console.log(slotbooked)
     if (slotbooked)
     {
         let bookappointment = await Appointment.create(details)
@@ -629,9 +628,7 @@ const order = async(req,res)=>
     try
     {
         let orderdetails = req.body
-        // console.log(orderdetails)
         const ordered = await Order.create(orderdetails)
-        // console.log(ordered)
         if (ordered)
         {
             let user = await User.findOneAndUpdate({username:req.body.username},
@@ -696,7 +693,8 @@ const cancelorder = async(req,res)=>
             {
                 $set:
                 {
-                    orderstatus:"CANCELLED"
+                    orderstatus:"CANCELLED",
+                    cancelled_by:'user'
                 }
             },
             {
