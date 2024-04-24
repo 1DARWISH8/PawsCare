@@ -652,7 +652,6 @@ const updatestock = async(req,res)=>
             {
                 returnDocument:false
             })
-        // console.log(stockupdated)
         if (stockupdated)
         {
             res.status(200).send({message:"Product Stock Updated"})
@@ -699,17 +698,17 @@ const editorderstatus = async(req,res)=>
             {
                 $set:
                 {
-                    "orderstatus":orderdata.orderstatus
+                    "order_status":orderdata.order_status
                 }
             },
             {
                 new:true
             })
-        if (edited.orderstatus==='ACCEPTED')
+        if (edited.order_status==='ACCEPTED')
         {
             res.status(200).send({message:'ORDER HAS BEEN ACCEPTED',payload:edited})
         }
-        else if (edited.orderstatus==='CANCELLED')
+        else if (edited.order_status==='CANCELLED')
         {
             let cancelled = await Order.findOneAndUpdate({_id:orderdata._id},
                 {
@@ -724,17 +723,34 @@ const editorderstatus = async(req,res)=>
             )
             res.status(200).send({message:"ORDER HAS BEEN CANCELLED",payload:edited})
         }
-        else if (edited.orderstatus==='IN TRANSIT')
+        else if (edited.order_status==='IN TRANSIT')
         {
             res.status(200).send({message:"ORDER IS IN TRANSIT",payload:edited})
         }
-        else if (edited.orderstatus==='OUT FOR DELIVERY')
+        else if (edited.order_status==='OUT FOR DELIVERY')
         {
             res.status(200).send({message:"ORDER IS OUT FOR DELIVERY",payload:edited})
         }
-        else if (edited.orderstatus==='DELIVERED')
+        else if (edited.order_status==='DELIVERED')
         {
-            res.status(200).send({message:"ORDER HAS BEEN DELIVERED",payload:edited})
+            let payment_edited = await Order.findOneAndUpdate({_id:orderdata._id},
+                {
+                    $set:
+                    {
+                        "payment_status":"COMPLETE"
+                    }
+                },
+                {
+                    new:true
+                })
+                if (payment_edited)
+                {
+                    res.status(200).send({message:"ORDER HAS BEEN DELIVERED",payload:edited})
+                }
+                else
+                {
+                    res.status(200).send({message:'FAILED TO UPDATE ORDER STATUS'})
+                }
         }
         else
         {
