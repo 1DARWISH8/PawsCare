@@ -6,6 +6,8 @@ import {useDispatch,useSelector} from 'react-redux'
 import { productDetailsPromiseStatus } from '../redux/slices/productDetailsSlice'
 import Accordion from 'react-bootstrap/Accordion';
 import {Alert} from 'react-bootstrap';
+import './Orders.css';
+import ProgressBar from 'react-bootstrap/ProgressBar'
 
 function Orders() {
 
@@ -94,90 +96,179 @@ async function cancelorder(order)
 }
 
 return (
-    <div>
+    <section>
         {error.length!==0&& <p className='fw-bold text-center text-danger border-0'>{error}</p>}
         {alert.length!==0 && <Alert variant={'dark'} onClose={()=>setAlert('')}>{alert}</Alert> }    
-            <h2 className='text-center'>ORDERS</h2>
+            <h2 className='text-center fs-1' id='health'>ORDERS</h2>
             {orders.length!==0&&
             <div>
                     {orders.map((order,index)=>
                         (
-                        <Table striped bordered hover variant="dark" className='m-3' size='sm'>
-                        <tbody>
-                            <tr key={index}>
-                                <td>
-                                    <h5 className='m-2'>
-                                        ORDER STATUS:
-                                            {order.orderstatus==='CANCELLED'&&<span className='text-danger m-2'>{order.orderstatus}</span>}
-                                            {order.orderstatus==='DELIVERED'&&<span className='text-success m-2'>{order.orderstatus}</span>}
-                                            {order.orderstatus==='ACCEPTED'&&<span className='text-primary m-2'>{order.orderstatus}</span>}
-                                            {(order.orderstatus!=='DELIVERED'&&order.orderstatus!=='CANCELLED'&&order.orderstatus!=='ACCEPTED')&&<span className='m-2'>{order.orderstatus}</span>}
-                                    </h5>
-                                    <p><span className='fw-bold m-2'>ORDERED ON:</span>{order.orderdate}</p>
-                                </td>
-                                <td>
-                                <Accordion >
-                                        <Accordion.Item eventKey="0">
-                                            <Accordion.Header>PAYMENT DETAILS:</Accordion.Header>
-                                                <Accordion.Body>
-                                                <p><span className='fw-bold m-2'>PAYMENT METHOD:</span>{order.paymentmethod}</p>
-                                                <p><span className='fw-bold m-2'>PAYMENT STATUS:</span>{order.paymentstatus}</p>
-                                            </Accordion.Body>
-                                        </Accordion.Item>
-                                    </Accordion>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colSpan={2}>
-                            <Accordion>
-                                        <Accordion.Item eventKey="0">
-                                            <Accordion.Header className='bg-dark'>ORDERED PRODUCTS:</Accordion.Header>
-                                                <Accordion.Body>
-                            {
-                                order.orderitems?.map((orderitem,indice)=>
-                                <>
-                                    <Table hover striped>
-                                        <tbody>
-                                        <tr key={indice}>
-                                    <td>
-                                        <span onClick={()=>openproductpage(orderitem)}>
-                                            <img src={order.orderitems[indice].image} style={{width:"30%",height:"30%"}}/>
-                                            <p>{order.orderitems[indice].productname}</p>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <p><span className='fw-bold'>QUANTITY:</span>{order.orderitems[indice].quantity}</p>
-                                        <p><span className='fw-bold'>PRICE:</span>Rs.{order.orderitems[indice].price}</p>
-                                    </td>
-                                </tr>
-                                        </tbody>
-                                    </Table>
-                                </>
-                                )
-                            }
-                            </Accordion.Body>
-                                        </Accordion.Item>
-                                    </Accordion>
+                            <div key={index} class="p-5">
+                                <div className='cards'>
+        <div class="card-body">
+            <h6>
+                <strong>Ordered On:</strong>{order.ordered_on_date}
+            </h6>
+                <span className='text-end text-dark'>
+                    <strong>Total Cost:    </strong>
+                    ₹{order.total_price}
+                </span>
+            <article class="cards">
+                <div class="card-bodys row">
+                    <div class="col fw-bold"> <strong>Status:</strong> <br/>
+                    {order.order_status==='CANCELLED'&&<span className='text-danger m-2'>{order.order_status} 
+                    {
+                        order.cancelled_by === "user" ?
+                        <span className='text-primary mx-1'>
+                            by {order.username}
+                        </span>
+                        :
+                        <span className='text-primary mx-1'>
+                            by Admin
+                        </span>
+                    }
+                    </span>}
+                    {order.order_status==='DELIVERED'&&<span className='text-success m-2 fw-bold'>{order.order_status}</span>}
+                    {order.order_status==='ACCEPTED'&&<span className='text-primary m-2 fw-bold'>{order.order_status}</span>}
+                    {(order.order_status!=='DELIVERED'&&order.order_status!=='CANCELLED'&&order.order_status!=='ACCEPTED')&&<span className='m-2 fw-bold'>{order.order_status}</span>}
+                    </div>
+                    <div class="col"> <strong>Payment Status:</strong> <br/>
+                        {order.payment_status==='COMPLETE'?
+                        <span className='text-success m-2 fw-bold'>{order.payment_status}</span>
+                        :
+                        <span className='fw-bold'>
+                            {order.payment_status}
+                        </span>}
+                    </div>
+                    <div class="col"> <strong>Payment Mode:</strong> <br/>{order.payment_method}</div>
+                </div>
+            </article>
 
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>ORDER TOTAL PRICE:</td>
-                                <td>Rs.{order.totalprice}</td>
-                            </tr>
-                            {order.orderstatus!=='CANCELLED'?
-                            <tr>
-                                <td colSpan={2}><button className='btn btn-danger' onClick={()=>cancelorder(order)}>CANCEL ORDER</button></td>
-                            </tr>
-                            :
-                            <></>
-                            }
-                        </tbody>
-                    </Table>
+            {
+                order.order_status==="PENDING"&&
+                <ProgressBar  className='mt-5' animated now={0} />
+            }
+            {
+                order.order_status==="ACCEPTED"&&
+                <ProgressBar  className='mt-5' variant='danger' animated now={13} />
+            }
+            {
+                order.order_status==="IN TRANSIT"&&
+                <ProgressBar  className='mt-5' variant='danger' animated now={38} />
+            }
+            {
+                order.order_status==="OUT FOR DELIVERY"&&
+                <ProgressBar  className='mt-5' variant='danger' animated now={63} />
+            }
+            {
+                order.order_status==="DELIVERED"&&
+                <ProgressBar  className='mt-5' variant='danger' animated now={100} />
+            }
+            {
+                order.order_status==="CANCELLED"&&
+                <ProgressBar  className='mt-5' variant='danger' animated now={100} />
+            }
+
+            <div class="track">
+                {
+                    order.order_status==="PENDING"&&
+                    <>
+                    <div class="step"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Order Accepted</span> </div>
+                    <div class="step"> <span class="icon"><i class="fas fa-map-marker-alt"></i> </span> <span class="text"> In Transit</span> </div>
+                    <div class="step"> <span class="icon"> <i class="fas fa-shipping-fast"></i> </span> <span class="text"> Out for delivery </span> </div>
+                    <div class="step"> <span class="icon"> <i class="fas fa-thumbs-up"></i></span> <span class="text">Delivered</span> </div>
+                    </>
+                }
+                {
+                    order.order_status==="ACCEPTED"&&
+                    <>
+                    <div class="step"> <span class="icon-active"> <i class="fa fa-check"></i> </span> <span class="text">Order Accepted</span> </div>
+                    <div class="step"> <span class="icon"><i class="fas fa-map-marker-alt"></i> </span> <span class="text"> In Transit</span> </div>
+                    <div class="step"> <span class="icon"> <i class="fas fa-shipping-fast"></i> </span> <span class="text"> Out for delivery </span> </div>
+                    <div class="step"> <span class="icon"> <i class="fas fa-thumbs-up"></i></span> <span class="text">Delivered</span> </div>
+                    </>
+                }
+                {
+                    order.order_status==="IN TRANSIT"&&
+                    <>
+                    <div class="step"> <span class="icon-active"> <i class="fa fa-check"></i> </span> <span class="text">Order Accepted</span> </div>
+                    <div class="step"> <span class="icon-active"><i class="fas fa-map-marker-alt"></i> </span> <span class="text"> In Transit</span> </div>
+                    <div class="step"> <span class="icon"> <i class="fas fa-shipping-fast"></i> </span> <span class="text"> Out for delivery </span> </div>
+                    <div class="step"> <span class="icon"> <i class="fas fa-thumbs-up"></i></span> <span class="text">Delivered</span> </div>
+                    </>
+                }
+                {
+                    order.order_status==="OUT FOR DELIVERY"&&
+                    <>
+                    <div class="step"> <span class="icon-active"> <i class="fa fa-check"></i> </span> <span class="text">Order Accepted</span> </div>
+                    <div class="step"> <span class="icon-active"><i class="fas fa-map-marker-alt"></i> </span> <span class="text"> In Transit</span> </div>
+                    <div class="step"> <span class="icon-active"> <i class="fas fa-shipping-fast"></i> </span> <span class="text"> Out for delivery </span> </div>
+                    <div class="step"> <span class="icon"> <i class="fas fa-thumbs-up"></i></span> <span class="text">Delivered</span> </div>
+                    </>
+                }
+                {
+                    order.order_status==="DELIVERED"&&
+                    <>
+                    <div class="step"> <span class="icon-active"> <i class="fa fa-check"></i> </span> <span class="text">Order Accepted</span> </div>
+                    <div class="step"> <span class="icon-active"><i class="fas fa-map-marker-alt"></i> </span> <span class="text"> In Transit</span> </div>
+                    <div class="step"> <span class="icon-active"> <i class="fas fa-shipping-fast"></i> </span> <span class="text"> Out for delivery </span> </div>
+                    <div class="step"> <span class="icon-active"> <i class="fas fa-thumbs-up"></i></span> <span class="text">Delivered</span> </div>
+                    </>
+                }
+                {
+                    order.order_status==="CANCELLED"&&
+                    <>
+                    <div class="step"> <span class="icon"> <i class="fas fa-times"></i>
+                    </span> <span class="text">Order Cancelled</span> </div>
+                    </>
+                }
+            </div>
+            <hr/>
+            <Accordion>
+                <Accordion.Item eventKey="0">
+                    <Accordion.Header>ORDER ITEMS:</Accordion.Header>
+                        <Accordion.Body>
+                        {
+                            order.order_items?.map((orderitem,indice)=>
+                            <>
+                                <Table hover>
+                                    <tbody>
+                                        <tr key={indice}>
+                                            <td>
+                                                <span onClick={()=>openproductpage(orderitem)}>
+                                                    <img src={orderitem.image[0].ImageURL} style={{width:"30%",height:"30%"}}/>
+                                                    <p>{orderitem.productname}</p>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <p><span className='fw-bold'>QUANTITY:</span>{orderitem.quantity}</p>
+                                                <p><span className='fw-bold'>PRICE:</span>Rs.{orderitem.price}</p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </Table>
+                            </>
+                            )
+                        }
+                    </Accordion.Body>
+                </Accordion.Item>
+            </Accordion>
+                {
+                    order.order_status!=='CANCELLED'&&
+                    <div className='text-end'>
+                        <hr/>
+                        <button className='btn btn-danger' onClick={()=>cancelorder(order)}>CANCEL ORDER</button>
+                    </div>
+                }
+            </div>
+        </div>
+
+</div>
                     ))}
             </div>
             }
-    </div>
+    </section>
   )
 }
 
