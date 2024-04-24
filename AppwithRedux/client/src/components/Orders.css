@@ -1,0 +1,76 @@
+/* Fonts */
+@import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+
+
+/* Container */
+.container {
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+/* Cards */
+.order-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 0.10rem;
+}
+
+
+/* Tracking */
+.track {
+    position: relative;
+    height: 0px;
+    display: flex;
+    margin-bottom: 60px;
+}
+
+.track .step {
+    flex-grow: 1;
+    width: 25%;
+    margin-top: -20px;
+    text-align: center;
+    position: relative;
+}
+
+
+.step.icon {
+    display: inline-block;
+    height: 0px;
+    position: relative;
+    width: 80px;
+    line-height: 60px;
+    border-radius: 100%;
+}
+
+.icon
+{
+    background-color: rgb(219, 208, 208);
+    color: #000000;
+    border-radius: 100%;
+    padding: 11px;
+}
+.icon-active
+{
+    background-color: #11c735;
+    color: #ffffff;
+    border-radius: 100%;
+    padding: 11px;
+    border: #000000;
+}
+
+
+.track .text {
+    display: block;
+    margin-top: 10px;
+}
+
+.track .step.active .text {
+    font-weight: 400;
+    color: #000;
+}
