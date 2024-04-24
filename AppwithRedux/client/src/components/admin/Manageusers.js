@@ -285,7 +285,7 @@ async function openprofile(user)
                     </td>
                     :
                     <td  >
-                        <button className='btn btn-success' disabled onClick={()=>activateuser(user)}>ACTIVATE</button>
+                        <button className='btn btn-success' onClick={()=>activateuser(user)}>ACTIVATE</button>
                     </td>
                 }
                 
