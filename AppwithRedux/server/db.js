@@ -476,7 +476,7 @@ const orderSchema = new mongoose.Schema(
         payment_status:
         {
             type:String,
-            enum:['PENDING','COMPLETED'],
+            enum:['PENDING','COMPLETE'],
             default:"PENDING"
         },
         payment_method:
@@ -504,9 +504,14 @@ const orderSchema = new mongoose.Schema(
                     enum:['In Stock','Out of Stock']
                 },
                 image:
-                {
-                    type:String,
-                }
+                [
+                    {
+                        ImageURL:
+                        {
+                            type:String
+                        }
+                    }
+                ],
             }
         ],
         address:
