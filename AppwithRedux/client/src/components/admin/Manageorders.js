@@ -6,6 +6,8 @@ import {useDispatch,useSelector} from 'react-redux'
 import { productDetailsPromiseStatus } from '../../redux/slices/productDetailsSlice';
 import Accordion from 'react-bootstrap/Accordion';
 import {Alert} from 'react-bootstrap';
+import '../Orders.css'
+import ProgressBar from 'react-bootstrap/ProgressBar'
 
 function Manageorders() {
 
@@ -53,11 +55,11 @@ const handleInputChange = (event) => {
   const filterOrders = () => {
     let filteredOrders = orders;
     if (searchBy === 'Orderstatus') {
-      filteredOrders = filteredOrders.filter(order => order.orderstatus.toLowerCase() === searchInput.toLowerCase());
+      filteredOrders = filteredOrders.filter(order => order.order_status.toLowerCase() === searchInput.toLowerCase());
     } else if (searchBy === 'Username') {
       filteredOrders = filteredOrders.filter(order => order.username.toLowerCase() === searchInput.toLowerCase());
     } else if (searchBy === 'Date') {
-filteredOrders = filteredOrders.filter(order => order.orderdate.includes(searchInput)); // Assuming date format is included in order.date
+filteredOrders = filteredOrders.filter(order => order.order_date.includes(searchInput)); // Assuming date format is included in order.date
     }
     return filteredOrders;
   };
@@ -91,8 +93,8 @@ const renderFormInputs = () => {
 
   // Function to sort orders by date
   const sortOrders = (filteredOrders) => {
-    return sortOrder === 'oldest' ? filteredOrders.sort((a, b) => new Date(a.orderdate) - new Date(b.orderdate)) :
-    filteredOrders.sort((a, b) => new Date(b.orderdate) - new Date(a.orderdate));
+    return sortOrder === 'oldest' ? filteredOrders.sort((a, b) => new Date(a.order_date) - new Date(b.order_date)) :
+    filteredOrders.sort((a, b) => new Date(b.order_date) - new Date(a.order_date));
       };
 
   // Filtered and sorted orders based on search criteria
@@ -139,15 +141,13 @@ async function editorderstatus(order,status)
 {
     try
     {
-        order.orderstatus=status
-        // console.log(order)
+        order.order_status=status
         let orderstatus = await axios.patch('http://localhost:5000/admin-api/editorderstatus',order)
-        // console.log(orderstatus)
         if ((orderstatus.data.message === 'ORDER HAS BEEN CANCELLED' || orderstatus.data.message === 'ORDER HAS BEEN ACCEPTED'
         || orderstatus.data.message === 'ORDER IS IN TRANSIT' || orderstatus.data.message === 'ORDER IS OUT FOR DELIVERY' || orderstatus.data.message === 'ORDER HAS BEEN DELIVERED'))
         {
             setAlert(orderstatus.data.message)
-            // getorders()
+            getorders()
         }
         else
         {
@@ -161,9 +161,10 @@ async function editorderstatus(order,status)
 }
 
 return (
-    <div>
-        {error.length!==0&& <p className='fw-bold text-center text-danger border-0'>{error}</p>}
-        {alert.length!==0 && <Alert variant={'dark'} onClose={()=>setAlert('')}>{alert}</Alert> }   
+    <section>
+    {error.length!==0&& <p className='fw-bold text-center text-danger border-0'>{error}</p>}
+    {alert.length!==0 && <Alert variant={'dark'} onClose={()=>setAlert('')}>{alert}</Alert> }    
+        <h2 className='text-center fs-1' id='health'>ORDERS</h2>
         <select value={searchBy} onChange={handleSelectChange} className='m-3'>
             <option value="">Select search criteria</option>
             <option value="Orderstatus">Order Status</option>
@@ -174,113 +175,194 @@ return (
             </span>
         </select>
         {renderFormInputs()}
-        {filteredOrders.length!==0?
-            <div>
-                <select value={sortOrder} onChange={handleSortChange} className='m-3'>
-                    <option value="oldest">Oldest to Newest</option>
-                    <option value="newest">Newest to Oldest</option>
-                </select>
-                    {filteredOrders.map((order,index)=>
-                        (
-                        <Table striped bordered hover variant="dark" className='col-xl-10 col-md-10 p-5 ' size='sm'>
-                        <tbody>
-                            <tr key={index}>
-                                <td>
-                                    <h4 className='m-1'>ORDER PLACED BY:<span className='fw-bold'>{order.username}</span></h4>
-                                    <h5 className='m-2'>
-                                        ORDER STATUS:
-                                            {order.orderstatus==='CANCELLED'&&<span className='text-danger m-2'>{order.orderstatus}</span>}
-                                            {order.orderstatus==='DELIVERED'&&<span className='text-success m-2'>{order.orderstatus}</span>}
-                                            {order.orderstatus==='ACCEPTED'&&<span className='text-primary m-2'>{order.orderstatus}</span>}
-                                            {(order.orderstatus!=='DELIVERED'&&order.orderstatus!=='CANCELLED'&&order.orderstatus!=='ACCEPTED')&&<span className='m-2'>{order.orderstatus}</span>}
-                                    </h5>
-                                    <p><span className='fw-bold m-2'>ORDERED ON:</span>{order.orderdate}</p>
-                                </td>
-                                <td>
-                                <Accordion >
-                                        <Accordion.Item eventKey="0">
-                                            <Accordion.Header>PAYMENT DETAILS:</Accordion.Header>
-                                                <Accordion.Body>
-                                                <p><span className='fw-bold m-2'>PAYMENT METHOD:</span>{order.paymentmethod}</p>
-                                                <p><span className='fw-bold m-2'>PAYMENT STATUS:</span>{order.paymentstatus}</p>
-                                            </Accordion.Body>
-                                        </Accordion.Item>
-                                    </Accordion>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colSpan={2}>
-                            <Accordion>
-                                        <Accordion.Item eventKey="0">
-                                            <Accordion.Header className='bg-dark'>ORDERED PRODUCTS:</Accordion.Header>
-                                                <Accordion.Body>
-                            {
-                                order.orderitems?.map((orderitem,indice)=>
-                                <>
-                                        <tr key={indice}>
-                                    <td>
-                                        <span onClick={()=>openproductpage(orderitem)}>
-                                            <img src={order.orderitems[indice].image} style={{width:"30%",height:"30%"}}/>
-                                            <p>{order.orderitems[indice].productname}</p>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <p><span className='fw-bold'>QUANTITY:</span>{order.orderitems[indice].quantity}</p>
-                                        <p><span className='fw-bold'>PRICE:</span>Rs.{order.orderitems[indice].price}</p>
-                                    </td>
-                                </tr>
-                                </>
-                                )
-                            }
-                            </Accordion.Body>
-                                        </Accordion.Item>
-                                    </Accordion>
-
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>ORDER TOTAL PRICE:</td>
-                                <td>Rs.{order.totalprice}</td>
-                            </tr>
-                            <tr className='table table-dark text-end'>
-                                <td>
-                                    {
-                                        (order.orderstatus!=='CANCELLED' && order.orderstatus!=='DELIVERED')&&
-                                        <h5 className='m-3'>CHANGE ORDER STATUS:</h5>
-                                    }
-                                </td>
-                                <td >
-                                    
-                                    {(order.orderstatus!=='CANCELLED' && order.orderstatus!=='DELIVERED')&&
-                                        <button className='btn btn-danger m-2' onClick={()=>editorderstatus(order,'CANCELLED')}>CANCEL ORDER</button>
-                                    }
-                                    {
-                                        order.orderstatus==='PENDING'&&
-                                        <button className='btn btn-success m-2' onClick={()=>editorderstatus(order,'ACCEPTED')}>ACCEPT ORDER</button>
-                                    }
-                                    {
-                                        order.orderstatus==='ACCEPTED'&&
-                                        <button className='btn btn-success m-2' onClick={()=>editorderstatus(order,'IN TRANSIT')}>ORDER IS IN TRANSIT</button>
-                                    }
-                                    {
-                                        order.orderstatus==='IN TRANSIT'&&
-                                        <button className='btn btn-success m-2' onClick={()=>editorderstatus(order,'OUT FOR DELIVERY')}>ORDER IS OUT FOR DELIVERY</button>
-                                    }
-                                    {
-                                        order.orderstatus==='OUT FOR DELIVERY'&&
-                                        <button className='btn btn-success m-2' onClick={()=>editorderstatus(order,'DELIVERED')}>DELIVERED</button>
-                                    }
-                                    
-                                </td>
-                            </tr>
-                        </tbody>
-                    </Table>
-                    ))}
+        {filteredOrders.length!==0&&
+        <div>
+            <select value={sortOrder} onChange={handleSortChange} className='m-3'>
+                <option value="oldest">Oldest to Newest</option>
+                <option value="newest">Newest to Oldest</option>
+            </select>
+                {filteredOrders.map((order,index)=>
+                    (
+                        <div key={index} class="p-5">
+                            <div className='cards'>
+    <div class="card-body">
+        <h6>
+            <strong>Ordered On:</strong>{order.ordered_on_date}
+        </h6>
+            <span className='text-end text-dark'>
+                <strong>Total Cost:    </strong>
+                ₹{order.total_price}
+            </span>
+        <article class="cards">
+            <div class="card-bodys row">
+                <div class="col"> <strong>Status:</strong> <br/>
+                    {order.order_status==='CANCELLED'&&<span className='text-danger m-2'>{order.order_status} 
+                    {
+                        order.cancelled_by === "user" ?
+                        <span className='text-primary mx-1'>
+                            by {order.username}
+                        </span>
+                        :
+                        <span className='text-primary mx-1'>
+                            by Admin
+                        </span>
+                    }
+                    </span>}
+                    {order.order_status==='DELIVERED'&&<span className='text-success m-2'>{order.order_status}</span>}
+                    {order.order_status==='ACCEPTED'&&<span className='text-primary m-2'>{order.order_status}</span>}
+                    {(order.order_status!=='DELIVERED'&&order.order_status!=='CANCELLED'&&order.order_status!=='ACCEPTED')&&<span className='m-2'>{order.order_status}</span>}
+                </div>
+                <div class="col"> <strong>Payment Status:</strong> <br/>{order.payment_status}</div>
+                <div class="col"> <strong>Payment Mode:</strong> <br/>{order.payment_method}</div>
             </div>
-            :
-            <><h5>NO ORDERS TO SHOW</h5></>
+        </article>
+
+        {
+            order.order_status==="PENDING"&&
+            <ProgressBar  className='mt-5' animated now={0} />
+        }
+        {
+            order.order_status==="ACCEPTED"&&
+            <ProgressBar  className='mt-5' variant='danger' animated now={13} />
+        }
+        {
+            order.order_status==="IN TRANSIT"&&
+            <ProgressBar  className='mt-5' variant='danger' animated now={38} />
+        }
+        {
+            order.order_status==="OUT FOR DELIVERY"&&
+            <ProgressBar  className='mt-5' variant='danger' animated now={63} />
+        }
+        {
+            order.order_status==="DELIVERED"&&
+            <ProgressBar  className='mt-5' variant='danger' animated now={100} />
+        }
+        {
+            order.order_status==="CANCELLED"&&
+            <ProgressBar  className='mt-5' variant='danger' animated now={100} />
+        }
+
+        <div class="track">
+            {
+                order.order_status==="PENDING"&&
+                <>
+                <div class="step"> <span class="icon"> <i class="fa fa-check"></i> </span> <span class="text">Order Accepted</span> </div>
+                <div class="step"> <span class="icon"><i class="fas fa-map-marker-alt"></i> </span> <span class="text"> In Transit</span> </div>
+                <div class="step"> <span class="icon"> <i class="fas fa-shipping-fast"></i> </span> <span class="text"> Out for delivery </span> </div>
+                <div class="step"> <span class="icon"> <i class="fas fa-thumbs-up"></i></span> <span class="text">Delivered</span> </div>
+                </>
             }
+            {
+                order.order_status==="ACCEPTED"&&
+                <>
+                <div class="step"> <span class="icon-active"> <i class="fa fa-check"></i> </span> <span class="text">Order Accepted</span> </div>
+                <div class="step"> <span class="icon"><i class="fas fa-map-marker-alt"></i> </span> <span class="text"> In Transit</span> </div>
+                <div class="step"> <span class="icon"> <i class="fas fa-shipping-fast"></i> </span> <span class="text"> Out for delivery </span> </div>
+                <div class="step"> <span class="icon"> <i class="fas fa-thumbs-up"></i></span> <span class="text">Delivered</span> </div>
+                </>
+            }
+            {
+                order.order_status==="IN TRANSIT"&&
+                <>
+                <div class="step"> <span class="icon-active"> <i class="fa fa-check"></i> </span> <span class="text">Order Accepted</span> </div>
+                <div class="step"> <span class="icon-active"><i class="fas fa-map-marker-alt"></i> </span> <span class="text"> In Transit</span> </div>
+                <div class="step"> <span class="icon"> <i class="fas fa-shipping-fast"></i> </span> <span class="text"> Out for delivery </span> </div>
+                <div class="step"> <span class="icon"> <i class="fas fa-thumbs-up"></i></span> <span class="text">Delivered</span> </div>
+                </>
+            }
+            {
+                order.order_status==="OUT FOR DELIVERY"&&
+                <>
+                <div class="step"> <span class="icon-active"> <i class="fa fa-check"></i> </span> <span class="text">Order Accepted</span> </div>
+                <div class="step"> <span class="icon-active"><i class="fas fa-map-marker-alt"></i> </span> <span class="text"> In Transit</span> </div>
+                <div class="step"> <span class="icon-active"> <i class="fas fa-shipping-fast"></i> </span> <span class="text"> Out for delivery </span> </div>
+                <div class="step"> <span class="icon"> <i class="fas fa-thumbs-up"></i></span> <span class="text">Delivered</span> </div>
+                </>
+            }
+            {
+                order.order_status==="DELIVERED"&&
+                <>
+                <div class="step"> <span class="icon-active"> <i class="fa fa-check"></i> </span> <span class="text">Order Accepted</span> </div>
+                <div class="step"> <span class="icon-active"><i class="fas fa-map-marker-alt"></i> </span> <span class="text"> In Transit</span> </div>
+                <div class="step"> <span class="icon-active"> <i class="fas fa-shipping-fast"></i> </span> <span class="text"> Out for delivery </span> </div>
+                <div class="step"> <span class="icon-active"> <i class="fas fa-thumbs-up"></i></span> <span class="text">Delivered</span> </div>
+                </>
+            }
+            {
+                order.order_status==="CANCELLED"&&
+                <>
+                <div class="step"> <span class="icon"> <i class="fas fa-times"></i>
+                </span> <span class="text">Order Cancelled</span> </div>
+                </>
+            }
+        </div>
+        <hr/>
+        <Accordion>
+            <Accordion.Item eventKey="0">
+                <Accordion.Header>ORDER ITEMS:</Accordion.Header>
+                    <Accordion.Body>
+                    {
+                        order.order_items?.map((orderitem,indice)=>
+                        <>
+                            <Table hover>
+                                <tbody>
+                                    <tr key={indice}>
+                                        <td>
+                                            <span onClick={()=>openproductpage(orderitem)}>
+                                                <img src={orderitem.image[0].ImageURL} style={{width:"30%",height:"30%"}}/>
+                                                <p>{orderitem.productname}</p>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <p><span className='fw-bold'>QUANTITY:</span>{orderitem.quantity}</p>
+                                            <p><span className='fw-bold'>PRICE:</span>Rs.{orderitem.price}</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </Table>
+                        </>
+                        )
+                    }
+                </Accordion.Body>
+            </Accordion.Item>
+        </Accordion>
+            {/* {
+                order.orderstatus!=='CANCELLED'&&
+                <div className='text-end'>
+                    <hr/>
+                    <button className='btn btn-danger' >CANCEL ORDER</button>
+                </div>
+            } */}
+
+                <div>
+                        {(order.order_status!=='CANCELLED' && order.order_status!=='DELIVERED')&&
+                            <button className='btn btn-danger m-2' onClick={()=>editorderstatus(order,'CANCELLED')}>CANCEL ORDER</button>
+                        }
+                        {
+                            order.order_status==='PENDING'&&
+                            <button className='btn btn-success m-2' onClick={()=>editorderstatus(order,'ACCEPTED')}>ACCEPT ORDER</button>
+                        }
+                        {
+                            order.order_status==='ACCEPTED'&&
+                            <button className='btn btn-success m-2' onClick={()=>editorderstatus(order,'IN TRANSIT')}>ORDER IS IN TRANSIT</button>
+                        }
+                        {
+                            order.order_status==='IN TRANSIT'&&
+                            <button className='btn btn-success m-2' onClick={()=>editorderstatus(order,'OUT FOR DELIVERY')}>ORDER IS OUT FOR DELIVERY</button>
+                        }
+                        {
+                            order.order_status==='OUT FOR DELIVERY'&&
+                            <button className='btn btn-success m-2' onClick={()=>editorderstatus(order,'DELIVERED')}>DELIVERED</button>
+                        }
+                </div>
+        </div>
     </div>
+
+</div>
+                ))}
+        </div>
+        }
+</section>
 )
 }
 
