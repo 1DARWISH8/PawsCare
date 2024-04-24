@@ -121,6 +121,12 @@ async function openproductpage(item)
         }
     }
 
+    // Function to get the name of the month from its index
+    function getMonthName(monthIndex) {
+        const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        return months[monthIndex];
+    }
+
     async function checkout(user,cart,sum)
     {
         try
@@ -128,16 +134,20 @@ async function openproductpage(item)
             let username = user.username
             let phonenumber = user.phonenumber
             let address = user.address
-            let totalprice = sum
-            let orderitems = cart
-            let order = {username,phonenumber,address,orderitems,totalprice}
+            let total_price = sum
+            let order_items = cart
+                // Get today's date
+                let today = new Date();
+                let ordered_on_date = `${today.getDate()} ${getMonthName(today.getMonth())} ${today.getFullYear()}`;
+            let order = {username,phonenumber,address,order_items,total_price,ordered_on_date}
             // console.log(order)
             let checkedout = await axios.post('http://localhost:5000/user-api/order',order)
-            // console.log(checkedout)
+            console.log(checkedout)
             if(checkedout)
             {
                 setAlert(checkedout.data.message)
                 getcart()
+                await dispatch(userCartPromiseStatus(username))
             }
         }
         catch(error)
@@ -172,7 +182,7 @@ return (
         {alert.length!==0 && <Alert variant={'dark'} onClose={()=>setAlert('')}>{alert}</Alert> }
 
         {
-            cart.length>0?
+            cart.length!==0?
             <section className=" m-3">
                     <div className="row w-100">
                         <div className="col-lg-12 col-md-12 col-12">
@@ -233,7 +243,7 @@ return (
                             </NavLink>
                         </div>
                         <div className="col-sm-6 order text-end">
-                            <a href="catalog.html" className="btn btn-primary mb-4 btn-lg pl-5 pr-5">Checkout</a>
+                            <button className="btn btn-primary mb-4 btn-lg pl-5 pr-5" onClick={()=>checkout(currentUser,cart,total)}>Checkout</button>
                         </div>
                     </div>
             </section>
@@ -248,67 +258,6 @@ return (
             </>
 }
 
-
-
-
-    {/* <div >
-        <div>
-        {cart.length ? 
-        <table className='table table-responsive table-hover'>
-            {error.length!==0&& <p className='fw-bold text-center text-danger border-0'>{error}</p>}
-                <h2 >CART</h2>
-        <tbody>
-        {cart.map((item,index)=>
-        (
-                <tr key={index}>
-                <td onClick={()=>openproductpage(item)}>
-                    {
-                        item.stock === 'In Stock' ?
-                        <img src={item.image[0].ImageURL} style={{width:"50%",height:"50%"}} onClick={()=>openproductpage(item)}/>
-                        :
-                        <div className="product-card">
-                            <img src={item.image[0].ImageURLe} style={{width:"50%",height:"50%"}} onClick={()=>openproductpage(item)}/>
-                            <div className={`text-overlay 'out-of-stock'}`}>
-                            <p>{'Out of Stock'}</p>
-                            </div>
-                        </div>
-                    }
-
-                    <p onClick={()=>openproductpage(item)}>{item.productname}</p>
-                </td>
-                <td className='text-center'>
-                    <div>
-                        <button className='btn btn-dark m-0' onClick={()=>decrementQuantity(item)}>-</button>
-                        <span className='m-2'>{item.quantity}</span>
-                        <button className='btn btn-dark m-0' onClick={()=>incrementQuantity(item)}>+</button>
-                    </div>
-                    Rs.{item.price}
-                    <div className='text-white'>{sum+=(parseInt(item.price)*item.quantity)}</div>
-                </td>
-                <td className='text-end'>
-                <button className='btn text-danger' onClick={()=>removeitem(item)}><span className="material-symbols-outlined">
-                    delete
-                </span></button>
-                </td>
-            </tr>
-        ))}
-        <tr className='text-end'>
-            <td></td>
-            <td>Total Price:<span className='fw-bold'>Rs.{sum}</span></td>
-            <td>
-            <button className='btn btn-success ' onClick={()=>checkout(currentUser,cart,sum)}>CHECKOUT</button>
-            </td>
-        </tr>
-        </tbody>
-        </table>:
-        <>
-            <h1 className='text-center m-3'>..CART IS EMPTY..</h1>
-            <p className='fw-bold text-center'>ADD ITEMS TO CART</p>
-        </>}
-        
-        </div>
-        
-    </div> */}
 </>
 )
 }
