@@ -8,6 +8,7 @@ import Accordion from 'react-bootstrap/Accordion';
 import {Alert} from 'react-bootstrap';
 import '../Orders.css'
 import ProgressBar from 'react-bootstrap/ProgressBar'
+import { userselectedDetailsPromiseSlice } from '../../redux/slices/userselectedDetailsSlice';
 
 function Manageorders() {
 
@@ -160,6 +161,19 @@ async function editorderstatus(order,status)
     }
 }
 
+async function openprofile(user)
+    {
+        try
+        {
+            await dispatch(userselectedDetailsPromiseSlice(user))
+            navigate('/admin/userprofile')
+        }
+        catch(err)
+        {
+            setError(err.message)
+        }
+    }
+
 return (
     <section>
     {error.length!==0&& <p className='fw-bold text-center text-danger border-0'>{error}</p>}
@@ -189,10 +203,17 @@ return (
         <h6>
             <strong>Ordered On:</strong>{order.ordered_on_date}
         </h6>
-            <span className='text-end text-dark'>
+        <strong>Ordered by:</strong>
+        <span id='health' className='btn' onClick={()=>openprofile(order)}>
+            {order.username}   
+        </span>
+        <span>
+            <div>
                 <strong>Total Cost:    </strong>
                 ₹{order.total_price}
-            </span>
+            </div>
+        </span>
+                
         <article class="cards">
             <div class="card-bodys row">
                 <div class="col"> <strong>Status:</strong> <br/>
