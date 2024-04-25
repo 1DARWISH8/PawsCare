@@ -11,6 +11,8 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import './Dashboard.css'
 import { Table } from 'react-bootstrap'
 import { userselectedDetailsPromiseSlice } from '../../redux/slices/userselectedDetailsSlice'
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 function Dashboard() {
 
@@ -20,10 +22,20 @@ function Dashboard() {
   const [searchResults, setSearchResults] = useState([]);
   let [users,setUsers] = useState('')
   let [appointmentsdata,setAppointmentsdata] = useState('')
+  let [seeappointmentsdata,setSeeappointmentsdata] = useState('')
   let [products,setProducts]=useState([])
   let [orders,setOrders] = useState([])
   let [totalcost,setTotalcost]=useState()
   let [deliveries,setDeliveries]=useState()
+  const today = new Date().toISOString().split('T')[0];
+  const [selectedDate, setSelectedDate] = useState(today);
+  const [selectedService, setService] = useState('HEALTH CHECK UP');
+  const [selectedLocation, setLocation] = useState('BANGALORE');
+
+    // Function to handle date change
+    const handleDateChange = (e) => {
+      setSelectedDate(e.target.value);
+    };
 
   async function getusers()
   {
@@ -44,7 +56,12 @@ function Dashboard() {
 
   async function openprofile(user)
     {
-        try
+      if(user.booked_by!=='')
+      {
+        let username = user.booked_by
+        user = {...user,username}
+      }
+      try
         {
             await dispatch(userselectedDetailsPromiseSlice(user))
             navigate('/admin/userprofile')
@@ -89,7 +106,6 @@ function Dashboard() {
     try
         {
             let orders = await axios.get(`http://localhost:5000/admin-api/getorders`)
-            // console.log(orders.data.payload)
             setOrders(orders.data.payload)
             if (orders)
             {
@@ -100,8 +116,8 @@ function Dashboard() {
                 let successful_deliveries = 0
                 for (let order of orders_data)
                 {
-                  total_cost += order.totalprice
-                  if (order.orderstatus==='DELIVERED')
+                  total_cost += order.total_price
+                  if (order.order_status==='DELIVERED')
                   {
                     successful_deliveries += 1
                   }
@@ -127,6 +143,12 @@ function Dashboard() {
     useEffect(()=>viewproducts,[])
     useEffect(()=>getorders,[])
 
+    useEffect(()=>
+    {      
+      // retrieve slots according to the inputs
+      get_specific_appointments(selectedService,selectedLocation,selectedDate)
+    },[selectedService,selectedLocation,selectedDate])
+
   async function Manage_users()
   {
     navigate('/admin/manageusers')
@@ -146,6 +168,25 @@ function Dashboard() {
   }
 
 
+  async function get_specific_appointments(selectedService,selectedLocation,selectedDate)
+  {
+    try
+    {
+      let appointments = await axios.get(`http://localhost:5000/admin-api/getspecificappointments?date=${selectedDate}&location=${selectedLocation}&service=${selectedService}`)
+      if (appointments.data.message==="APPOINTMENTS")
+      {
+        setSeeappointmentsdata(appointments.data.payload[0].slots)
+      }
+      else
+      {
+        setError(appointments.data.message)
+      }
+    }
+    catch(err)
+    {
+      setError(err.message)
+    }
+  }
 
 return (
     <div className='container-fluid'>
@@ -275,8 +316,8 @@ return (
                 <div className="row align-items-center">
                     <div className="col">
                         <div className="text-start">
-                            <h3>156</h3>
-                            <span>LOCATIONS</span>
+                            <h3>4</h3>
+                            <span>STATES</span>
                         </div>
                     </div>
                     <div className="col-auto">
@@ -314,7 +355,8 @@ return (
                         </div>
                     </div>
                     <div className="col-auto">
-                      <i class="bi bi-currency-rupee fs-1" id='rupee'></i>                   </div>
+                      <i class="bi bi-currency-rupee fs-1" id='rupee'></i>
+                    </div>
                 </div>
             </div>
         </div>
@@ -350,7 +392,94 @@ return (
   </div> */}
 
   <div className="row">
-    <div className="col-xl-12 col-md-12 p-4">
+
+  <div className="col-xl-6 col-md-12 p-4">
+      <div className="cards overflow-hidden">
+        <div className="card-content">
+          <div className="card-body cleartfix">
+            <div className="media align-items-stretch">
+              <div className="align-self-center">
+                <i className="icon-speech warning font-large-2 mr-2"></i>
+              </div>
+              <div className="media-body">
+                <h4 className='fs-3 p-2' id='health'>Appointments</h4>
+                <form>
+                  <label className='fw-bold p-2'>Service:</label>
+                  <select  value={selectedService} onChange={(e) => setService(e.target.value)}>
+                    <option value='HEALTH CHECK UP'>HEALTH CHECK UP</option>
+                    <option value='GROOMING'>GROOMING</option>
+                    <option value='TRAINING'>TRAINING</option>
+                  </select>
+                  <label className='fw-bold p-2'>Location:</label>
+                  <select  value={selectedLocation} onChange={(e) => setLocation(e.target.value)}>
+                    <option value='BANGALORE'>BANGALORE</option>
+                    <option value='CHENNAI'>CHENNAI</option>
+                    <option value='HYDERABAD'>HYDERABAD</option>
+                    <option value='VISAKHAPATNAM'>VISAKHAPATNAM</option>
+                  </select>
+                  <label className='fw-bold p-2'>Date:</label>
+                  <input type='date' value={selectedDate} onChange={handleDateChange}></input>
+                </form>
+              </div>
+              <div className="align-self-center">
+                {
+                  seeappointmentsdata.length!==0?
+                  <>
+                    <Table striped responsive hover>
+                      <thead>
+                          <tr>
+                          <th >Time Slot</th>
+                          <th>Status</th>
+                          <th className='text-center'>BOOKED BY USER</th>
+                          </tr>
+                      </thead>
+                      <tbody >
+                      {seeappointmentsdata.map((appointment,index)=>(
+                          <tr key={index}>
+                              <td >
+                                {appointment.appointment_time}
+                              </td>
+                              <td>
+                                  {
+                                    appointment.appointment_status==="available"?
+                                    <span className='text-uppercase text-primary'>
+                                      {appointment.appointment_status}
+                                    </span>
+                                    :
+                                    <span className='text-uppercase text-success fw-bold
+                                    '>
+                                      {appointment.appointment_status}
+                                    </span>
+                                  }
+                              </td>
+                              <td className='text-center'>
+                                {
+                                appointment.booked_by==='none'
+                                  ?
+                                  <span >--
+                                  </span>
+                                  :
+                                  <span className='btn p-0 fw-bold' onClick={()=>openprofile(appointment)} style={{color:'#b40404'}}>
+                                    {appointment.booked_by}
+                                  </span>}
+                              </td>
+                          </tr>
+                      ))}
+                      </tbody>
+                      </Table>
+                  </>
+                  :
+                  <>
+                  </>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div className="col-xl-6 col-md-12 p-4">
       <div className="cards overflow-hidden">
         <div className="card-content">
           <div className="card-body cleartfix">
@@ -359,13 +488,8 @@ return (
                 <i className="icon-pencil primary font-large-2 mr-2"></i>
               </div>
               <div className="media-body">
-                <h4 className='fw-bold'>Users
-                </h4>
-                {/* <span>Monthly blog posts</span> */}
+                <h4 className='fs-3 p-2' id='health'>Users</h4>
               </div>
-              {/* <div className="align-self-center">
-                <h1>18,000</h1>
-              </div> */}
               <Table striped responsive hover>
         <thead>
             <tr>
@@ -413,71 +537,6 @@ return (
     </div>
   </div>
 
-    {/* <div className="col-xl-6 col-md-12 p-2">
-      <div className="card">
-        <div className="card-content">
-          <div className="card-body cleartfix">
-            <div className="media align-items-stretch">
-              <div className="align-self-center">
-                <i className="icon-speech warning font-large-2 mr-2"></i>
-              </div>
-              <div className="media-body">
-                <h4>Total Comments</h4>
-                <span>Monthly blog comments</span>
-              </div>
-              <div className="align-self-center"> 
-                <h1>84,695</h1>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div className="row">
-    <div className="col-xl-6 col-md-12 p-2">
-      <div className="card">
-        <div className="card-content">
-          <div className="card-body cleartfix">
-            <div className="media align-items-stretch">
-              <div className="align-self-center">
-                <h1 className="mr-2">$76,456.00</h1>
-              </div>
-              <div className="media-body">
-                <h4>Total Sales</h4>
-                <span>Monthly Sales Amount</span>
-              </div>
-              <div className="align-self-center">
-                <i className="icon-heart danger font-large-2"></i>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div className="col-xl-6 col-md-12 p-2">
-      <div className="card">
-        <div className="card-content">
-          <div className="card-body cleartfix">
-            <div className="media align-items-stretch">
-              <div className="align-self-center">
-                <h1 className="mr-2">$36,000.00</h1>
-              </div>
-              <div className="media-body">
-                <h4>Total Cost</h4>
-                <span>Monthly Cost</span>
-              </div>
-              <div className="align-self-end">
-              <FontAwesomeIcon icon={faWallet} className="success" size="lg" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div> */}
 </section>
     </div>
   )
