@@ -241,7 +241,8 @@ const bookAppointment = async(req,res)=>
         {
             $set:
             {
-                'slots.$.appointment_status':'booked'
+                'slots.$.appointment_status':'booked',
+                'slots.$.booked_by':details.username
             }
         },
         {
@@ -280,7 +281,8 @@ const cancelappointment = async(req,res)=>
             {
                 $set:
                 {
-                    'slots.$.appointment_status':'available'
+                    'slots.$.appointment_status':'available',
+                    'slots.$.booked_by':'none'
                 }
             },
             {
@@ -344,7 +346,8 @@ const rescheduleappointment = async (req,res)=>
             {
                 $set:
                 {
-                    'slots.$.appointment_status':'available'
+                    'slots.$.appointment_status':'available',
+                    'slots.$.booked_by':'none'
                 }
             },
             {
@@ -358,7 +361,8 @@ const rescheduleappointment = async (req,res)=>
                 {
                     $set:
                     {
-                        'slots.$.appointment_status':'booked'
+                        'slots.$.appointment_status':'booked',
+                        'slots.$.booked_by':details.username
                     }
                 },
                 {
