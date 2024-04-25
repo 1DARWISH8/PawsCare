@@ -60,6 +60,7 @@ function Bookappointment() {
         }
     },[selectedService,selectedLocation,selectedDate])
 
+    
     async function getallslots(selectedService,selectedLocation,selectedDate)
     {
         try
@@ -231,7 +232,7 @@ return (
             </div>
             :
             <div className='text-center'>
-                <button className='btn btn-success' type='submit' disabled={!selectedOption}>BOOK</button>
+                <button className='btn btn-success' type='submit' >BOOK</button>
             </div>
     }
     </>
