@@ -10,7 +10,8 @@ import Modal from 'react-bootstrap/Modal';
 import DatePicker from 'react-datepicker';
 import Accordion from 'react-bootstrap/Accordion';
 import './Myappointments.css'
-
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 
 
 function Myappointments()
@@ -175,23 +176,22 @@ return (
             {
                 sortedAppointments.map((appointment,index)=>
                 (
-                    <article class="postcard light red m-4">
+                    <article class="postcard light red m-3">
                         {
                             appointment.appointment_service==="HEALTH CHECK UP"&&
                             <img class="postcard__img" src="https://res.cloudinary.com/dozacgfl7/image/upload/v1712573019/Health_checkup_docs_itqetq.png" alt="Image Title" />	
                         }
                         {
-                            appointment.appointment_service==="GROOMING"&&
+                            appointment.appointment_service==="TRAINING"&&
                             <img class="postcard__img" src="https://res.cloudinary.com/dozacgfl7/image/upload/v1712573257/dog_training_eskdcl.jpg" alt="Image Title" />
                         }
                         {
-                            appointment.appointment_service==="TRAINING"&&
+                            appointment.appointment_service==="GROOMING"&&
                             <img class="postcard__img" src="https://res.cloudinary.com/dozacgfl7/image/upload/v1712573466/cat_grooming_bskql7.jpg" alt="Image Title" />	
                         }
                         <div class="postcard__text t-dark">
                             <h1 class="postcard__title red">{appointment.appointment_service}</h1>
                             <div class="postcard__subtitle small">
-                                {/* <time datetime="2020-05-25 12:00:00"> */}
                                     <div className='text-start'>
                                         <i class="fas fa-calendar-alt"></i><span className='fw-bold m-2'>APPOINTMENT DATE:</span>{appointment.booked_appointment_date}
                                     </div>
@@ -224,11 +224,6 @@ return (
                                             
                                             </>
                             }
-                                {/* <li class="tag__item"><i class="fas fa-tag mr-2"></i>Podcast</li>
-                                <li class="tag__item play blue"><i class="fas fa-clock mr-2"></i>55 mins.</li>
-                                <li class="tag__item play red">
-                                    <a href="#"><i class="fas fa-play mr-2"></i>Play Episode</a>
-                                </li> */}
                             </ul>
                         </div>
                     </article>
@@ -236,45 +231,8 @@ return (
             }
         </div>
         
-        // <table>
-        //     <tbody>
-        //         {
-        //             appointmentsdata.map((appointment,index)=>(
-        //                 <tr key={index}>
-        //                     <Card className='m-3'>
-        //                         <Card.Body>
-        //                             <Card.Title>
-        //                                 SERVICE:{appointment.appointment_service}
-        //                                 <span>
-        //                                     {appointment.appointment_status==="PENDING"&&
-        //                                     <>
-        //                                     <button className='btn btn-danger m-2' onClick={()=>cancelappointment(appointment)}>CANCEL</button>
-        //                                     <button className='btn btn-primary m-2' onClick={() => handleRescheduleClick(appointment)}>RESCHEDULE</button>
-                                            
-        //                                     </>
-        //                                     }
-        //                                 </span>
-        //                             </Card.Title>
-        //                             <Card.Text>
-        //                                 STATUS:
-        //                                 {appointment.appointment_status === "CANCELLED" && <span className='text-danger'>{appointment.appointment_status}</span>}
-        //                                 {appointment.appointment_status === "COMPLETED" && <span className='text-success'>{appointment.appointment_status}</span>}
-        //                                 {(appointment.appointment_status !== "COMPLETED" && appointment.appointment_status !== "CANCELLED") && <span className='text-primary'>{appointment.appointment_status}</span>}
-        //                             </Card.Text>
-        //                         </Card.Body>
-        //                         <Card.Footer>APPOINTMENT LOCATION:{appointment.appointment_location}
-        //                         <p>DATE:{appointment.appointment_date}</p>
-        //                         TIME:{appointment.appointment_time}</Card.Footer>
-        //                     </Card>
-        //                 </tr>
-        //             ))
-        //         }
-        //     </tbody>
-        // </table>
         }
-        {/* <Button variant="primary" onClick={handleShow}>
-        Reschedule Appointment
-        </Button> */}
+
 
         <Modal show={show}  onHide={handleClose}>
         <Modal.Header closeButton>
@@ -282,7 +240,7 @@ return (
         </Modal.Header>
         <Modal.Body>
         <p><span className='fw-bold'>Previous Appointment Details</span> 
-            <p><span className='fw-bold'>Date:</span>{selectedAppointment && selectedAppointment.appointment_date}
+            <p><span className='fw-bold'>Date:</span>{selectedAppointment && selectedAppointment.booked_appointment_date}
             <p><span className='fw-bold'>Time:</span>{selectedAppointment && selectedAppointment.appointment_time}</p>
             </p>
             
@@ -331,8 +289,10 @@ return (
                                 {/* <button className='btn btn-light m-2' disabled>
                                     {slot.appointment_time}
                                 </button> */}
+                                <OverlayTrigger overlay={<Tooltip id="tooltip-disabled">SLOT UNAVAILABLE</Tooltip>}>
+                                    <input type='checkbox' disabled />
+                                </OverlayTrigger>
                                 <label>
-                                    <input type="checkbox" disabled/>
                                     {slot.appointment_time}
                                 </label>
                                 </div>
@@ -350,9 +310,11 @@ return (
             <Button variant="danger" onClick={handleClose}>
             Cancel
             </Button>
-            <Button variant="primary" onClick={()=>rescheduleappointment(selectedAppointment)} disabled={!selectedOption}>
-            RESCHEDULE
-            </Button>
+            <OverlayTrigger overlay={<Tooltip id="tooltip-disabled">SLOT UNAVAILABLE</Tooltip>}>
+                <Button variant="primary" onClick={()=>rescheduleappointment(selectedAppointment)} disabled={!selectedOption}>
+                    RESCHEDULE
+                </Button>
+            </OverlayTrigger>
         </Modal.Footer>
         </Modal>
     </div>
