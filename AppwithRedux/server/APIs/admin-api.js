@@ -7,7 +7,7 @@ const adminApp = express.Router()
 // import express-async-handler to handle async errors (error handler in server.js cannot handle async errors)
 const expressAsyncHandler = require('express-async-handler')
 // import req handlers from controllers
-const {getadmin,getusers,changeuserstatus,getallappointments,bookappointment,cancelappointment,appointmentcompleted,rescheduleappointment,pendingappointments,pendingappointment,cancelledappointments,getproducts,addproduct,getaproduct,editproduct,deactivateproduct,activateproduct,inactiveproducts,updatestock,getappointmentdate,getorders,editorderstatus} = require('../Controllers/admin-controller')
+const {getadmin,getusers,changeuserstatus,getallappointments,bookappointment,cancelappointment,appointmentcompleted,rescheduleappointment,pendingappointments,pendingappointment,cancelledappointments,getproducts,addproduct,getaproduct,editproduct,deactivateproduct,activateproduct,inactiveproducts,updatestock,getappointmentdate,getspecificappointments,getorders,editorderstatus} = require('../Controllers/admin-controller')
 // import token verification middleware
 const verifytoken = require('../Middlewares/verifytoken')
 // import upload and/(or) cloudinary configurations
@@ -83,6 +83,8 @@ adminApp.post('/updatestock',expressAsyncHandler(updatestock))
 // POST AND GET DATE APPOINTMENT
 adminApp.post('/getappointmentdate',expressAsyncHandler(getappointmentdate))
 
+// GET APPOINTMENT ACCORDING TO LOCATION, SERVICE AND DATE
+adminApp.get('/getspecificappointments',expressAsyncHandler(getspecificappointments))
 
 // MANAGE ORDERS
 
