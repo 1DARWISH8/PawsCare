@@ -180,7 +180,8 @@ const bookappointment = async (req,res)=>
         {
             $set:
             {
-                'slots.$.appointment_status':'booked'
+                'slots.$.appointment_status':'booked',
+                'slots.$.booked_by':details.username
             }
         },
         {
@@ -217,7 +218,8 @@ const cancelappointment = async(req,res)=>
             {
                 $set:
                 {
-                    'slots.$.appointment_status':'available'
+                    'slots.$.appointment_status':'available',
+                    'slots.$.booked_by':'none'
                 }
             },
             {
@@ -311,7 +313,8 @@ const rescheduleappointment = async (req,res)=>
             {
                 $set:
                 {
-                    'slots.$.appointment_status':'available'
+                    'slots.$.appointment_status':'available',
+                    'slots.$.booked_by':'none'
                 }
             },
             {
@@ -325,7 +328,8 @@ const rescheduleappointment = async (req,res)=>
                 {
                     $set:
                     {
-                        'slots.$.appointment_status':'booked'
+                        'slots.$.appointment_status':'booked',
+                        'slots.$.booked_by':details.username
                     }
                 },
                 {
@@ -763,4 +767,34 @@ const editorderstatus = async(req,res)=>
     }
 }
 
-module.exports={getadmin,getusers,changeuserstatus,getallappointments,bookappointment,cancelappointment,appointmentcompleted,rescheduleappointment,pendingappointments,pendingappointment,cancelledappointments,getproducts,addproduct,getaproduct,editproduct,deactivateproduct,activateproduct,inactiveproducts,updatestock,getappointmentdate,getorders,editorderstatus}
+const getspecificappointments = async (req,res)=>
+{
+    try
+    {
+        
+        let {service,location}=req.query
+        let query = req.originalUrl.split('?')[1]
+        let datequery = query.split('&')[0]
+        let date = new URLSearchParams(datequery)
+        date = decodeURIComponent(date.get('date'))
+        date = new Date(date);
+        const options = { weekday: 'short', month: 'short', day: '2-digit', year: 'numeric' };
+        const formattedDate = date.toLocaleDateString('en-US', options).replace(/,/g, '');
+        date = formattedDate + " 00:00:00 GMT+0530 (India Standard Time)"
+        let appointments_data = await Appointmentday.find({appointment_date:date,appointment_service:service,appointment_location:location})
+        if(appointments_data)
+        {
+            res.status(200).send({message:"APPOINTMENTS",payload:appointments_data})
+        }
+        else
+        {
+            res.status(200).send({message:"FAILED TO RETRIEVE DATA"})
+        }
+    }
+    catch(err)
+    {
+        res.status(200).send(err.message)
+    }
+}
+
+module.exports={getadmin,getusers,changeuserstatus,getallappointments,bookappointment,cancelappointment,appointmentcompleted,rescheduleappointment,pendingappointments,pendingappointment,cancelledappointments,getproducts,addproduct,getaproduct,editproduct,deactivateproduct,activateproduct,inactiveproducts,updatestock,getappointmentdate,getspecificappointments,getorders,editorderstatus}
