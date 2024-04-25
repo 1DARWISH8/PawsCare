@@ -352,6 +352,11 @@ const appointmentDaySchema = new mongoose.Schema(
                     type:String,
                     enum:['available','booked'],
                     default:'available'
+                },
+                booked_by:
+                {
+                    type:String,
+                    default:'none'
                 }
             }
         ]
