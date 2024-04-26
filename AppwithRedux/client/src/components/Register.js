@@ -46,7 +46,6 @@ function Register() {
         // console.log(data)
         const formData = new FormData();
         formData.append('data',JSON.stringify(data))
-
         formData.append('userpic',file)
 
 
@@ -112,6 +111,7 @@ return (
             {/* USER DISPLAY PICTURE */}
             <label htmlFor='userpic' className='form-label fw-bold'>PROFILE IMAGE:</label>
             <input id='userpic' type='file' name='userpic' className='form-control border-black' onChange={uploadPic}/>
+            {errors.userpic?.type==='required'&&<p className='text-center text-danger fw-bold'>*USER IMAGE is required*</p>}
         </div>
 
 
@@ -174,7 +174,7 @@ return (
                 <select className='form-control border-black' id="state" {...register("address.state",{required:true})} onChange={handleStateChange}>
                     <option value="">Select State</option>
                         {indianStates.map((state, index) => (
-                            <option value={state.name}>
+                            <option key={index} value={state.name}>
                                     {state.name}
                             </option>
                         ))}
