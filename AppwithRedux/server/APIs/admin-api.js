@@ -61,12 +61,12 @@ adminApp.get('/cancelledappointments',expressAsyncHandler(cancelledappointments)
 adminApp.get('/getproducts',expressAsyncHandler(getproducts))
 
 // ADD PRODUCT
-adminApp.post('/addproduct',upload.single('image'),expressAsyncHandler(addproduct))
+adminApp.post('/addproduct',upload.array('images'),expressAsyncHandler(addproduct))
 
 // EDIT PRODUCT
 // get the exact product details
 adminApp.post('/getaproduct',expressAsyncHandler(getaproduct))
-adminApp.post('/editproduct',upload.single('image'),expressAsyncHandler(editproduct))
+adminApp.post('/editproduct',expressAsyncHandler(editproduct))
 
 // DELETE A PRODUCT BY DEACTIVATING IT
 adminApp.post('/deactivateproduct',expressAsyncHandler(deactivateproduct))
