@@ -502,6 +502,7 @@ const orderSchema = new mongoose.Schema(
                     default:1
                 },
                 price:Number,
+                discounted_price:Number,
                 stock:
                 {
                     type:String,
