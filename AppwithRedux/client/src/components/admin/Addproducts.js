@@ -6,11 +6,11 @@ import {Alert} from 'react-bootstrap';
 
 const Addproducts = () => {
     let {register,handleSubmit,formState:{errors}}=useForm()
-        let [error,setError] = useState('')
-        let [file,setFile]=useState(null)
-        let navigate=useNavigate()
-        let [alert,setAlert] = useState('')
-        
+    let [error,setError] = useState('')
+    let [files,setFiles]=useState(null)
+    let navigate=useNavigate()
+    let [alert,setAlert] = useState('')
+
 const hideAlert = () =>
 {
     setTimeout(()=>
@@ -27,14 +27,17 @@ useState(()=>
 
         function uploadPic(e)
     {
-        setFile(e.target.files[0])
-    }
-    
+        setFiles(e.target.files)
+    }    
     async function formSubmit(data)
     {
         const formData = new FormData();
         formData.append('data',JSON.stringify(data))
-        formData.append('image',file)
+        // Append each file to FormData
+        for (let i = 0; i < files.length; i++) 
+        {
+            formData.append(`images`, files[i]);
+        }
         let discounted_price = 0
         data = {...data,discounted_price}
         try
@@ -54,7 +57,6 @@ useState(()=>
             setError(err.message)
         }
     }
-
 
 return (
 <div className="containers m-5">
@@ -83,7 +85,6 @@ return (
             <option value="DOG & CAT">DOG & CAT</option>
             <option value="BIRD"> BIRD</option>
             <option value="FISH">FISH</option>
-            <option value="GUINEA PIG">GUINEA PIG</option>
             <option value="HAMSTER">HAMSTER</option>
             <option value="TURTLE">TURTLE</option>
             <option value="OTHER">OTHER</option>
@@ -116,8 +117,8 @@ return (
             <input type="number"className="form-control" min={0} max={99} id="discount_percent" name="discount_percent" placeholder='0'{...register("discount_percent",{required:true,min:0,max:99})} />
         </div>
         <div className="sm-3 mb-3">
-            <label htmlFor="image" className="form-label">Images:</label>
-            <input type="file" className="form-control" id="image" name="image" onChange={uploadPic} />
+            <label htmlFor="images" className="form-label">Images:</label>
+            <input type="file" id="images" name="images" onChange={uploadPic} multiple/>
         </div>
         {/* <div className="mb-3">
             <label htmlFor="rating" className="form-label">Rating:</label>
