@@ -243,7 +243,7 @@ return (
                                             </td>
                                             <td>
                                                 <p><span className='fw-bold'>QUANTITY:</span>{orderitem.quantity}</p>
-                                                <p><span className='fw-bold'>PRICE:</span>Rs.{orderitem.price}</p>
+                                                <p><span className='fw-bold'>PRICE:</span>Rs.{orderitem.discounted_price}</p>
                                             </td>
                                         </tr>
                                     </tbody>
