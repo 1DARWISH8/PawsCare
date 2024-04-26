@@ -272,7 +272,7 @@ async function updatestock(item)
 }
 
 return (
-    <div className="container-fluid">
+    <section className="container-fluid">
         {error.length!==0&& <p className='fw-bold text-center text-danger border-0'>{error}</p>}
         {alert.length!==0 && <Alert variant={'dark'} onClose={()=>setAlert('')}>{alert}</Alert> }
             <div className="cart">
@@ -415,7 +415,7 @@ return (
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
   )
 }
 
