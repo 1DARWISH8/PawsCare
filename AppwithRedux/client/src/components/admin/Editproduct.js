@@ -9,17 +9,17 @@ import {Alert} from 'react-bootstrap';
 function Editproduct() {
     let {register,handleSubmit,formState:{errors}}=useForm()
     let [error,setError] = useState('')
-    let [file,setFile]=useState(null)
+    // let [file,setFile]=useState(null)
     let dispatch = useDispatch()
     let navigate=useNavigate()
     let {presentItem} = useSelector(state=>state.productdetails)
     let [alert,setAlert] = useState('')
 
     // console.log(presentItem)
-    function uploadPic(e)
-    {
-        setFile(e.target.files[0])
-    }
+    // function uploadPic(e)
+    // {
+    //     setFile(e.target.files[0])
+    // }
 
 const hideAlert = () =>
 {
@@ -38,14 +38,13 @@ useState(()=>
     {
         let _id = presentItem._id
         data = {...data,_id}
-        // console.log(data)
-        const formData = new FormData();
-        formData.append('data',JSON.stringify(data))
-        formData.append('image',file)
+        // const formData = new FormData();
+        // formData.append('data',JSON.stringify(data))
+        // console.log(...formData)
+        // formData.append('image',file)
         try
         {
-            let res = await axios.post('http://localhost:5000/admin-api/editproduct',formData)
-            // console.log(res)
+            let res = await axios.post('http://localhost:5000/admin-api/editproduct',data)
             if (res.data.message==="Product Edited")
             {
                 setAlert('PRODUCT SUCCESSFULLY EDITED')
@@ -131,10 +130,10 @@ return (
             <label htmlFor="discount_percent" className="form-label">Discount Percent:</label>
             <input type="number"className="form-control" min={0} max={99} id="discount_percent" name="discount_percent" defaultValue={presentItem.discount_percent} placeholder={presentItem.discount_percent}{...register("discount_percent",{required:true,min:0,max:99})} />
         </div>
-        <div className="sm-3 mb-3">
+        {/* <div className="sm-3 mb-3">
             <label htmlFor="image" className="form-label">Images:</label>
             <input type="file" className="form-control" id="image" name="image"  onChange={uploadPic} />
-        </div>
+        </div> */}
         {/* <div className="mb-3">
             <label htmlFor="rating" className="form-label">Rating:</label>
             <input type="number" className="form-control" id="rating" name="rating" value={formData.rating} onChange={handleChange} min="0" max="5" />
