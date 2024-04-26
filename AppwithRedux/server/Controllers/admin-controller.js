@@ -5,7 +5,7 @@ const bcryptjs = require('bcryptjs')
 // import jsonwebtokens for JWT
 const jwt = require('jsonwebtoken')
 // import cloudinary middleware for image and other fileupload
-const cloudinary = require('../Middlewares/cloudinaryUpload')
+const {cloudinary} = require('../Middlewares/cloudinaryUpload')
 // import fs (filesystem) module
 const fs = require('fs');
 const { Axios } = require('axios');
@@ -480,6 +480,13 @@ const addproduct = async (req,res)=>
         if (product_exists===null)
         {
             data.discounted_price = Math.round(data.price * ((100 - data.discount_percent) / 100));
+            let uploads = [];
+            for (const file of req.files) {
+                let upload = await cloudinary.uploader.upload(file.path);
+                uploads.push({ ImageURL: upload.secure_url });
+            }
+            let image=uploads
+            data = {...data,image}
             let added = await Product.create(data)
             if (added)
             {
@@ -531,7 +538,7 @@ const editproduct =async (req,res)=>
 {
     try
     {
-        let data = JSON.parse(req.body.data)
+        let data = req.body
         data.discounted_price = Math.round(data.price * (100 - data.discount_percent) / 100);
         let edited = await Product.findOneAndUpdate({_id:data._id},
             {
