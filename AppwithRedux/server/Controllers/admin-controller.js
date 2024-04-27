@@ -1,5 +1,5 @@
 //import models
-const {User,Admin,Seller,Appointment,Appointmentday,Product,Order} = require('../db')
+const {User,Cart,Admin,Seller,Appointment,Appointmentday,Product,Order} = require('../db')
 // import bcryptjs for password hashing
 const bcryptjs = require('bcryptjs')
 // import jsonwebtokens for JWT
@@ -8,7 +8,6 @@ const jwt = require('jsonwebtoken')
 const {cloudinary} = require('../Middlewares/cloudinaryUpload')
 // import fs (filesystem) module
 const fs = require('fs');
-const { Axios } = require('axios');
 
 // get admins
 const getadmin = async(req,res)=>
