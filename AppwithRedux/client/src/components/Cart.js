@@ -17,13 +17,16 @@ function Cart() {
     let [error,setError] = useState('')
     let [alert,setAlert] = useState('')
     let [total,setTotal] = useState(0)
+    let [usercart,setUsercart] = useState([])
     
     const getcart = async()=>
     {
         let cartproducts = await axios.get(`http://localhost:5000/user-api/cart/${currentUser.username}`)
+        console.log(cartproducts)
         if (cartproducts.data.message==="RETRIEVED USER-CART")
         {
-            setCart(cartproducts.data.payload)
+            setUsercart(cartproducts.data.payload)
+            setCart(cartproducts.data.payload.cart)
         }
         else
         {
@@ -31,6 +34,8 @@ function Cart() {
         }
     }
     useEffect(()=>getcart,[])
+
+    console.log(cart)
 
     const hideAlert = () =>
 {
@@ -176,6 +181,56 @@ async function openproductpage(item)
     useEffect(()=>
 {get_total()},[cart])
 
+// PAYMENT GATEWAY
+async function handle_Payment(e,cart)
+{
+    try
+    {
+        let response = await axios.post('http://localhost:5000/user-api/razorpayorder',)
+        var options = {
+            "key": "YOUR_KEY_ID", // Enter the Key ID generated from the Dashboard
+            "amount": "50000", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+            "currency": "INR",
+            "name": "Acme Corp",
+            "description": "Test Transaction",
+            "image": "https://example.com/your_logo",
+            "order_id": "order_IluGWxBm9U8zJ8", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+            "handler": function (response){
+                alert(response.razorpay_payment_id);
+                alert(response.razorpay_order_id);
+                alert(response.razorpay_signature)
+            },
+            "prefill": {
+                "name": "Gaurav Kumar",
+                "email": "gaurav.kumar@example.com",
+                "contact": "9000090000"
+            },
+            "notes": {
+                "address": "Razorpay Corporate Office"
+            },
+            "theme": {
+                "color": "#3399cc"
+            }
+        };
+        var rzp1 = new window.Razorpay(options);
+        rzp1.on('payment.failed', function (response){
+                alert(response.error.code);
+                alert(response.error.description);
+                alert(response.error.source);
+                alert(response.error.step);
+                alert(response.error.reason);
+                alert(response.error.metadata.order_id);
+                alert(response.error.metadata.payment_id);
+        });
+        rzp1.open();
+        e.preventDefault();
+    }
+    catch(err)
+    {
+
+    }
+}
+
 return (
     <>
         {error.length!==0&& <p className='fw-bold text-center text-danger border-0'>{error}</p>}
@@ -232,7 +287,7 @@ return (
                             </table>
                             <div className='text-end'>
                                 <h4>Subtotal:</h4>
-                                <h1>₹{total}</h1>
+                                <h1>₹{usercart.amount}</h1>
                             </div>
                         </div>
                     </div>
@@ -243,7 +298,7 @@ return (
                             </NavLink>
                         </div>
                         <div className="col-sm-6 order text-end">
-                            <button className="btn btn-primary mb-4 btn-lg pl-5 pr-5" onClick={()=>checkout(currentUser,cart,total)}>Checkout</button>
+                            <button className="btn btn-primary mb-4 btn-lg pl-5 pr-5" onClick={()=>handle_Payment(cart)}>Checkout</button>
                         </div>
                     </div>
             </section>
