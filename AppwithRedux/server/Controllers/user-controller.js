@@ -1,5 +1,5 @@
 //import models
-const {User,Admin,Seller,Appointment,Appointmentday,Product,Order} = require('../db')
+const {User,Cart,Admin,Seller,Appointment,Appointmentday,Product,Order} = require('../db')
 // import bcryptjs for password hashing
 const bcryptjs = require('bcryptjs')
 // import jsonwebtokens for JWT
@@ -8,7 +8,37 @@ const jwt = require('jsonwebtoken')
 const {cloudinary} = require('../Middlewares/cloudinaryUpload')
 // import fs (filesystem) module
 const fs = require('fs');
-const { query } = require('express');
+const Razorpay = require('razorpay');
+
+// Instantiate the Razorpay instance
+const razorpay = new Razorpay(
+    {
+        key_id:process.env.RAZORPAY_KEY_ID,
+        key_secret:process.env.RAZORPAY_SECRET
+    }
+);
+
+// razorpay payments
+const payment_orders = async (req,res)=>
+{
+    try
+    {
+        const options = req.body;
+        const order = await razorpay.orders.create(options)
+        if(order)
+        {
+            res.status(201).send({message:"SUCCESS",payload:order})
+        }
+        else
+        {
+            res.status(500).send({message:"ERROR IN PAYMENTS"})
+        }
+    }
+    catch(err)
+    {
+        res.status(500).send(err.message)
+    }
+}
 
 // get users
 const getusers = async(req,res)=>
@@ -46,7 +76,10 @@ const registerUser = async(req,res)=>
             // upload the image into cloudinary
             let upload = await cloudinary.uploader.upload(req.file.path);
             userdata.profileImageURL = upload.url;
+            // Create a USER in the database
             let user = await User.create(userdata)
+            // Create USERCART in the database
+            let user_cart = await Cart.create(userdata)
             // remove image from local user
             fs.unlink(req.file.path,err=>
                 {
@@ -509,10 +542,10 @@ const getallproducts = async(req,res)=>
 const cart = async(req,res)=>
 {
     let username = req.params.username
-    let cartproducts = await User.findOne({username:username})
+    let cartproducts = await Cart.findOne({username:username})
     if (cartproducts!==null)
     {
-        res.status(200).send({message:"RETRIEVED USER-CART",payload:cartproducts.cart})
+        res.status(200).send({message:"RETRIEVED USER-CART",payload:cartproducts})
     }
     else
     {
@@ -525,25 +558,30 @@ const addcartproduct = async (req,res)=>
 {
     try
     {
-        let productdata = req.body
-        // console.log(productdata)
-        let user = await User.findOne({username:productdata.username})
-        let cartproduct = user.cart.find(product=>product._id.equals(productdata._id))
+        let productData = req.body
+        // console.log(productData)
+        let user = await Cart.findOne({username:productData.username})
+        let amount = user.amount
+        let cartproduct = user.cart.find(product=>product._id.equals(productData._id))
         if (cartproduct)
         {
             res.status(200).send({message:'ITEM ALREADY IN CART'})
         }
         else
         {
-            let addedtocart = await User.findOneAndUpdate({username:productdata.username},
+            let addedtocart = await Cart.findOneAndUpdate({username:productData.username},
                 {
                     $push:
                     {
-                        "cart":productdata
+                        "cart":productData
+                    },
+                    $set:
+                    {
+                        "amount":amount+productData.discounted_price
                     }
                 },
                 {
-                    returnOriginal: false
+                    new: false
                 })
             if (addedtocart)
             {
@@ -551,7 +589,7 @@ const addcartproduct = async (req,res)=>
             }
             else
             {
-                res.status(200).send({message:"PRODUCT COULDN'T ADDED TO CART"})
+                res.status(404).send({message:"COULDN'T ADD PRODUCT TO CART"})
             }
         }
     }
@@ -567,8 +605,8 @@ const removecartproduct = async (req,res)=>
     try
     {
         let productdata = req.body
-        // console.log(productdata)
-        let deletedproduct = await User.findOneAndUpdate({username:productdata.username},
+        let userCart = await Cart.findOne({username:productdata.username})
+        let deletedproduct = await Cart.findOneAndUpdate({username:productdata.username},
             {
                 $pull:
                 {
@@ -576,20 +614,23 @@ const removecartproduct = async (req,res)=>
                     {
                         productid:productdata.productid
                     }
+                },
+                $set:
+                {
+                    'amount': userCart.amount - (productdata.discounted_price*productdata.quantity)
                 }
             },
             {
                 returnOriginal: false
             }
         )
-        // console.log(deletedproduct)
         if (deletedproduct)
         {
             res.status(200).send({message:"PRODUCT IS DELETED FROM CART",payload:deletedproduct})
         }
         else
         {
-            res.status(200).send({message:"FAILED TO DELETE CART ITEM"})
+            res.status(404).send({message:"FAILED TO DELETE CART ITEM"})
         }
     }
     catch(err)
@@ -603,21 +644,31 @@ const editquantity = async (req,res)=>
 {
     try
     {
-        let request = req.body
-        const updatedcart = await User.findOneAndUpdate(
-            // Find the user and the nested cart item by their IDs
-            { username: request.username, 'cart._id': request._id },
-            // Update the quantity of the nested cart item
-            { $set: { 'cart.$.quantity': request.quantity } }, 
-            { new: true } // To return the updated document
-        );
-        if (updatedcart)
-        {
-            res.status(200).send({message:"Quantity updated",payload:updatedcart})
+        let request = req.body;
+
+        // Find the cart item that needs to be updated
+        let cartItem = await Cart.findOne({ username: request.username, 'cart._id': request._id });
+        if (!cartItem) {
+            return res.status(404).send({ message: "Cart item not found" });
         }
-        else
-        {
-            res.status(200).send({message:"Quantity couldn't be updated"})
+
+        // Calculate the updated amount based on the new quantity and discounted price
+        let updatedAmount = cartItem.amount - (cartItem.cart.find(item => item._id.toString() === request._id).discounted_price * cartItem.cart.find(item => item._id.toString() === request._id).quantity) +
+            (request.discounted_price * request.quantity);
+
+        // Update the quantity of the nested cart item and the amount in the cart
+        const updatedCart = await Cart.findOneAndUpdate(
+            { username: request.username, 'cart._id': request._id },
+            { 
+                $set: { 'cart.$.quantity': request.quantity, amount: updatedAmount }
+            }, 
+            { new: true } 
+        );
+
+        if (updatedCart) {
+            res.status(200).send({ message: "Quantity updated", payload: updatedCart });
+        } else {
+            res.status(404).send({ message: "Quantity couldn't be updated" });
         }
     }
     catch(err)
@@ -833,4 +884,4 @@ const inwishlist = async(req,res)=>
 }
 
 
-module.exports={getuser,getusers,registerUser,userLogin,searchResults,bookAppointment,appointments,cancelappointment,rescheduleappointment,getallslots,getProducts,getallproducts,cart,addcartproduct,removecartproduct,editquantity,order,getorders,cancelorder,getwishlist,addtowishlist,removefromwishlist,inwishlist}
+module.exports={payment_orders,getuser,getusers,registerUser,userLogin,searchResults,bookAppointment,appointments,cancelappointment,rescheduleappointment,getallslots,getProducts,getallproducts,cart,addcartproduct,removecartproduct,editquantity,order,getorders,cancelorder,getwishlist,addtowishlist,removefromwishlist,inwishlist}
