@@ -42,7 +42,7 @@ const userCartSlice = createSlice(
         })
         .addCase(userCartPromiseStatus.fulfilled,(state,action)=>
         {
-            state.userCart=action.payload.payload;
+            state.userCart=action.payload.payload.cart;
             state.errorMessage='';
             state.isPending=false;
         })
