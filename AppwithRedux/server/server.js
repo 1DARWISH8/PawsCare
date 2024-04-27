@@ -5,13 +5,15 @@ const app = express()
 // connect to react app
 // 'path' a core module to manipulate file path
 const path = require('path')
+
 // join paths 
 // express.static middleware to serve static files
 app.use(express.static(path.join(__dirname,'../build')))
 // configure environment variables
 require('dotenv').config()
 // add body parsing middleware
-app.use(express.json())
+app.use(express.json());
+app.use(express.urlencoded({extended:false}));
 
 // import apis
 const userApp = require('./APIs/user-api');
