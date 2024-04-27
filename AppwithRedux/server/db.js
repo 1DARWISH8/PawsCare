@@ -119,35 +119,35 @@ const userSchema = new mongoose.Schema(
                 required:true,
             }
         }],
-        cart:
-        [{
-            productname:String,
-            productid:String,
-            username:String,
-            quantity:
-            {
-                type:Number,
-                default:1
-            },
-            price:Number,
-            stock:
-            {
-                type:String,
-                default:"In Stock",
-                enum:['In Stock','Out of Stock']
-            },
-            image:
-        [
-            {
-                ImageURL:
-                {
-                    type:String
-                }
-            }
-        ],
-        discount_percent:Number,
-        discounted_price:Number,
-        }],
+        // cart:
+        // [{
+        //     productname:String,
+        //     productid:String,
+        //     username:String,
+        //     quantity:
+        //     {
+        //         type:Number,
+        //         default:1
+        //     },
+        //     price:Number,
+        //     stock:
+        //     {
+        //         type:String,
+        //         default:"In Stock",
+        //         enum:['In Stock','Out of Stock']
+        //     },
+        //     image:
+        // [
+        //     {
+        //         ImageURL:
+        //         {
+        //             type:String
+        //         }
+        //     }
+        // ],
+        // discount_percent:Number,
+        // discounted_price:Number,
+        // }],
         wishlist:
         [
             {
@@ -180,6 +180,48 @@ const userSchema = new mongoose.Schema(
                 time:String
             }
         ]
+    }
+)
+
+// Create USERCART SCHEMA
+const cartSchema = new mongoose.Schema(
+    {
+        username:String,
+        cart_ID:String,
+        cart:
+        [{
+            productname:String,
+            productid:String,
+            username:String,
+            quantity:
+            {
+                type:Number,
+                default:1
+            },
+            price:Number,
+            stock:
+            {
+                type:String,
+                default:"In Stock",
+                enum:['In Stock','Out of Stock']
+            },
+            image:
+        [
+            {
+                ImageURL:
+                {
+                    type:String
+                }
+            }
+        ],
+        discount_percent:Number,
+        discounted_price:Number,
+        }],
+        amount:
+        {
+            type:Number,
+            default:0
+        }
     }
 )
 
@@ -565,6 +607,8 @@ const orderSchema = new mongoose.Schema(
 // Create Model(Class) for Schemas
 // model for userSchema
 const User = mongoose.model('User',userSchema)
+// model for userCartSchema
+const Cart = mongoose.model('Cart',cartSchema)
 // model for adminSchema
 const Admin = mongoose.model('Admin',adminSchema)
 // model for sellerSchema
@@ -580,4 +624,4 @@ const Order = mongoose.model('Order',orderSchema)
 
 
 // Export Models(classes)
-module.exports={User,Admin,Seller,Appointment,Appointmentday,Product,Order};
+module.exports={User,Cart,Admin,Seller,Appointment,Appointmentday,Product,Order};
