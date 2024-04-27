@@ -6,7 +6,6 @@ const express = require('express')
 const userApp = express.Router()
 // import express-async-handler to handle async errors (error handler in server.js cannot handle async errors)
 const expressAsyncHandler = require('express-async-handler')
-
 // import token verification middleware
 const verifytoken = require('../Middlewares/verifytoken')
 // import upload and/(or) cloudinary configurations
@@ -20,7 +19,10 @@ userApp.use(cors(
 ))
 
 // import req handlers from controllers
-const {getuser,getusers,registerUser,userLogin,searchResults,bookAppointment,appointments,cancelappointment,rescheduleappointment,getallslots,getProducts,getallproducts,cart,addcartproduct,removecartproduct,editquantity,order,getorders,cancelorder,getwishlist,addtowishlist,removefromwishlist,inwishlist} = require('../Controllers/user-controller')
+const {payment_orders,getuser,getusers,registerUser,userLogin,searchResults,bookAppointment,appointments,cancelappointment,rescheduleappointment,getallslots,getProducts,getallproducts,cart,addcartproduct,removecartproduct,editquantity,order,getorders,cancelorder,getwishlist,addtowishlist,removefromwishlist,inwishlist} = require('../Controllers/user-controller')
+
+// RAZORPAY PAYMENT
+userApp.post('/razorpayorder',expressAsyncHandler(payment_orders))
 
 // CRUD OPERATIONS
 
