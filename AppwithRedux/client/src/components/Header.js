@@ -6,9 +6,7 @@ import './Dropdown.css';
 import { logOut } from '../redux/slices/userLoginSlice'
 /* Import Bootstrap Icons CSS */
 import './Header.css'
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
+import { Navbar, Nav, NavDropdown, Container, Modal } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { userCartPromiseStatus } from '../redux/userCartSlice';
