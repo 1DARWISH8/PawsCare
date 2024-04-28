@@ -1,6 +1,6 @@
 
 // import mongoose
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 require('dotenv').config()
 
 // connect to the local MongoDB database
@@ -221,6 +221,11 @@ const cartSchema = new mongoose.Schema(
         {
             type:Number,
             default:0
+        },
+        currency:
+        {
+            type:String,
+            default:"INR"
         }
     }
 )
@@ -529,9 +534,11 @@ const orderSchema = new mongoose.Schema(
         payment_method:
         {
             type:String,
-            enum:['UPI PAYMENT',"NETBANKING","CASH ON DELIVERY(COD)"],
+            enum:["ONLINE PAYMENT","CASH ON DELIVERY(COD)"],
             default:'CASH ON DELIVERY(COD)'
         },
+        razorpay_payment_id:String,
+        razorpay_order_id:String,
         order_items:
         [
             {
