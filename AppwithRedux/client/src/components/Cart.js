@@ -6,7 +6,7 @@ import {useDispatch,useSelector} from 'react-redux'
 import { productDetailsPromiseStatus } from '../redux/slices/productDetailsSlice' 
 import {Alert} from 'react-bootstrap';
 import { userCartPromiseStatus } from '../redux/userCartSlice'
-
+import FailedModal from './FailedModal'
 
 function Cart() {
 
@@ -18,11 +18,22 @@ function Cart() {
     let [alert,setAlert] = useState('')
     let [total,setTotal] = useState(0)
     let [usercart,setUsercart] = useState([])
+    let [paymentMode,setPaymentmode] = useState("CASH ON DELIVERY(COD)")
+    let [successModal,setSuccessModal] = useState("INACTIVE")
+    const [showModal, setShowModal] = useState(false);
+
+    const handleModalClose = () => {
+      setShowModal(false);
+    };
+  
     
+    const handlePaymentModeChange = (e) => {
+        setPaymentmode(e.target.value);
+    };
+
     const getcart = async()=>
     {
         let cartproducts = await axios.get(`http://localhost:5000/user-api/cart/${currentUser.username}`)
-        console.log(cartproducts)
         if (cartproducts.data.message==="RETRIEVED USER-CART")
         {
             setUsercart(cartproducts.data.payload)
@@ -34,8 +45,6 @@ function Cart() {
         }
     }
     useEffect(()=>getcart,[])
-
-    console.log(cart)
 
     const hideAlert = () =>
 {
@@ -63,7 +72,6 @@ async function openproductpage(item)
     }
 }
 
-// console.log(cart[0].stock)
 
     async function incrementQuantity(item)
     {
@@ -132,27 +140,43 @@ async function openproductpage(item)
         return months[monthIndex];
     }
 
-    async function checkout(user,cart,sum)
+    async function checkout(response)
     {
         try
         {
-            let username = user.username
-            let phonenumber = user.phonenumber
-            let address = user.address
-            let total_price = sum
+            let username = currentUser.username
+            let phonenumber = currentUser.phonenumber
+            let address = currentUser.address
+            let total_price = usercart.amount
             let order_items = cart
-                // Get today's date
-                let today = new Date();
-                let ordered_on_date = `${today.getDate()} ${getMonthName(today.getMonth())} ${today.getFullYear()}`;
-            let order = {username,phonenumber,address,order_items,total_price,ordered_on_date}
-            // console.log(order)
-            let checkedout = await axios.post('http://localhost:5000/user-api/order',order)
-            console.log(checkedout)
-            if(checkedout)
+            // Get today's date
+            let today = new Date();
+            let ordered_on_date = `${today.getDate()} ${getMonthName(today.getMonth())} ${today.getFullYear()}`;
+            if(paymentMode==="ONLINE PAYMENT")
             {
-                setAlert(checkedout.data.message)
-                getcart()
-                await dispatch(userCartPromiseStatus(username))
+                console.log("first")
+                let payment_status = "COMPLETE"
+                let payment_method = paymentMode
+                let {razorpay_payment_id,razorpay_order_id} = response
+                let order = {username,phonenumber,address,order_items,total_price,ordered_on_date,payment_status,payment_method,razorpay_order_id,razorpay_payment_id}
+                let checkedout = await axios.post('http://localhost:5000/user-api/order',order)
+                if(checkedout)
+                {
+                    setAlert(checkedout.data.message)
+                    getcart()
+                    await dispatch(userCartPromiseStatus(username))
+                }
+            }
+            else if(paymentMode === "CASH ON DELIVERY(COD)")
+            {
+                let order = {username,phonenumber,address,order_items,total_price,ordered_on_date}
+                let checkedout = await axios.post('http://localhost:5000/user-api/order',order)
+                if(checkedout)
+                {
+                    setAlert(checkedout.data.message)
+                    getcart()
+                    await dispatch(userCartPromiseStatus(username))
+                }
             }
         }
         catch(error)
@@ -161,75 +185,68 @@ async function openproductpage(item)
         }        
     }
 
-    async function get_total()
-    {
-        try
-        {
-            let total_price = 0
-            for (const item of cart)
-            {
-                total_price += item.discounted_price * item.quantity
-            }
-            setTotal(total_price)
-        }
-        catch(err)
-        {
-
-        }
-    }
-
-    useEffect(()=>
-{get_total()},[cart])
-
 // PAYMENT GATEWAY
-async function handle_Payment(e,cart)
+async function handle_Payment()
 {
     try
     {
-        let response = await axios.post('http://localhost:5000/user-api/razorpayorder',)
+        let response = await axios.post('http://localhost:5000/user-api/razorpayorder',usercart)
+        let razorpayOrder = response.data
         var options = {
-            "key": "YOUR_KEY_ID", // Enter the Key ID generated from the Dashboard
-            "amount": "50000", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+            "key": razorpayOrder.key, // Enter the Key ID generated from the Dashboard
+            "amount": razorpayOrder.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
             "currency": "INR",
-            "name": "Acme Corp",
+            "name": "Pawscare India Private Ltd",
             "description": "Test Transaction",
-            "image": "https://example.com/your_logo",
-            "order_id": "order_IluGWxBm9U8zJ8", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-            "handler": function (response){
-                alert(response.razorpay_payment_id);
-                alert(response.razorpay_order_id);
-                alert(response.razorpay_signature)
-            },
+            "image": "https://res.cloudinary.com/dozacgfl7/image/upload/v1711878050/logo_hjylkr.png",
+            "order_id": razorpayOrder.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+            "handler": async function (response){
+                let isVerified = await axios.post('http://localhost:5000/user-api/verifyPayment',response)
+                console.log(response)
+                if (isVerified.data.message==="PAYMENT VERIFIED SUCCESSFULLY")
+                {
+                    await checkout(response)
+                }
+                // window.alert(response.razorpay_payment_id);
+                // window.alert(response.razorpay_order_id);
+                // window.alert(response.razorpay_signature)
+            },            
             "prefill": {
-                "name": "Gaurav Kumar",
-                "email": "gaurav.kumar@example.com",
-                "contact": "9000090000"
+                "name": currentUser.username,
+                "email": currentUser.email,
+                "contact": currentUser.phonenumber
+                // "card": 4315814838719009
             },
             "notes": {
                 "address": "Razorpay Corporate Office"
             },
             "theme": {
-                "color": "#3399cc"
+                "color": "#11c738"
             }
         };
         var rzp1 = new window.Razorpay(options);
         rzp1.on('payment.failed', function (response){
-                alert(response.error.code);
-                alert(response.error.description);
-                alert(response.error.source);
-                alert(response.error.step);
-                alert(response.error.reason);
-                alert(response.error.metadata.order_id);
-                alert(response.error.metadata.payment_id);
-        });
+            <FailedModal show={showModal} onClose={handleModalClose} message={"Your transaction has failed. Please go back and try again."}/>
+            // window.alert(response.error.code);
+            // window.alert(response.error.description);
+            // window.alert(response.error.source);
+            // window.alert(response.error.step);
+            // window.alert(response.error.reason);
+            // window.alert(response.error.metadata.order_id);
+            // window.alert(response.error.metadata.payment_id);
+    });
         rzp1.open();
-        e.preventDefault();
     }
     catch(err)
     {
-
+        <FailedModal show={showModal} onClose={handleModalClose} message={err.message} />
     }
 }
+
+// useEffect(()=>
+// (
+//     setShowModal(true)
+// ),[])
 
 return (
     <>
@@ -291,6 +308,13 @@ return (
                             </div>
                         </div>
                     </div>
+                    <div>
+                        <label htmlFor="paymentMode" className='fw-bold fs-5'>Payment Mode:</label>
+                        <select id="paymentMode" className='mx-2' value={paymentMode} onChange={handlePaymentModeChange}>
+                            <option value="CASH ON DELIVERY(COD)">CASH ON DELIVERY(COD)</option>
+                            <option value="ONLINE PAYMENT">ONLINE PAYMENT</option>
+                        </select>
+                    </div>
                     <div className="row mt-4 d-flex">
                         <div className="btn col-sm-6 mb-3 mb-m-1 order text-start">
                             <NavLink to='/store'>
@@ -298,7 +322,11 @@ return (
                             </NavLink>
                         </div>
                         <div className="col-sm-6 order text-end">
-                            <button className="btn btn-primary mb-4 btn-lg pl-5 pr-5" onClick={()=>handle_Payment(cart)}>Checkout</button>
+                        {
+                            paymentMode==="CASH ON DELIVERY(COD)"?
+                            <button className="btn btn-primary mb-4 btn-lg pl-5 pr-5" onClick={()=>checkout()}>Checkout</button>:
+                            <button className="btn btn-primary mb-4 btn-lg pl-5 pr-5" onClick={handle_Payment}>Checkout</button>
+                        }
                         </div>
                     </div>
             </section>
@@ -312,6 +340,8 @@ return (
                 </div>
             </>
 }
+
+
 
 </>
 )
