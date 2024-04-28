@@ -19,10 +19,13 @@ userApp.use(cors(
 ))
 
 // import req handlers from controllers
-const {payment_orders,getuser,getusers,registerUser,userLogin,searchResults,bookAppointment,appointments,cancelappointment,rescheduleappointment,getallslots,getProducts,getallproducts,cart,addcartproduct,removecartproduct,editquantity,order,getorders,cancelorder,getwishlist,addtowishlist,removefromwishlist,inwishlist} = require('../Controllers/user-controller')
+const {payment_orders,verifyPayment,getuser,getusers,registerUser,userLogin,searchResults,bookAppointment,appointments,cancelappointment,rescheduleappointment,getallslots,getProducts,getallproducts,cart,addcartproduct,removecartproduct,editquantity,order,getorders,cancelorder,getwishlist,addtowishlist,removefromwishlist,inwishlist} = require('../Controllers/user-controller')
 
 // RAZORPAY PAYMENT
 userApp.post('/razorpayorder',expressAsyncHandler(payment_orders))
+
+// Verify payment
+userApp.post('/verifyPayment',expressAsyncHandler(verifyPayment))
 
 // CRUD OPERATIONS
 
