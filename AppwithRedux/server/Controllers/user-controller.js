@@ -8,7 +8,10 @@ const jwt = require('jsonwebtoken')
 const {cloudinary} = require('../Middlewares/cloudinaryUpload')
 // import fs (filesystem) module
 const fs = require('fs');
+// import Razorpay
 const Razorpay = require('razorpay');
+// import crypto
+const crypto = require('crypto');
 
 // Instantiate the Razorpay instance
 const razorpay = new Razorpay(
@@ -21,17 +24,56 @@ const razorpay = new Razorpay(
 // razorpay payments
 const payment_orders = async (req,res)=>
 {
+    let data = req.body
+    let order_data = await Cart.findOne({username:data.username})
+    if (order_data)
+    {
+        let options=
+        {
+            amount:(order_data.amount)*100,
+            currency:"INR"
+        }
+        try
+        {
+            const order = await razorpay.orders.create(options)
+            if(order)
+            {
+                res.status(201).send(order)
+            }
+            else
+            {
+                res.status(500).send({message:"ERROR IN PAYMENTS"})
+            }
+        }
+        catch(err)
+        {
+            console.log(err)
+            res.status(500).send(err.message)
+        }
+    }
+    else 
+    {
+        res.status(404).send({ message: "Cart data not found" });
+    }
+}
+
+// Verify payment
+const verifyPayment = async(req,res)=>
+{
     try
     {
-        const options = req.body;
-        const order = await razorpay.orders.create(options)
-        if(order)
+        const {razorpay_order_id,razorpay_payment_id,razorpay_signature} = req.body
+        let secret = process.env.RAZORPAY_SECRET
+        const signature = crypto.createHmac("sha256",secret)
+        signature.update(`${razorpay_order_id}|${razorpay_payment_id}`)
+        let generated_signature = signature.digest('hex');
+        if (generated_signature === razorpay_signature) 
         {
-            res.status(201).send({message:"SUCCESS",payload:order})
+            res.status(200).send({message:"PAYMENT VERIFIED SUCCESSFULLY"})
         }
         else
         {
-            res.status(500).send({message:"ERROR IN PAYMENTS"})
+            res.status(400).send({message:"INVALID SIGNATURE"})
         }
     }
     catch(err)
@@ -686,28 +728,29 @@ const order = async(req,res)=>
         const ordered = await Order.create(orderdetails)
         if (ordered)
         {
-            let user = await User.findOneAndUpdate({username:req.body.username},
+            let userCart = await Cart.findOneAndUpdate({username:req.body.username},
                 {
                     $set:
                     {
-                        cart:[]
+                        cart:[],
+                        amount:0
                     }
                 },
                 {
                     new:false
                 })
-            if (user)
+            if (userCart)
             {
                 res.status(201).send({message:"ORDER PLACED",payload:ordered})
             }
             else
             {
-                res.status(200).send({message:"UNABLE TO EMPTY CART"})
+                res.status(400).send({message:"UNABLE TO EMPTY CART"})
             }
         }
         else
         {
-            res.status(200).send({message:"UNABLE TO PLACE ORDER"})
+            res.status(500).send({message:"UNABLE TO PLACE ORDER"})
         }
     }
     catch(err)
@@ -884,4 +927,4 @@ const inwishlist = async(req,res)=>
 }
 
 
-module.exports={payment_orders,getuser,getusers,registerUser,userLogin,searchResults,bookAppointment,appointments,cancelappointment,rescheduleappointment,getallslots,getProducts,getallproducts,cart,addcartproduct,removecartproduct,editquantity,order,getorders,cancelorder,getwishlist,addtowishlist,removefromwishlist,inwishlist}
+module.exports={payment_orders,verifyPayment,getuser,getusers,registerUser,userLogin,searchResults,bookAppointment,appointments,cancelappointment,rescheduleappointment,getallslots,getProducts,getallproducts,cart,addcartproduct,removecartproduct,editquantity,order,getorders,cancelorder,getwishlist,addtowishlist,removefromwishlist,inwishlist}
