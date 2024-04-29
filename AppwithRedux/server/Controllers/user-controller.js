@@ -102,10 +102,9 @@ const getuser = async(req,res)=>
 // REGISTER USER
 const registerUser = async(req,res)=>
 {
-    // console.log(req.body)
-    // const userdata = req.body
-    // console.log(userdata.userType)
-    const userdata = JSON.parse(req.body.data)
+    try
+    {
+        const userdata = JSON.parse(req.body.data)
     let userType = userdata.userType
     
     if (userdata.userType==='user')
@@ -163,6 +162,12 @@ const registerUser = async(req,res)=>
             res.status(200).send({message:"ADMIN ALREADY REGISTERED!"})
         }
     }
+    }
+    catch(err)
+    {
+        res.status(500).send(err).message
+    }
+    
     // else if (userType==='seller')
     // {
     //     let sellerexists = await Seller.findOne({username:userdata.username})
