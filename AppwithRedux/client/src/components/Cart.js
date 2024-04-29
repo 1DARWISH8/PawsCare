@@ -7,23 +7,27 @@ import { productDetailsPromiseStatus } from '../redux/slices/productDetailsSlice
 import {Alert} from 'react-bootstrap';
 import { userCartPromiseStatus } from '../redux/userCartSlice'
 import FailedModal from './FailedModal'
+import SuccessModal from './SuccessModal'
 
 function Cart() {
 
-    let {currentUser}=useSelector(state=>state.userLogin)
+    let {currentUser,loginStatus}=useSelector(state=>state.userLogin)
     let navigate=useNavigate()
     let dispatch = useDispatch()
     let [cart,setCart] = useState([])
     let [error,setError] = useState('')
     let [alert,setAlert] = useState('')
-    let [total,setTotal] = useState(0)
     let [usercart,setUsercart] = useState([])
     let [paymentMode,setPaymentmode] = useState("CASH ON DELIVERY(COD)")
-    let [successModal,setSuccessModal] = useState("INACTIVE")
+    let [successModal,setSuccessModal] = useState(false)
     const [showModal, setShowModal] = useState(false);
+    let [message,setMessage] = useState('')
 
     const handleModalClose = () => {
       setShowModal(false);
+    };
+    const handleSuccessModalClose = () => {
+      setSuccessModal(false);
     };
   
     
@@ -41,7 +45,11 @@ function Cart() {
         }
         else
         {
-            setError(cartproducts.data.message)
+            if(loginStatus===true)
+            {
+                setMessage(cartproducts.data.message)
+                setShowModal(true)
+            }
         }
     }
     useEffect(()=>getcart,[])
@@ -68,7 +76,8 @@ async function openproductpage(item)
     }
     catch(err)
     {
-        setError(err.message)
+        setMessage(err.message)
+        setShowModal(true)
     }
 }
 
@@ -86,7 +95,8 @@ async function openproductpage(item)
         }
         catch(err)
         {
-            setError(err.message)
+            setMessage(err.message)
+            setShowModal(true)
         }
         
     };
@@ -106,7 +116,8 @@ async function openproductpage(item)
         }
         catch(err)
         {
-            setError(err.message)
+            setMessage(err.message)
+            setShowModal(true)
         }
     };
 
@@ -125,12 +136,14 @@ async function openproductpage(item)
             }
             else
             {
-                setError(productdeleted.data.message)
+                setMessage(productdeleted.data.message)
+                setShowModal(true)
             }
         }
         catch(err)
         {
-            setError(err.message)
+            setMessage(err.message)
+            setShowModal(true)
         }
     }
 
@@ -162,9 +175,10 @@ async function openproductpage(item)
                 let checkedout = await axios.post('http://localhost:5000/user-api/order',order)
                 if(checkedout)
                 {
-                    setAlert(checkedout.data.message)
+                    setMessage(checkedout.data.message)
                     getcart()
                     await dispatch(userCartPromiseStatus(username))
+                    setSuccessModal(true)
                 }
             }
             else if(paymentMode === "CASH ON DELIVERY(COD)")
@@ -173,15 +187,17 @@ async function openproductpage(item)
                 let checkedout = await axios.post('http://localhost:5000/user-api/order',order)
                 if(checkedout)
                 {
-                    setAlert(checkedout.data.message)
+                    setMessage(checkedout.data.message)
                     getcart()
                     await dispatch(userCartPromiseStatus(username))
+                    setSuccessModal(true)
                 }
             }
         }
         catch(error)
         {
-            setError(error.message)
+            setMessage(error.message)
+            setShowModal(true)
         }        
     }
 
@@ -226,7 +242,9 @@ async function handle_Payment()
         };
         var rzp1 = new window.Razorpay(options);
         rzp1.on('payment.failed', function (response){
-            <FailedModal show={showModal} onClose={handleModalClose} message={"Your transaction has failed. Please go back and try again."}/>
+            setMessage(response.error.description)
+            setShowModal(true)
+            // <FailedModal show={showModal} onClose={handleModalClose} message={"Your transaction has failed. Please go back and try again."}/>
             // window.alert(response.error.code);
             // window.alert(response.error.description);
             // window.alert(response.error.source);
@@ -239,19 +257,19 @@ async function handle_Payment()
     }
     catch(err)
     {
-        <FailedModal show={showModal} onClose={handleModalClose} message={err.message} />
+        setMessage(err.message)
+        setShowModal(true)
     }
 }
-
-// useEffect(()=>
-// (
-//     setShowModal(true)
-// ),[])
 
 return (
     <>
         {error.length!==0&& <p className='fw-bold text-center text-danger border-0'>{error}</p>}
         {alert.length!==0 && <Alert variant={'dark'} onClose={()=>setAlert('')}>{alert}</Alert> }
+
+        <SuccessModal show={successModal} onClose={handleSuccessModalClose} message={message} />
+        <FailedModal show={showModal} onClose={handleModalClose} message={message} />
+
 
         {
             cart.length!==0?
@@ -348,3 +366,4 @@ return (
 }
 
 export default Cart
+
