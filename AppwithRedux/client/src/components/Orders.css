@@ -68,9 +68,12 @@
 .track .text {
     display: block;
     margin-top: 10px;
+    font-size: 1.5vh;
+    font-weight: 900;
 }
 
 .track .step.active .text {
     font-weight: 400;
     color: #000;
 }
+
