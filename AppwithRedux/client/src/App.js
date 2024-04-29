@@ -37,6 +37,7 @@ import Myappointments from './components/Myappointments';
 import Dashboard from './components/admin/Dashboard';
 import Shop from './components/Shop';
 import Searchresults from './components/Searchresults';
+import ProductsNotfound from './components/ProductsNotfound';
 
 
 function App() {
@@ -61,6 +62,10 @@ function App() {
         {
           path:'/home',
           element:<Home/>
+        },
+        {
+          path:'/productsnotfound',
+          element:<ProductsNotfound/>
         },
         {
           path:'/searchshop',
