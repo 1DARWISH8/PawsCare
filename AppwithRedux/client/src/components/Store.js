@@ -8,6 +8,7 @@ import './Store.css'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { userCartPromiseStatus } from '../redux/userCartSlice'
+import ProductsNotfound from './ProductsNotfound'
 
 function Store() {
   let navigate = useNavigate()
@@ -180,7 +181,10 @@ useEffect(()=>getwishlist,[])
       
     <section>
     <div className="row">
-    {searchResults.map((item,index)=>
+      {
+        searchResults.length!==0?
+        <>
+              {searchResults.map((item,index)=>
       (
     <div className="col-md-3 col-sm-6 mt-4">
         <div key={index} className="product-grid">
@@ -245,6 +249,13 @@ useEffect(()=>getwishlist,[])
         </div>
     </div>
   ))}
+        </>
+        :
+        <>
+        <ProductsNotfound message={"PRODUCTS NOT FOUND"}/>
+        </>
+      }
+
         </div>
   </section>
     </div>
