@@ -3,6 +3,7 @@ import {useForm} from "react-hook-form"
 import axios from 'axios';
 import {NavLink, useNavigate} from 'react-router-dom'
 import Alert from 'react-bootstrap/Alert';
+import SuccessModal from './SuccessModal';
 
 
 function Register() {
@@ -11,7 +12,24 @@ function Register() {
     let navigate=useNavigate();
     let [error,setError]=useState('')
     let [file,setFile]=useState(null)
-    const [userType,setUserType]=useState('user')
+    let [userType,setUserType] = useState('user')
+
+    let userTypeChange=()=>
+    {
+      if(userType==="user")
+      {
+        setUserType('admin')
+      }
+      else
+      {
+        setUserType('user')
+      }
+    }
+
+    let [successModal,setSuccessModal] = useState(false)
+    const handleSuccessModalClose = () => {
+        setSuccessModal(false);
+      };
 
     const [selectedState, setSelectedState] = useState('');
 
@@ -28,11 +46,6 @@ function Register() {
     // Clear the city field when state changes
     setValue('city', '');
   };
-
-    let userTypeChange=(event)=>
-    {
-        setUserType(event.target.value)
-    }
 
     function uploadPic(e)
     {
@@ -55,6 +68,7 @@ function Register() {
             // console.log(res)
             if (res.status===201)
             {
+                setSuccessModal(true)
                 navigate('/getstarted/login')
             }
             else
@@ -68,26 +82,36 @@ function Register() {
         }
     }
 
-    // console.log(errors)
-
 
 return (
     <div>
         <form className='col-sm-6 mx-auto m-3 p-2' onSubmit={handleSubmit(formSubmit)}>
-        <h1 className='text-center fs-3 text-decoration-underline'>REGISTRATION</h1>
+        <h1 className='text-center fs-3 ' id='health'>REGISTRATION</h1>
         <p className='text-center fw-bold'>ALREADY A USER?<NavLink to='/getstarted/login'>Login</NavLink></p>
+
+        <SuccessModal show={successModal} onClose={handleSuccessModalClose} message={"ACCOUNT CREATED SUCCESSFULLY"}/>
+
         {error.length!==0&& <p className='fw-bold text-center text-danger border-0'>{error}</p>}
 
-        <label className='form-label fw-bold'>SELECT USER TYPE:</label>
+        <h6 className="mb-0 mt-5 pb-3 text-center"><span>USER</span><span>ADMIN</span></h6>
+        <input className="checkbox" type="checkbox" id="reg-log" onChange={userTypeChange} name="reg-log"/>
+			<label for="reg-log"></label>
+        {/* <label className='form-label fw-bold'>SELECT USER TYPE:</label>
         <input type='radio' id='user' name='userType' value='user' checked={userType==='user'} onChange={userTypeChange}></input>
         <label htmlFor='user'>USER</label>
         <input type='radio' id='admin' name='userType' value='admin' onChange={userTypeChange}></input>
-        <label htmlFor='admin'>ADMIN</label>
+        <label htmlFor='admin'>ADMIN</label> */}
         {/* <input type='radio' id='seller' name='userType' value='seller' onChange={userTypeChange}></input>
         <label htmlFor='seller'>SELLER</label> */}
 
         {/* USER DETAILS FORM */}
-        <h5 className='text-center fw-bold pt-5'>USER DETAILS</h5>
+        <h5 className='text-center fw-bold pt-5'>
+            {
+                userType==="user"?
+                <>USER </>:
+                <>ADMIN </>
+            }
+            DETAILS</h5>
         <div className='sm-3 m-3'>
             {/* username */}
             <label htmlFor='username' className='form-label fw-bold' >USERNAME:</label>
@@ -111,7 +135,7 @@ return (
             {/* USER DISPLAY PICTURE */}
             <label htmlFor='userpic' className='form-label fw-bold'>PROFILE IMAGE:</label>
             <input id='userpic' type='file' name='userpic' className='form-control border-black' onChange={uploadPic}/>
-            {errors.userpic?.type==='required'&&<p className='text-center text-danger fw-bold'>*USER IMAGE is required*</p>}
+            {file===null&&<p className='text-center text-danger fw-bold'>*USER IMAGE is required*</p>}
         </div>
 
 
@@ -149,12 +173,12 @@ return (
             </select>
             {errors.petdetails?.petanimal?.type==='required'&&<p className='text-center text-danger fw-bold'>*PET ANIMAL TYPE is required*</p>}
         </div>
-        <div className='sm-3 m-3'>
             {/* Previous Health checkup date */}
+        {/* <div className='sm-3 m-3'>
             <label htmlFor='last_checkup_date' className='form-label fw-bold'>PREVIOUS DATE OF HEALTH CHECK-UP:</label>
             <input type='date' id="last_checkup_date" className='form-control border-black text-center' {...register('petdetails.last_checkup_date',{required:true})}></input>
             {errors.petdetails?.last_checkup_date?.type==='required'&&<p className='text-center text-danger fw-bold'>*PREVIOUS HEALTH CHECK-UP DATE is required*</p>}
-        </div>
+        </div> */}
         </div>
 
 
@@ -179,13 +203,13 @@ return (
                             </option>
                         ))}
                 </select>
-                {errors.address?.state?.type==='required'&&<p className='fw-bold text-danger text-center'>*ADDRESS is required*</p>}
+                {errors.address?.state?.type==='required'&&<p className='fw-bold text-danger text-center'>*STATE is required*</p>}
             </div>
 
             <div className='sm-3 m-3 '>
                 <label className='form-label fw-bold' htmlFor='district'>DISTRICT:</label>
                 {/* <textarea className='form-control border-black' type='text' id='address' {...register('address.addressline',{required:true})}></textarea> */}
-                <select className='form-control border-black' id="district" {...register("address.district")}>
+                <select className='form-control border-black' id="district" {...register("address.district",{required:true})}>
                     <option value="">Select City</option>
                         {selectedState &&
                             indianStates.find((state) => state.name === selectedState).districts.map((city, index) => (
@@ -194,7 +218,7 @@ return (
                     </option>
                     ))}
                 </select>
-                {errors.address?.district?.type==='required'&&<p className='fw-bold text-danger text-center'>*ADDRESS is required*</p>}
+                {errors.address?.district?.type==='required'&&<p className='fw-bold text-danger text-center'>*DISTRICT is required*</p>}
             </div>
 
             <div className='sm-3 m-3 '>
