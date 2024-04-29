@@ -1,4 +1,4 @@
-import React, {useEffect,useState} from 'react'
+import React, {useState} from 'react'
 import { useNavigate } from 'react-router-dom'
 import {useDispatch,useSelector} from 'react-redux'
 import axios from 'axios'
@@ -8,6 +8,7 @@ import './Store.css'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { userCartPromiseStatus } from '../redux/userCartSlice'
+import ProductsNotfound from './ProductsNotfound'
 
 function Shop() {
     let navigate = useNavigate()
@@ -60,16 +61,19 @@ return (
 
     <section>
     <div className="row">
-    {petproducts.map((item,index)=>
+        {
+            petproducts.length!==0?
+            <>
+                {petproducts.map((item,index)=>
     (
     <div className="col-md-3 col-sm-6 mt-4">
         <div key={index} className="product-grid">
             <div className="product-image">
-                <a href="#" className="image">
+                <a className="image">
                     {
                         item.stock === "In Stock"?
                         <div>
-                            <img key={index} onClick={()=>openproductpage(item)} src={item.image[0].ImageURL}/>
+                            <img key={index} onClick={()=>openproductpage(item)} src={item.image[0].ImageURL} alt={item.productname}/>
                         </div>
                         :
                         <div>
@@ -113,18 +117,25 @@ return (
                     </div>
                 </h3>
                 <div className="price">₹{item.discounted_price} 
-                  {
-                    item.discount_percent===0?
-                    <>
-                    </>
-                    :
-                    <span>₹{item.price}</span>
-                  }
+                    {
+                        item.discount_percent===0?
+                        <>
+                        </>
+                        :
+                        <span>₹{item.price}</span>
+                    }
                 </div>
             </div>
         </div>
     </div>
   ))}
+            </>
+            :
+            <>
+            <ProductsNotfound message={"PRODUCTS NOT FOUND"}/>
+            </>
+        }
+
         </div>
         </section>
     </div>
