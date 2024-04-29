@@ -25,11 +25,11 @@ function Login() {
     }
   }
 
-  const formSubmit=(data)=>
+  async function formSubmit(data)
   {
     data={userType,...data}
-    dispatch(userLoginPromiseStatus(data))
-    dispatch(userCartPromiseStatus(data.username))
+    await dispatch(userLoginPromiseStatus(data))
+    await dispatch(userCartPromiseStatus(data.username))
   }
 
   useEffect(()=>
@@ -48,22 +48,23 @@ function Login() {
   },[loginStatus])
 
   return (
-    <div>
-      <h6 className="mb-0 mt-5 pb-3 text-center"><span>USER</span><span>ADMIN</span></h6>
+    <div className='text-center'>
+      <h1 className='pt-4' id='health'>LOGIN</h1>
+      <h6 className="mb-0 mt-3 pb-3 text-center"><span>USER</span><span>ADMIN</span></h6>
 			<input className="checkbox" type="checkbox" id="reg-log" onChange={userTypeChange} name="reg-log"/>
 			<label for="reg-log"></label>
       {errorMessage.length!==0&&<p className='fw-bold text-center text-danger fs-4'>{errorMessage.message}</p>}
 						<div className="d-flex align-items-center justify-content-center pt-3">
-            <form id='login-form' className='col-sm-8 col-md-4' onSubmit={handleSubmit(formSubmit)}>
+            <form id='login-form' className='' onSubmit={handleSubmit(formSubmit)}>
               <div className="align-items-center justify-content-center">
-                <h4 className="mb-4 pb-3">
+                <h2 className="mb-4 pb-3" id='health'>
                   {userType==='user'?<>
                   User </>
                   :
                   <>
                   Admin </>}
                   Log In
-                </h4>
+                </h2>
                 <div className="form-group">
                   <input type="text" className="form-style" placeholder="Your Username" autocomplete="off" id='username' {...register('username',{required:true})}/>
                   <i className="input-icon fas fa-user"></i>
