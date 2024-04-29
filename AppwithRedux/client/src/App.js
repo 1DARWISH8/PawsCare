@@ -12,13 +12,7 @@ import Login from './components/Login';
 import Contact from './components/Contact';
 import Profile from './components/Profile';
 import Appointment from './components/Appointment';
-import Appointsuccess from './components/Appointsuccess';
-import Healthcard from './components/Healthcard';
-// import Food from './components/Food';
-// import Treats from './components/Treats';
-// import Essentials from './components/Essentials';
 import Cart from './components/Cart';
-import Checkout from './components/Checkout';
 import Checkappointment from './components/admin/Checkappointments';
 import Manageusers from './components/admin/Manageusers';
 import Managestore from './components/admin/Managestore'
@@ -38,9 +32,13 @@ import Dashboard from './components/admin/Dashboard';
 import Shop from './components/Shop';
 import Searchresults from './components/Searchresults';
 import ProductsNotfound from './components/ProductsNotfound';
+import { useSelector } from 'react-redux';
 
 
 function App() {
+
+  let {currentUser,loginStatus} = useSelector(state=>state.userLogin)
+
   // browserRouter variable is created which contains all the paths and its components
   let browserRouter= createBrowserRouter([
     {
@@ -51,13 +49,7 @@ function App() {
       children:[
         {
           path:'',
-          element:<Home/>,
-          children:[
-            {
-              path:'/home/healthcard',
-              element:<Healthcard/>
-            }
-          ]
+          element:<Home/>
         },
         {
           path:'/home',
@@ -76,20 +68,8 @@ function App() {
           element:<Shop/>
         },
         {
-          path:'/dashboard',
-          element:<Dashboard/>
-        },
-        {
           path:'store',
           element:<Store/>
-        },
-        {
-          path:"/cart",
-          element:<Cart/>
-        },
-        {
-          path:'/store/checkout',
-          element:<Checkout/>
         },
         {
           path:'/getstarted',
@@ -108,32 +88,8 @@ function App() {
           element:<Contact/>
         },
         {
-          path:'profile',
-          element:<Profile/>
-        },
-        {
-          path:'/user/orders',
-          element:<Orders/>
-        },
-        {
-          path:'/user/wishlist',
-          element:<Wishlist/>
-        },
-        {
-          path:'/home/appointment',
-          element:<Appointment/>
-        },
-        {
-          path:'/home/myappointments',
-          element:<Myappointments/>
-        },
-        {
           path:'/home/bookappointment',
           element:<Bookappointment/>
-        },
-        {
-          path:'appointment/appointsuccess',
-          element:<Appointsuccess/>
         },
         {
           path:'/store',
@@ -144,44 +100,72 @@ function App() {
           element:<Productpage/>
         },
         {
+          path:"/cart",
+          element:(loginStatus===true && currentUser.userType ==="user")?<Cart/>:<Login/>
+        },
+        {
+          path:'profile',
+          element:(loginStatus===true && currentUser.userType ==="user")?<Profile/>:<Login/>
+        },
+        {
+          path:'/user/orders',
+          element:(loginStatus===true && currentUser.userType ==="user")?<Orders/>:<Login/>
+        },
+        {
+          path:'/user/wishlist',
+          element:(loginStatus===true && currentUser.userType ==="user")?<Wishlist/>:<Login/>
+        },
+        {
+          path:'/home/appointment',
+          element:(loginStatus===true && currentUser.userType ==="user")?<Appointment/>:<Login/>
+        },
+        {
+          path:'/home/myappointments',
+          element:(loginStatus===true && currentUser.userType ==="user")?<Myappointments/>:<Login/>
+        },
+        {
+          path:'/dashboard',
+          element:(loginStatus===true && currentUser.userType ==="admin")?<Dashboard/>:<Login/>
+        },
+        {
           path:'/admin/checkappointment',
-          element:<Checkappointment/>
+          element:(loginStatus===true && currentUser.userType ==="admin")?<Checkappointment/>:<Login/>
         },
         {
           path:'/admin/bookuserappointment',
-          element:<Bookuserappointment/>
+          element:(loginStatus===true && currentUser.userType ==="admin")?<Bookuserappointment/>:<Login/>
         },
         {
           path:'/admin/adminbookappointment',
-          element:<Adminbookappointment/>
+          element:(loginStatus===true && currentUser.userType ==="admin")?<Adminbookappointment/>:<Login/>
         },
         {
           path:'/admin/manageusers',
-          element:<Manageusers/>
+          element:(loginStatus===true && currentUser.userType ==="admin")?<Manageusers/>:<Login/>
         },
         {
           path:'/admin/managestore',
-          element:<Managestore/>
+          element:(loginStatus===true && currentUser.userType ==="admin")?<Managestore/>:<Login/>
         },
         {
           path:'/admin/manageorders',
-          element:<Manageorders/>
+          element:(loginStatus===true && currentUser.userType ==="admin")?<Manageorders/>:<Login/>
         },
         {
           path:'/admin/addproduct',
-          element:<Addproducts/>
+          element:(loginStatus===true && currentUser.userType ==="admin")?<Addproducts/>:<Login/>
         },
         {
           path:'/admin/editproduct',
-          element:<Editproduct/>
+          element:(loginStatus===true && currentUser.userType ==="admin")?<Editproduct/>:<Login/>
         },
         {
           path:'/admin/deletedproducts',
-          element:<Deletedproduct/>
+          element:(loginStatus===true && currentUser.userType ==="admin")?<Deletedproduct/>:<Login/>
         },
         {
           path:'/admin/userprofile',
-          element:<Userprofile/>
+          element:(loginStatus===true && currentUser.userType ==="admin")?<Userprofile/>:<Login/>
         }
       ]
     }
