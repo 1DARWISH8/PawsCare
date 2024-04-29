@@ -12,6 +12,8 @@ import Form from 'react-bootstrap/Form';
 import { userCartPromiseStatus } from '../redux/userCartSlice';
 import { searchResultsPromiseStatus } from '../redux/slices/searchResultsSlice';
 // import Offcanvas from 'react-bootstrap/Offcanvas';
+// import Login from './Login'
+// import Register from './Register'
 
 function Header() {
   // import userloginSlice from reducer store
@@ -22,6 +24,17 @@ function Header() {
   let {userCart} = useSelector(state=>state.usercart)
 
   const [search_word, setSearch_word] = useState('');
+
+  // const [showLogin, setShowLogin] = useState(false);
+
+  // const handleLoginClose = () => setShowLogin(false);
+  // const handleLoginShow = () => setShowLogin(true);
+  
+  // const [showRegister, setShowRegister] = useState(false);
+
+  // const handleRegisterClose = () => setShowRegister(false);
+  // const handleRegisterShow = () => setShowRegister(true);
+
   async function logout()
     {
         await dispatch(logOut())
@@ -71,9 +84,33 @@ function Header() {
             <NavLink className='nav-link' id='icon' to='/home/appointment'><i className="bi bi-calendar"></i>APPOINTMENTS</NavLink>
             <NavLink className='nav-link' id='icon' to='/cart'><i className="bi bi-cart4"></i>CART</NavLink>
             <NavLink className='nav-link' id='icon' to='/getstarted'>GET STARTED</NavLink>
+            {/* <Button className='nav-link' id='icon' onClick={handleLoginShow}>
+              Login
+            </Button>
+            <Button className='nav-link' id='icon' onClick={handleRegisterShow}>
+              Register
+            </Button> */}
           </Nav>
           </Navbar.Collapse>
-          </Navbar>    
+          </Navbar>  
+
+          {/* <Offcanvas show={showLogin} onHide={handleLoginClose} placement="end">
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title id='health'>LOGIN</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
+          <Login/>
+        </Offcanvas.Body>
+      </Offcanvas>
+  
+          <Offcanvas show={showRegister} onHide={handleRegisterClose} placement="end">
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title id='health'>REGISTER</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
+          <Register/>
+        </Offcanvas.Body>
+      </Offcanvas> */}
       </>
       :
       <>
