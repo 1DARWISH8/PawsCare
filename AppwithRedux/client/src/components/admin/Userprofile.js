@@ -79,7 +79,7 @@ useState(()=>
 
 
   return (
-    <div>
+    <section>
 	{error.length!==0&&<p className='fs-3 text-danger'>{error}</p>}
 	{alert.length!==0 && <Alert variant={'dark'} onClose={()=>setAlert('')}>{alert}</Alert> }
 	<div className="pt-3">
@@ -190,7 +190,7 @@ useState(()=>
 			</div>
 		</div>
 	</div>
-    </div>
+    </section>
   )
 }
 
