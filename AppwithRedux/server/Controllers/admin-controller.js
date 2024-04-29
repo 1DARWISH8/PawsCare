@@ -486,6 +486,18 @@ const addproduct = async (req,res)=>
             }
             let image=uploads
             data = {...data,image}
+            // Iterate over req.files array
+            for (const file of req.files)
+            {
+                // Unlink files saved in "Uploads" folder
+                fs.unlink(file.path,err=>
+                {
+                    if(err)
+                    {
+                        throw err
+                    }
+                })
+            }
             let added = await Product.create(data)
             if (added)
             {
