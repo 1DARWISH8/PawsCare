@@ -36,10 +36,11 @@ const localstorage = multer.diskStorage(
         // defines filename under which uploaded file will be stored
         filename: function(req,file,cb)
         {
-            cb(null,file.originalname);
+            const uniqueIdentifier = Date.now() + '_' + file.originalname;
+            cb(null, uniqueIdentifier);
         }
     }
 )
 
-const upload = multer({storage : localstorage});
+const upload = multer({ storage: localstorage });
 module.exports={upload,cloudinary};
