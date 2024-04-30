@@ -1,7 +1,6 @@
 import React from 'react'
 
 function Contact() {
-  let logo = 'https://res.cloudinary.com/dozacgfl7/image/upload/v1711878050/logo_with_name_l2vh5v.png'
   return (
     <section>
         <div className='row p-3'>
