@@ -1,12 +1,14 @@
+//Import Styles
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
 // Router is imported from react-router-dom
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+
 // individual components are imported from their file locations
 import Rootlayout from './Rootlayout';
 import Home from './components/Home';
 import Store from './components/Store';
-import GetStarted from './components/GetStarted';
 import Register from './components/Register';
 import Login from './components/Login';
 import Contact from './components/Contact';
@@ -33,8 +35,6 @@ import Shop from './components/Shop';
 import Searchresults from './components/Searchresults';
 import ProductsNotfound from './components/ProductsNotfound';
 import { useSelector } from 'react-redux';
-import axios from 'axios'
-import { useEffect, useState } from 'react';
 
   // // Function to set token in Axios headers
   // const setAuthToken = (getToken) => {
@@ -47,7 +47,9 @@ import { useEffect, useState } from 'react';
 
 function App() {
 
-  let {currentUser,loginStatus} = useSelector(state=>state.userLogin)
+// Destructure the currentUser and loginStatus from the userLogin state using useSelector hook
+  let { currentUser, loginStatus } = useSelector(state => state.userLogin);
+
 
   // if (loginStatus)
   // {
