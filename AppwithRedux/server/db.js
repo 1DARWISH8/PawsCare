@@ -85,10 +85,6 @@ const userSchema = new mongoose.Schema(
             {
                 type:String,
                 required:[true,"PETANIMAL IS REQUIRED"]
-            },
-            last_checkup_date:
-            {
-                type:String
             }
         }],
         address:
