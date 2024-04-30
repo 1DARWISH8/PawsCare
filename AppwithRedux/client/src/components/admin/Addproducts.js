@@ -6,28 +6,34 @@ import Alerts from '../Alerts';
 
 function Addproducts () 
 {
+    // Form to submit product details using react-hook-form
     let {register,handleSubmit,formState:{errors}}=useForm()
-    let [message,setMessage] = useState('')
-    let [Alert,setAlert] = useState(false)
-    let [type,setType] = useState('')
+
+    //Image Files 
     let [files,setFiles]=useState(null)
     let navigate=useNavigate()
 
-const hideAlert = () =>
-{
-    setTimeout(()=>
+    // Alert
+    let [message,setMessage] = useState('')
+    let [Alert,setAlert] = useState(false)
+    let [type,setType] = useState('')
+
+    // Hide Alert after 3 seconds
+    const hideAlert = () =>
     {
-        setAlert(false);
-    },3000);
-}
+        setTimeout(()=>
+        {
+            setAlert(false);
+        },3000);
+    }
 
-
-
+    // To upload selected files
     function uploadPic(e)
     {
         setFiles(e.target.files)
     }
 
+    // Form submission of FormData
     async function formSubmit(data)
     {
         const formData = new FormData();
