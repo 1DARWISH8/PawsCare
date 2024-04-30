@@ -39,7 +39,7 @@ function Header() {
     {
         await dispatch(logOut())
 		    sessionStorage.removeItem('token')        
-        navigate('/getstarted')
+        navigate('/')
     }
 
     async function handleSearch(e) {
