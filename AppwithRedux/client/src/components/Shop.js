@@ -37,7 +37,7 @@ async function addtocart(item)
         // console.log(added)
         if (added.data.message === "PRODUCT ADDED TO CART")
         {
-            setAlert('PRODUCT ADDED')
+            setMessage('PRODUCT ADDED')
             setType('success')
             setAlert(true)
             hideAlert()
@@ -51,6 +51,7 @@ async function addtocart(item)
             hideAlert()
         }
     }
+    
     catch(err)
     {
         setMessage(err.message)
