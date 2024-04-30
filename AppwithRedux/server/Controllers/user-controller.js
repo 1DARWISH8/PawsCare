@@ -189,7 +189,9 @@ const registerUser = async(req,res)=>
 // LOGIN USER
 const userLogin = async(req,res)=>
 {
-    // get user login credentials
+    try
+    {
+        // get user login credentials
     let userCred = req.body;
     // check for data in db
     let userType = req.body.userType
@@ -226,7 +228,7 @@ const userLogin = async(req,res)=>
             let result = await bcryptjs.compare(userCred.password,adminExistsinDB.password)
             if (result)
             {
-                let signedToken = jwt.sign({username:adminExistsinDB.username},process.env.SECRET_KEY,{expiresIn:300})
+                let signedToken = jwt.sign({username:adminExistsinDB.username},process.env.SECRET_KEY,{expiresIn:900})
                 res.status(200).send({message:"SUCCESSFUL LOGIN",token:signedToken,user:adminExistsinDB})
             }
             else
@@ -234,6 +236,11 @@ const userLogin = async(req,res)=>
                 res.status(200).send({message:"INCORRECT PASSWORD"})
             }
         }
+    }
+    }
+    catch(err)
+    {
+        res.status(500).send(err.message)
     }
     // else
     // {
