@@ -3,22 +3,23 @@ import { useNavigate } from 'react-router-dom'
 import {useDispatch,useSelector} from 'react-redux'
 import axios from 'axios'
 import { productDetailsPromiseStatus } from '../redux/slices/productDetailsSlice' 
-import {Alert} from 'react-bootstrap';
 import './Store.css'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { userCartPromiseStatus } from '../redux/userCartSlice'
 import ProductsNotfound from './ProductsNotfound'
+import Alerts from './Alerts'
 
 function Store() {
   let navigate = useNavigate()
   let dispatch = useDispatch()
   let [products,setProducts]=useState([])
-  let [error,setError] =useState('')
+  let [message,setMessage] = useState('')
+  let [Alert,setAlert] = useState(false)
+  let [type,setType] = useState('')
   // const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   let {currentUser,loginStatus}=useSelector(state=>state.userLogin)
-  let [alert,setAlert] = useState('')
   let [wishlist,setWishlist] = useState([])
 
 
@@ -35,7 +36,9 @@ function Store() {
     }
     catch(err)
     {
-      setError(err.message)
+      setMessage(err.message)
+      setType('failure')
+      setAlert(true)
     }
   }
 
@@ -55,7 +58,9 @@ async function getwishlist()
     }
     catch(err)
     {
-        setError(err.message)
+        setMessage(err.message)
+        setType("failure")
+        setAlert(true)
     }
 }
 
@@ -65,14 +70,10 @@ useEffect(()=>getwishlist,[])
   {
     setTimeout(()=>
     {
-      setAlert('');
-    },5000);
+      setAlert(false);
+    },1000);
   }
 
-  useState(()=>
-  {
-    hideAlert();
-  },[])
 
 //   const handleChange = (e) => {
 //     setSearchTerm(e.target.value);
@@ -107,17 +108,25 @@ useEffect(()=>getwishlist,[])
         let added = await axios.post('http://localhost:5000/user-api/addcartproduct',item)
         if (added.data.message === "PRODUCT ADDED TO CART")
         {
-          setAlert('PRODUCT ADDED')
+          setMessage('PRODUCT ADDED')
+          setType('success')
+          setAlert(true)
+          hideAlert()
           await dispatch(userCartPromiseStatus(username))
         }
         else if (added.data.message === "ITEM ALREADY IN CART")
         {
-          setAlert('PRODUCT ALREADY IN CART')
+          setMessage('PRODUCT ALREADY IN CART')
+          setType('exists')
+          setAlert(true)
+          hideAlert()
         }
     }
     catch(err)
     {
-      setError(err.message)
+      setMessage(err.message)
+      setType('failure')
+      setAlert(true)
     }
   }
 
@@ -130,55 +139,55 @@ useEffect(()=>getwishlist,[])
     }
     catch(err)
     {
-      setError(err.message)
+      setMessage(err.message)
+      setType("failure")
+      setAlert(true)
     }
   }
 
-  async function addtowishlist(item)
-  {
-    try
-    {
-      let username=currentUser.username;
-      item = {...item,username}
-      console.log(item)
-      let addtowishlist = await axios.post('http://localhost:5000/user-api/addtowishlist',item)
-      console.log(addtowishlist)
-      if (addtowishlist.data.message === "PRODUCT ADDED TO WISHLIST")
-      {
-        setAlert('PRODUCT ADDED TO WISHLIST')
-        viewproducts()
-      }
-    }
-    catch(err)
-    {
-      setError(err.message)
-    }
-  }
+  // async function addtowishlist(item)
+  // {
+  //   try
+  //   {
+  //     let username=currentUser.username;
+  //     item = {...item,username}
+  //     console.log(item)
+  //     let addtowishlist = await axios.post('http://localhost:5000/user-api/addtowishlist',item)
+  //     console.log(addtowishlist)
+  //     if (addtowishlist.data.message === "PRODUCT ADDED TO WISHLIST")
+  //     {
+  //       setAlert('PRODUCT ADDED TO WISHLIST')
+  //       viewproducts()
+  //     }
+  //   }
+  //   catch(err)
+  //   {
+  //     setError(err.message)
+  //   }
+  // }
 
-  async function removefromwishlist(item)
-  {
-    try
-    {
-      let username=currentUser.username;
-      item = {...item,username}
-      let removedfromwishlist = await axios.post('http://localhost:5000/user-api/removefromwishlist',item)
-      // console.log(added)
-      if (removedfromwishlist.data.message === "PRODUCT REMOVED FROM WISHLIST")
-      {
-        setAlert('PRODUCT REMOVED FROM WISHLIST')
-        viewproducts()
-      }    }
-    catch(err)
-    {
-      setError(err.message)
-    }
-  }
+  // async function removefromwishlist(item)
+  // {
+  //   try
+  //   {
+  //     let username=currentUser.username;
+  //     item = {...item,username}
+  //     let removedfromwishlist = await axios.post('http://localhost:5000/user-api/removefromwishlist',item)
+  //     // console.log(added)
+  //     if (removedfromwishlist.data.message === "PRODUCT REMOVED FROM WISHLIST")
+  //     {
+  //       setAlert('PRODUCT REMOVED FROM WISHLIST')
+  //       viewproducts()
+  //     }    }
+  //   catch(err)
+  //   {
+  //     setError(err.message)
+  //   }
+  // }
 
   return (
     <div>
-      {error.length!==0&& <p className='fw-bold text-center text-danger border-0'>{error}</p>}
-      {alert.length!==0 && <Alert variant={'dark'} onClose={()=>setAlert('')}>{alert}</Alert> }
-      
+      <Alerts show={Alert} type={type} message={message} onClose={()=>setAlert(false)} />
     <section>
     <div className="row">
       {
