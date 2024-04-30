@@ -4,9 +4,7 @@ import {useDispatch} from 'react-redux'
 import {useNavigate} from 'react-router-dom'
 import {useForm} from "react-hook-form"
 import { userselectedDetailsPromiseSlice } from '../../redux/slices/userselectedDetailsSlice';
-import Spinner from 'react-bootstrap/Spinner';
 import './Manageusers.css'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Table from 'react-bootstrap/Table'
 
 function Manageusers() {
