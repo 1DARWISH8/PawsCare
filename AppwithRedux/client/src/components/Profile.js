@@ -17,7 +17,7 @@ function Profile() {
     {
         dispatch(logOut())
 		sessionStorage.removeItem('token')        
-        navigate('/getstarted')
+        navigate('/')
     }
 
 return (
