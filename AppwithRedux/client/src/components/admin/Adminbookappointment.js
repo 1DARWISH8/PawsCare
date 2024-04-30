@@ -5,35 +5,52 @@ import {useNavigate} from 'react-router-dom'
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import {useSelector} from 'react-redux'
-import Accordion from 'react-bootstrap/Accordion';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import {Alert} from 'react-bootstrap';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import Alerts from '../Alerts';
 
 function Adminbookappointment() {
 
     let {selectedUser} = useSelector(state=>state.userselected)
-    let [error,setError]=useState('')
     let navigate= useNavigate()
+    // Form to Submit appointment form 
     let {register,handleSubmit,formState:{errors}}=useForm()
+    // Form variables
     const [selectedDate, setSelectedDate] = useState('');
     const [selectedService, setService] = useState('');
     const [selectedLocation, setLocation] = useState('');
     const [timeslots,setTimeslots]=useState([])
+
     // State to store the selected option
     const [selectedOption, setSelectedOption] = useState(""); 
+
     // Get today's date
     const today = new Date();
-    let [alert,setAlert] = useState('')
 
+    //Alerts
+    let [Alert,setAlert] = useState('')
+    let [message,setMessage] = useState('')
+    let [type,setType] = useState('')
+
+    // Hide Alert after 3 seconds
+    const hideAlert = () =>
+    {
+        setTimeout(()=>
+        {
+            setAlert(false);
+        },3000);
+    }
+
+    // Modal  
     const [show, setShow] = useState(false);
-
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
 
+    // UseEffect to rerender on dependency array
     useEffect(()=>
     {
         // Check if all inputs are provided
@@ -44,6 +61,7 @@ function Adminbookappointment() {
         }
     },[selectedService,selectedLocation,selectedDate])
 
+    // Get appointment slots based on inputs
     async function getallslots(selectedService,selectedLocation,selectedDate)
     {
         try
@@ -54,7 +72,9 @@ function Adminbookappointment() {
         }
         catch(err)
         {
-            setError(err.message)
+          setMessage(err.message)
+          setType("failure")
+          setAlert(true)
         }
     }
     
@@ -71,17 +91,23 @@ function Adminbookappointment() {
             let booked = await axios.post(`http://localhost:5000/admin-api/bookappointment`,data)
             if(booked.data.message==="APPOINTMENT HAS BEEN BOOKED")
             {
-                setAlert(booked.data.message)
-                handleShow()
+              setMessage(booked.data.message)
+              setType("success")
+              setAlert(true)
+              handleShow()
             }
             else
             {
-                setError(booked.data.message)
+              setMessage(booked.data.message)
+              setType("failure")
+              setAlert(true)
             }
         }
         catch(err)
         {
-            setError(err.message)
+          setMessage(err.message)
+          setType("failure")
+          setAlert(true)
         }
     }
 
@@ -93,8 +119,9 @@ function Adminbookappointment() {
   return (
     <div>
       <h1 className='text-center fs-3 text-decoration-underline'>BOOK APPOINTMENT</h1>
-        {error.length!==0&& <p className='fw-bold text-center text-danger border-0'>{error}</p>}
-        {alert.length!==0 && <Alert variant={'dark'} onClose={()=>setAlert('')}>{alert}</Alert> }
+
+      <Alerts show={Alert} type={type} message={message} onClose={()=>setAlert(false)} />
+      
         <form className='p-3 ' onSubmit={handleSubmit(formSubmit)}>
             <div className='row'>
 
