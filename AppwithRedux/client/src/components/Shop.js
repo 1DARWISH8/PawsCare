@@ -3,21 +3,29 @@ import { useNavigate } from 'react-router-dom'
 import {useDispatch,useSelector} from 'react-redux'
 import axios from 'axios'
 import { productDetailsPromiseStatus } from '../redux/slices/productDetailsSlice' 
-import {Alert} from 'react-bootstrap';
 import './Store.css'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { userCartPromiseStatus } from '../redux/userCartSlice'
 import ProductsNotfound from './ProductsNotfound'
+import Alerts from './Alerts'
 
 function Shop() {
     let navigate = useNavigate()
     let dispatch = useDispatch()
-    let [alert,setAlert] = useState('')
-    let [error,setError] =useState('')
+    let [message,setMessage] = useState('')
+    let [Alert,setAlert] = useState(false)
+    let [type,setType] = useState('')
     let {petproducts}=useSelector(state=>state.petProducts)
     let {currentUser,loginStatus}=useSelector(state=>state.userLogin)
 
+    const hideAlert = () =>
+    {
+        setTimeout(()=>
+        {
+            setAlert(false);
+        },1000);
+    }
 
 async function addtocart(item)
 {
@@ -30,16 +38,24 @@ async function addtocart(item)
         if (added.data.message === "PRODUCT ADDED TO CART")
         {
             setAlert('PRODUCT ADDED')
+            setType('success')
+            setAlert(true)
+            hideAlert()
             await dispatch(userCartPromiseStatus(username))
         }
         else if (added.data.message === "ITEM ALREADY IN CART")
         {
-            setAlert('PRODUCT ALREADY IN CART')
+            setMessage('PRODUCT ALREADY IN CART')
+            setType('exists')
+            setAlert(true)
+            hideAlert()
         }
     }
     catch(err)
     {
-        setError(err.message)
+        setMessage(err.message)
+        setType('failure')
+        setAlert(true)
     }
 }   
 async function openproductpage(item)
@@ -51,13 +67,14 @@ async function openproductpage(item)
     }
     catch(err)
     {
-        setError(err.message)
+        setMessage(err.message)
+        setType("failure")
+        setAlert(true)
     }
 }
 return (
     <div>
-        {error.length!==0&& <p className='fw-bold text-center text-danger border-0'>{error}</p>}
-        {alert.length!==0 && <Alert variant={'dark'} onClose={()=>setAlert('')}>{alert}</Alert> }
+        <Alerts show={Alert} type={type} message={message} onClose={()=>setAlert(false)} />
 
     <section>
     <div className="row">
