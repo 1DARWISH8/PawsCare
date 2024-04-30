@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
-import Card from 'react-bootstrap/Card';
 import {Alert} from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
