@@ -25,9 +25,7 @@ return (
 		{
 			userType==='user'?
 			<>
-			
-        <div >
-		<div >
+			<div >
 			<h3 className='fs-1 p-3 text-center pb-0' id='health'>USER PROFILE</h3>
 			<div className="row">
 				<div className="col-lg-4">
@@ -116,20 +114,19 @@ return (
                                     <p className='user-data'>{currentUser.petdetails[0].dob}</p>
 								</div>
 							</div>
-							<div className="row mb-3">
+							{/* <div className="row mb-3">
 								<div className="col-sm-3">
 									<h6 className="mb-0" id="pawscare">Previous Health Checkup:</h6>
 								</div>
 								<div className="col-sm-9 text-secondary">
                                     <p className='user-data'>{currentUser.petdetails[0].last_checkup_date}</p>
 								</div>
-							</div>
+							</div> */}
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
 			</>
 			:
 			<>
