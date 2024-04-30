@@ -93,15 +93,11 @@ function App() {
           element:<Store/>
         },
         {
-          path:'/getstarted',
-          element:<GetStarted/>,
-        },
-        {
-          path:'/getstarted/register',
+          path:'/register',
           element:<Register/>
         },
         {
-          path:'getstarted/login',
+          path:'/login',
           element:<Login/>
         },
         {
@@ -111,6 +107,10 @@ function App() {
         {
           path:'/home/bookappointment',
           element:<Bookappointment/>
+        },
+        {
+          path:'/home/appointment',
+          element:<Appointment/>
         },
         {
           path:'/store',
@@ -135,10 +135,6 @@ function App() {
         {
           path:'/user/wishlist',
           element:(loginStatus===true && currentUser.userType ==="user")?<Wishlist/>:<Login/>
-        },
-        {
-          path:'/home/appointment',
-          element:(loginStatus===true && currentUser.userType ==="user")?<Appointment/>:<Login/>
         },
         {
           path:'/home/myappointments',
