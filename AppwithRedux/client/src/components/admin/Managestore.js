@@ -3,7 +3,6 @@ import axios from 'axios'
 import { useNavigate,NavLink } from 'react-router-dom'
 import { productDetailsPromiseStatus } from '../../redux/slices/productDetailsSlice'
 import {useDispatch} from 'react-redux'
-import {Alert} from 'react-bootstrap';
 import '../Store.css'
 
 function Managestore() 
@@ -174,12 +173,14 @@ async function openproductpage(item)
           </form>
       </div>
 
-  <div className="row">
+
+<section>
+  <div className="row" >
     {searchResults.map((item,index)=>
       (
-    <div className="col-md-3 col-sm-6 mt-4">
-        <div key={index} className="product-grid">
-            <div className="product-image">
+    <div className="col-md-3 col-sm-6 mt-4" >
+        <div key={index} className="product-grid" >
+            <div className="product-image" id='product-cards'>
                 <a href="#" className="image">
                   {
                     item.stock === "In Stock"?
@@ -234,7 +235,7 @@ async function openproductpage(item)
     </div>
   ))}
   <div className="hover-container">
-      <button className="stickyButton" onClick={toggleFloatingButton}>
+      <button className="stickyButton"  onClick={toggleFloatingButton}>
         <i className="fas fa-plus rotated"></i>
       </button>
       {showFloatingButton && (
@@ -249,6 +250,7 @@ async function openproductpage(item)
       )}
   </div>
 </div>
+</section>
 </div>
   )
 }
