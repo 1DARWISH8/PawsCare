@@ -82,8 +82,9 @@ function Header() {
           </Nav>
           <Nav>
             <NavLink className='nav-link' id='icon' to='/home/appointment'><i className="bi bi-calendar"></i>APPOINTMENTS</NavLink>
-            <NavLink className='nav-link' id='icon' to='/cart'><i className="bi bi-cart4"></i>CART</NavLink>
-            <NavLink className='nav-link' id='icon' to='/getstarted'>GET STARTED</NavLink>
+            <NavLink className='nav-link' id='icon' to='/contact'><i class="fas fa-headphones headphone-icon"></i>CONTACT US</NavLink>
+            <NavLink className='nav-link' id='icon' to='/register'>REGISTER</NavLink>
+            <NavLink className='nav-link' id='icon' to='/login'>LOG IN</NavLink>
             {/* <Button className='nav-link' id='icon' onClick={handleLoginShow}>
               Login
             </Button>
@@ -123,15 +124,19 @@ function Header() {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
-          <Form className="d-flex m-2 border ">
-              <Form.Control
-                type="search"
-                className="me-2 border border-black"
-                aria-label="Search"
-              />
-              <Button className='fw-bold text-dark border border-none' style={{ backgroundColor: "#11c739" }}><i class="fas fa-search"></i></Button>
-            </Form>
-          </Nav>
+              <form  onSubmit={handleSearch} >
+                <div className="d-flex m-2 border">
+                <input
+                    type="text"
+                    value={search_word}
+                    onChange={(e) => setSearch_word(e.target.value)}
+                    placeholder="Search..."
+                    style={{width:"100%"}}
+                  />
+                  <Button type='submit' className='fw-bold text-dark border border-none' style={{ backgroundColor: "#11c739" }}><i class="fas fa-search"></i></Button>
+                </div>
+              </form>
+            </Nav>
           <Nav>
               <NavDropdown title="Profile" className='nav-item mx-2' id="collapsible-nav-dropdown">
                 <NavDropdown.Item >
