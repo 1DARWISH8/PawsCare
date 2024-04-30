@@ -33,11 +33,32 @@ import Shop from './components/Shop';
 import Searchresults from './components/Searchresults';
 import ProductsNotfound from './components/ProductsNotfound';
 import { useSelector } from 'react-redux';
+import axios from 'axios'
+import { useEffect, useState } from 'react';
 
+  // // Function to set token in Axios headers
+  // const setAuthToken = (getToken) => {
+  //   if (getToken) {
+  //     axios.defaults.headers.common['Authorization'] = `Bearer ${getToken}`;
+  //   } else {
+  //     delete axios.defaults.headers.common['Authorization'];
+  //   }
+  // };
 
 function App() {
 
   let {currentUser,loginStatus} = useSelector(state=>state.userLogin)
+
+  // if (loginStatus)
+  // {
+  //   let getToken = sessionStorage.getItem('token')
+  //   setAuthToken(getToken)
+  // }
+  // else
+  // {
+  //   setAuthToken(null)
+  // }
+
 
   // browserRouter variable is created which contains all the paths and its components
   let browserRouter= createBrowserRouter([
