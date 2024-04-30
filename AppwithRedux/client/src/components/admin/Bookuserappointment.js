@@ -1,19 +1,33 @@
 import React, {  useEffect, useState } from 'react'
 import axios from 'axios'
 import {useNavigate} from 'react-router-dom'
-import {useForm} from "react-hook-form"
 import {useDispatch} from 'react-redux'
-import Card from 'react-bootstrap/Card';
 import { userselectedDetailsPromiseSlice } from '../../redux/slices/userselectedDetailsSlice';
 import './Bookuserappointment.css'
 import Table from 'react-bootstrap/Table'
+import Alerts from '../Alerts';
 
 function Bookuserappointment() {
 
     let navigate= useNavigate()
-    let [error,setError]=useState('')
-    let [users,setUsers] = useState([])
     let dispatch = useDispatch()
+
+    // Alert
+    let [Alert,setAlert] = useState('')
+    let [message,setMessage] = useState('')
+    let [type,setType] = useState('')
+
+    // Hide Alert after 3 seconds
+    const hideAlert = () =>
+    {
+        setTimeout(()=>
+        {
+            setAlert(false);
+        },3000);
+    }
+
+
+    let [users,setUsers] = useState([])
     let [order,setOrder] = useState('List')
 
     async function openprofile(user)
@@ -25,10 +39,13 @@ function Bookuserappointment() {
         }
         catch(err)
         {
-            setError(err.message)
+            setMessage(err.message)
+            setType("failure")
+            setAlert(true)
         }
     }
 
+    // GET All THE USERS
     async function getusers()
     {
         try
@@ -42,43 +59,47 @@ function Bookuserappointment() {
         }
         catch(err)
         {
-            setError(err.message)
+            setMessage(err.message)
+            setType("failure")
+            setAlert(true)
         }
     }
-    
     useEffect(()=>getusers,[])
 
 
-    
+    // Search for Users
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
-    const handleChange = (e) => {
+    const handleChange = (e) => 
+    {
         setSearchTerm(e.target.value);
         const results = users.filter(user =>
             user.username.toLowerCase().includes(e.target.value.toLowerCase())
             );
             setSearchResults(results);
-        };
-        
-        async function bookappointment(user)
+    };
+    
+    // Book appointment for a user
+    async function bookappointment(user)
+    {
+        try
         {
-            try
-            {
-                await dispatch(userselectedDetailsPromiseSlice(user))
-                navigate('/admin/adminbookappointment')
-            }
-            catch(err)
-            {
-                setError(err.message)
-            }
+            await dispatch(userselectedDetailsPromiseSlice(user))
+            navigate('/admin/adminbookappointment')
         }
+        catch(err)
+        {
+            setMessage(err.message)
+            setType("failure")
+            setAlert(true)
+        }
+    }
 
 
-        return (
+return (
     <div>
-            {error.length!==0&& <p className='fw-bold text-center text-danger border-0'>{error}</p>}
 
-        
+<Alerts show={Alert} type={type} message={message} onClose={()=>setAlert(false)} />
 
     <div className=' mt-3'>
         <div className='search'>
