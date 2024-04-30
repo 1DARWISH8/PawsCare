@@ -148,4 +148,17 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:5000/user-api/cart/HENRY
+GET http://localhost:5000/user-api/cart/GOKU
+
+###
+GET http://localhost:5000/user-api/getsearchresults/PEDI
+
+###
+POST http://localhost:5000/user-api/razorpayorder
+Content-Type: application/json
+
+{
+    "amount":500,
+    "currency":"INR",
+    "receipt":"Xysjd1"
+}
