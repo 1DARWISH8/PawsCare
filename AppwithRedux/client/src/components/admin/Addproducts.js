@@ -2,33 +2,32 @@ import React, { useState } from 'react'
 import {useForm} from 'react-hook-form'
 import axios from 'axios'
 import {NavLink, useNavigate} from 'react-router-dom'
-import {Alert} from 'react-bootstrap';
+import Alerts from '../Alerts';
 
-const Addproducts = () => {
+function Addproducts () 
+{
     let {register,handleSubmit,formState:{errors}}=useForm()
-    let [error,setError] = useState('')
+    let [message,setMessage] = useState('')
+    let [Alert,setAlert] = useState(false)
+    let [type,setType] = useState('')
     let [files,setFiles]=useState(null)
     let navigate=useNavigate()
-    let [alert,setAlert] = useState('')
 
 const hideAlert = () =>
 {
     setTimeout(()=>
     {
-        setAlert('');
-    },5000);
+        setAlert(false);
+    },3000);
 }
 
-useState(()=>
-{
-    hideAlert();
-},[])
 
 
-        function uploadPic(e)
+    function uploadPic(e)
     {
         setFiles(e.target.files)
-    }    
+    }
+
     async function formSubmit(data)
     {
         const formData = new FormData();
@@ -45,36 +44,49 @@ useState(()=>
             let res = await axios.post('http://localhost:5000/admin-api/addproduct',formData)
             if (res.status===201)
             {
+                setMessage(res.data.message)
+                setType('exists')
+                setAlert(true)
+                hideAlert()
                 navigate('/admin/managestore')
             }
             else
             {
-                setError(res.data.message)
+                setMessage(res.data.message)
+                setType("failure")
+                setAlert(true)
             }
         }
         catch(err)
         {
-            setError(err.message)
+            setMessage(err.message)
+            setType("failure")
+            setAlert(true)
         }
     }
 
 return (
 <div className="containers m-5">
-    {alert.length!==0 && <Alert variant={'dark'} onClose={()=>setAlert('')}>{alert}</Alert> }
+    
+    <Alerts show={Alert} type={type} message={message} onClose={()=>setAlert(false)} />
+
     <NavLink className='btn btn-dark' to='/admin/managestore'>BACK TO PRODUCTS</NavLink>
     <h2 className="mt-5 mb-4">ADD A PRODUCT</h2>
     <form onSubmit={handleSubmit(formSubmit)}>
         <div className="mb-3">
             <label htmlFor="productname" className="form-label">Product Name:</label>
             <input type="text" className="form-control" id="productname" name="productname" {...register("productname",{required:true})} />
+            {errors.productname?.type==='required'&&<p className='text-danger fw-bold text-center'>*Product Name is required*</p>}
         </div>
         <div className="mb-3">
             <label htmlFor="productid" className="form-label">Product ID:</label>
             <input type="text" className="form-control" id="productid" name="productid" {...register("productid",{required:true})} />
+            {errors.productid?.type==='required'&&<p className='text-danger fw-bold text-center'>*ProductId is required*</p>}
         </div>
         <div className="mb-3">
             <label htmlFor="description" className="form-label">Description:</label>
             <textarea type="text" className="form-control" id="description" name="description" {...register("description",{required:true})} />
+            {errors.description?.type==='required'&&<p className='text-danger fw-bold text-center'>*Product Description is required*</p>}
         </div>
         <div className="mb-3">
             <label htmlFor="animal" className="form-label">ANIMAL:</label>
@@ -89,6 +101,7 @@ return (
             <option value="TURTLE">TURTLE</option>
             <option value="OTHER">OTHER</option>
             </select>
+            {errors.animal?.type==='required'&&<p className='text-danger fw-bold text-center'>*Animal Type is required*</p>}
         </div>
         <div className="mb-3">
             <label htmlFor="category" className="form-label">Category:</label>
@@ -103,23 +116,28 @@ return (
             <option value="Essentials">Essentials</option>
             <option value="Accessories">Accessories</option>
             </select>
+            {errors.category?.type==='required'&&<p className='text-danger fw-bold text-center'>*Category is required*</p>}
         </div>
         <div className="mb-3">
             <label htmlFor="brand" className="form-label">Brand:</label>
             <input type="text" className="form-control" id="brand" name="brand" {...register("brand",{required:true})} />
+            {errors.brand?.type==='required'&&<p className='text-danger fw-bold text-center'>*Brand is required*</p>}
         </div>
         <div className="mb-3">
             <label htmlFor="price" className="form-label">Price:</label>
             <input type="number"className="form-control" id="price" name="price" min={1} {...register("price",{required:true})} />
+            {errors.price?.type==='required'&&<p className='text-danger fw-bold text-center'>*Product Price is required*</p>}
         </div>
         <div className="mb-3">
             <label htmlFor="discount_percent" className="form-label">Discount Percent:</label>
             <input type="number"className="form-control" min={0} max={99} id="discount_percent" name="discount_percent" placeholder='0'{...register("discount_percent",{required:true,min:0,max:99})} />
+            {errors.discount_percent?.type==='required'&&<p className='text-danger fw-bold text-center'>*Discount Percent is required*</p>}
         </div>
         <div className="sm-3 mb-3">
             <label htmlFor="images" className="form-label">Images:</label>
             <input type="file" id="images" name="images" onChange={uploadPic} multiple/>
         </div>
+        {files===null&&<p className='text-center text-danger fw-bold'>*Product Images are required*</p>}
         {/* <div className="mb-3">
             <label htmlFor="rating" className="form-label">Rating:</label>
             <input type="number" className="form-control" id="rating" name="rating" value={formData.rating} onChange={handleChange} min="0" max="5" />
