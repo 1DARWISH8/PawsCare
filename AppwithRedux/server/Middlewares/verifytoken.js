@@ -18,7 +18,7 @@ function verifytoken(req,res,next)
                 let decodedToken = jwt.verify(Token,process.env.SECRET_KEY)
                 // attach decoded token to request object
                 req.user = decodedToken
-                console.log(req.user)
+                // console.log(req.user)
                 next()
             }
             catch(err)
