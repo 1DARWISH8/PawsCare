@@ -27,9 +27,16 @@ function Login() {
 
   async function formSubmit(data)
   {
-    data={userType,...data}
-    await dispatch(userLoginPromiseStatus(data))
-    await dispatch(userCartPromiseStatus(data.username))
+    try
+    {
+      data={userType,...data}
+      await dispatch(userLoginPromiseStatus(data))
+      await dispatch(userCartPromiseStatus(data.username))
+    }
+    catch(err)
+    {
+      console.log(err.message)
+    }
   }
 
   useEffect(()=>
