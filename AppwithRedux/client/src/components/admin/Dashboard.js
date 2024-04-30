@@ -2,16 +2,12 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import {useDispatch} from 'react-redux'
 import {useNavigate} from 'react-router-dom'
-import {useForm} from "react-hook-form"
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faWallet } from '@fortawesome/free-solid-svg-icons'
 import { BiCalendar } from 'react-icons/bi';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import './Dashboard.css'
 import { Table } from 'react-bootstrap'
 import { userselectedDetailsPromiseSlice } from '../../redux/slices/userselectedDetailsSlice'
-import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
 function Dashboard() {
@@ -56,11 +52,6 @@ function Dashboard() {
 
   async function openprofile(user)
     {
-      if(user.booked_by!=='')
-      {
-        let username = user.booked_by
-        user = {...user,username}
-      }
       try
         {
             await dispatch(userselectedDetailsPromiseSlice(user))
