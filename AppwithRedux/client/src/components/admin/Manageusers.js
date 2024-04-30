@@ -358,6 +358,7 @@ async function openprofile(user)
             <label htmlFor='userpic' className='form-label fw-bold'>PROFILE IMAGE:</label>
             <input id='userpic' type='file' name='userpic' className='form-control border-black' onChange={uploadPic}/>
         </div>
+        {file===null&&<p className='text-center text-danger fw-bold'>*USER IMAGE is required*</p>}
 
 
         {/* PET DETAILS FORM */}
@@ -391,12 +392,12 @@ async function openprofile(user)
             </select>
             {errors.petdetails?.petanimal?.type==='required'&&<p className='text-center text-danger fw-bold'>*PET ANIMAL TYPE is required*</p>}
         </div>
-        <div className='sm-3 m-3'>
             {/* Previous Health checkup date */}
+        {/* <div className='sm-3 m-3'>
             <label htmlFor='last_checkup_date' className='form-label fw-bold'>PREVIOUS DATE OF HEALTH CHECK-UP:</label>
             <input type='date' id="last_checkup_date" className='form-control border-black text-center' {...register('petdetails.last_checkup_date',{required:true})}></input>
             {errors.petdetails?.last_checkup_date?.type==='required'&&<p className='text-center text-danger fw-bold'>*PREVIOUS HEALTH CHECK-UP DATE is required*</p>}
-        </div>
+        </div> */}
         </div>
 
 
