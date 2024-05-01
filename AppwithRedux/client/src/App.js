@@ -74,10 +74,10 @@ function App() {
           path:'',
           element:<Home/>
         },
-        {
-          path:'/home',
-          element:<Home/>
-        },
+        // {
+        //   path:'/home',
+        //   element:<Home/>
+        // },
         {
           path:'/productsnotfound',
           element:<ProductsNotfound/>
