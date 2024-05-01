@@ -25,6 +25,13 @@ const allowCors = fn => async (req, res) => {
   return await fn(req, res)
 } 
 
+app.use(cors({
+origin:["https://paws-care.vercel.app/"],
+
+methods:["POST","GET","PUT","DELETE"],
+credentials:true
+}
+
 // join paths 
 // express.static middleware to serve static files
 app.use(express.static(path.join(__dirname,'../build')))
