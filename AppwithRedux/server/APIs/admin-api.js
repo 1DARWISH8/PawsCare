@@ -15,9 +15,9 @@ const {upload} = require('../Middlewares/cloudinaryUpload')
 // import cors and use
 const cors = require('cors')
 adminApp.use(cors(
-    {
-        'Access-Control-Allow-Origin':'*'
-    }
+    // {
+    //     'Access-Control-Allow-Origin':'*'
+    // }
 ))
 
 
