@@ -30,7 +30,7 @@ origin:["https://paws-care.vercel.app/"],
 
 methods:["POST","GET","PUT","DELETE"],
 credentials:true
-}
+}))
 
 // join paths 
 // express.static middleware to serve static files
